@@ -40,7 +40,7 @@
   - Files: `src/app/api/hero-availability/route.ts`, `src/app/api/team-members/route.ts`, `src/app/api/team-invite/route.ts`, `src/app/api/team-invite/check/route.ts`, `package.json`
   - Verify: rg 'from.*@/lib/supabase' src/app/api/hero-availability/ src/app/api/team-members/ src/app/api/team-invite/ returns zero matches && rg 'from.*@/lib/db' src/app/api/hero-availability/ src/app/api/team-members/ src/app/api/team-invite/ returns 4 matches && npx tsc --noEmit 2>&1 | grep -E 'hero-availability|team-members|team-invite' shows zero errors
 
-- [ ] **T02: Migrate register route to Neon SQL with stored procedure and verify all API routes** `est:45m`
+- [x] **T02: Migrate register route to Neon SQL with stored procedure and verify all API routes** `est:45m`
   Rewrite the register route from Supabase triple-fallback (direct insert → RPC simple → RPC params) to a clean Neon implementation using the register_user_extended stored procedure for atomic insert+hero_availability update. Pre-checks (line taken, email unique, hero available) become sequential SQL queries. Then verify all 5 migrated routes compile and no API route files import from @/lib/supabase.
   - Files: `src/app/api/register/route.ts`
   - Verify: rg 'from.*@/lib/supabase' src/app/api/ returns zero matches && rg 'from.*@/lib/db' src/app/api/ returns 5+ matches && npx tsc --noEmit 2>&1 | grep 'register/route' shows zero errors

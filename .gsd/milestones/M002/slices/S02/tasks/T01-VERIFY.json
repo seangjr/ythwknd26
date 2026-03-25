@@ -1,0 +1,24 @@
+{
+  "schemaVersion": 1,
+  "taskId": "T01",
+  "unitId": "M002/S02/T01",
+  "timestamp": 1774447988662,
+  "passed": false,
+  "discoverySource": "task-plan",
+  "checks": [
+    {
+      "command": "rg 'from.*@/lib/supabase' src/app/api/hero-availability/ src/app/api/team-members/ src/app/api/team-invite/ returns zero matches",
+      "exitCode": 2,
+      "durationMs": 20,
+      "verdict": "fail"
+    },
+    {
+      "command": "rg 'from.*@/lib/db' src/app/api/hero-availability/ src/app/api/team-members/ src/app/api/team-invite/ returns 4 matches",
+      "exitCode": 2,
+      "durationMs": 12,
+      "verdict": "fail"
+    }
+  ],
+  "retryAttempt": 1,
+  "maxRetries": 2
+}
