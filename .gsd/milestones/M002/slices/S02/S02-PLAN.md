@@ -35,7 +35,7 @@
 
 ## Tasks
 
-- [ ] **T01: Migrate hero-availability, team-members, team-invite, and team-invite/check routes to Neon SQL** `est:45m`
+- [x] **T01: Migrate hero-availability, team-members, team-invite, and team-invite/check routes to Neon SQL** `est:45m`
   Rewrite 4 simpler API routes from Supabase fluent API to Neon parameterized SQL using the db.ts client from S01. Add nanoid as an explicit dependency. Each route follows the same pattern: swap import from @/lib/supabase to @/lib/db, replace createClient() with getClient(), replace .from().select().eq() chains with sql tagged-template queries. Key differences: Neon returns arrays (not {data, error}), empty results are [] not PGRST116 errors, and .single() becomes rows[0] with length check.
   - Files: `src/app/api/hero-availability/route.ts`, `src/app/api/team-members/route.ts`, `src/app/api/team-invite/route.ts`, `src/app/api/team-invite/check/route.ts`, `package.json`
   - Verify: rg 'from.*@/lib/supabase' src/app/api/hero-availability/ src/app/api/team-members/ src/app/api/team-invite/ returns zero matches && rg 'from.*@/lib/db' src/app/api/hero-availability/ src/app/api/team-members/ src/app/api/team-invite/ returns 4 matches && npx tsc --noEmit 2>&1 | grep -E 'hero-availability|team-members|team-invite' shows zero errors

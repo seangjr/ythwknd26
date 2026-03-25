@@ -1,4 +1,4 @@
-import { createClient, handleDatabaseError } from "@/lib/supabase";
+import { getClient, handleDatabaseError } from "@/lib/db";
 import { NextResponse } from "next/server";
 
 // Get hero availability for a specific team
@@ -14,25 +14,17 @@ export async function GET(request: Request) {
       );
     }
 
-    const supabase = createClient();
+    const sql = getClient();
 
     // Get all hero availability for this team
-    const { data, error } = await supabase
-      .from("hero_availability")
-      .select("hero_id, is_available")
-      .eq("team_id", teamId);
-
-    if (error) {
-      const errorResponse = handleDatabaseError(error);
-      console.error("Error fetching hero availability:", error);
-      return NextResponse.json(
-        { error: errorResponse.message },
-        { status: errorResponse.status },
-      );
-    }
+    const rows = await sql`
+      SELECT hero_id, is_available
+      FROM hero_availability
+      WHERE team_id = ${teamId}
+    `;
 
     // Format the response
-    const heroAvailability = data.map((item) => ({
+    const heroAvailability = rows.map((item) => ({
       heroId: item.hero_id,
       isAvailable: item.is_available,
     }));
@@ -61,26 +53,17 @@ export async function POST(request: Request) {
       );
     }
 
-    const supabase = createClient();
+    const sql = getClient();
 
     // Update the hero availability
-    const { data, error } = await supabase
-      .from("hero_availability")
-      .update({ is_available: isAvailable })
-      .eq("team_id", teamId)
-      .eq("hero_id", heroId)
-      .select();
+    const rows = await sql`
+      UPDATE hero_availability
+      SET is_available = ${isAvailable}
+      WHERE team_id = ${teamId} AND hero_id = ${heroId}
+      RETURNING *
+    `;
 
-    if (error) {
-      const errorResponse = handleDatabaseError(error);
-      console.error("Error updating hero availability:", error);
-      return NextResponse.json(
-        { error: errorResponse.message },
-        { status: errorResponse.status },
-      );
-    }
-
-    return NextResponse.json(data);
+    return NextResponse.json(rows);
   } catch (error) {
     const errorResponse = handleDatabaseError(error);
     console.error("Error in hero availability API:", error);

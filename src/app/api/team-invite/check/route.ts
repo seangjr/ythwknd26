@@ -1,4 +1,4 @@
-import { createClient } from "@/lib/supabase";
+import { getClient, handleDatabaseError } from "@/lib/db";
 import { NextResponse } from "next/server";
 
 export async function GET(request: Request) {
@@ -13,49 +13,39 @@ export async function GET(request: Request) {
       );
     }
 
-    const supabase = createClient();
+    const sql = getClient();
 
     // Get the most recent invite for this team
-    const { data, error } = await supabase
-      .from("team_invites")
-      .select("invite_code, expires_at")
-      .eq("team_id", teamId)
-      .order("created_at", { ascending: false })
-      .limit(1)
-      .single();
+    const rows = await sql`
+      SELECT invite_code, expires_at
+      FROM team_invites
+      WHERE team_id = ${teamId}
+      ORDER BY created_at DESC
+      LIMIT 1
+    `;
 
-    if (error) {
-      // If no invite found, return empty response
-      if (error.code === "PGRST116") {
-        return NextResponse.json({});
-      }
-
-      console.error("Error fetching team invite:", error);
-      return NextResponse.json(
-        { error: "Failed to check for existing invite" },
-        { status: 500 },
-      );
+    if (rows.length === 0) {
+      return NextResponse.json({});
     }
 
+    const data = rows[0];
+
     // Check if the invite has expired
-    if (data && new Date(data.expires_at as string) < new Date()) {
+    if (new Date(data.expires_at as string) < new Date()) {
       return NextResponse.json({});
     }
 
     // Return the invite URL if it exists and is valid
-    if (data) {
-      return NextResponse.json({
-        inviteCode: data.invite_code,
-        inviteUrl: `${process.env.NEXT_PUBLIC_BASE_URL || ""}/invite/${data.invite_code}`,
-      });
-    }
-
-    return NextResponse.json({});
+    return NextResponse.json({
+      inviteCode: data.invite_code,
+      inviteUrl: `${process.env.NEXT_PUBLIC_BASE_URL || ""}/invite/${data.invite_code}`,
+    });
   } catch (error) {
+    const errorResponse = handleDatabaseError(error);
     console.error("Error in team invite check API:", error);
     return NextResponse.json(
-      { error: "Internal server error" },
-      { status: 500 },
+      { error: errorResponse.message },
+      { status: errorResponse.status },
     );
   }
 }
