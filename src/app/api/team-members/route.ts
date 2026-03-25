@@ -6,22 +6,21 @@ export async function GET(request: Request) {
     const { searchParams } = new URL(request.url);
     const teamId = searchParams.get("teamId");
 
-    if (!teamId) {
-      return NextResponse.json(
-        { error: "Team ID is required" },
-        { status: 400 },
-      );
-    }
-
     const sql = getClient();
 
-    // Fetch all registrations for this team
-    const rows = await sql`
-      SELECT id, line_number, nickname, instagram_handle, full_name, hero_id, created_at
-      FROM registrations
-      WHERE team_id = ${teamId}
-      ORDER BY line_number
-    `;
+    // Fetch registrations — filtered by team if teamId provided, otherwise all
+    const rows = teamId
+      ? await sql`
+          SELECT id, line_number, nickname, instagram_handle, full_name, hero_id, team_id, created_at
+          FROM registrations
+          WHERE team_id = ${teamId}
+          ORDER BY line_number
+        `
+      : await sql`
+          SELECT id, line_number, nickname, instagram_handle, full_name, hero_id, team_id, created_at
+          FROM registrations
+          ORDER BY line_number
+        `;
 
     return NextResponse.json({ members: rows });
   } catch (error) {

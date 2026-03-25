@@ -7,25 +7,25 @@ export async function GET(request: Request) {
     const { searchParams } = new URL(request.url);
     const teamId = searchParams.get("teamId");
 
-    if (!teamId) {
-      return NextResponse.json(
-        { error: "Team ID is required" },
-        { status: 400 },
-      );
-    }
-
     const sql = getClient();
 
-    // Get all hero availability for this team
-    const rows = await sql`
-      SELECT hero_id, is_available
-      FROM hero_availability
-      WHERE team_id = ${teamId}
-    `;
+    // Get hero availability — filtered by team if teamId provided, otherwise all
+    const rows = teamId
+      ? await sql`
+          SELECT hero_id, team_id, is_available
+          FROM hero_availability
+          WHERE team_id = ${teamId}
+        `
+      : await sql`
+          SELECT hero_id, team_id, is_available
+          FROM hero_availability
+          ORDER BY team_id
+        `;
 
     // Format the response
     const heroAvailability = rows.map((item) => ({
       heroId: item.hero_id,
+      teamId: item.team_id,
       isAvailable: item.is_available,
     }));
 

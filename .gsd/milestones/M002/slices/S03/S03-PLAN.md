@@ -27,7 +27,7 @@ Upstream: All 6 API routes from S02 (hero-availability, team-members, team-invit
 
 ## Tasks
 
-- [ ] **T01: Enhance API routes for all-data queries and refactor register page + character-selection-screen** `est:45m`
+- [x] **T01: Enhance API routes for all-data queries and refactor register page + character-selection-screen** `est:45m`
   Update hero-availability and team-members API routes to return all rows when teamId is omitted (currently returns 400). Then refactor register/page.tsx and character-selection-screen.tsx to use fetch() against API routes instead of importing createClient from @/lib/supabase.
   - Files: `src/app/api/hero-availability/route.ts`, `src/app/api/team-members/route.ts`, `src/app/(everywhere-else)/register/page.tsx`, `src/components/character-selection-screen.tsx`
   - Verify: rg 'supabase' src/app/\(everywhere-else\)/register/page.tsx src/components/character-selection-screen.tsx returns zero matches && npx tsc --noEmit exits 0
