@@ -46,7 +46,7 @@ Upstream: none. Produces: src/lib/db.ts (sql client, withTransaction, handleData
 
 ## Tasks
 
-- [ ] **T01: Install Neon driver, create db.ts client, schema.sql, seed.sql, and .env.example** `est:30m`
+- [x] **T01: Install Neon driver, create db.ts client, schema.sql, seed.sql, and .env.example** `est:30m`
   Install @neondatabase/serverless, create the Neon DB client module replacing the Supabase client interface, write SQL schema and seed scripts, and create .env.example. All local files — no DB connection needed.
   - Files: `package.json`, `src/lib/db.ts`, `schema.sql`, `seed.sql`, `.env.example`
   - Verify: bun run build exits 0 with new db.ts; schema.sql and seed.sql exist and are non-empty
