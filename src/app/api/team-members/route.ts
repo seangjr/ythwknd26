@@ -1,4 +1,4 @@
-import { createClient, handleDatabaseError } from "@/lib/supabase";
+import { getClient, handleDatabaseError } from "@/lib/db";
 import { NextResponse } from "next/server";
 
 export async function GET(request: Request) {
@@ -6,34 +6,23 @@ export async function GET(request: Request) {
     const { searchParams } = new URL(request.url);
     const teamId = searchParams.get("teamId");
 
-    if (!teamId) {
-      return NextResponse.json(
-        { error: "Team ID is required" },
-        { status: 400 },
-      );
-    }
+    const sql = getClient();
 
-    const supabase = createClient();
+    // Fetch registrations — filtered by team if teamId provided, otherwise all
+    const rows = teamId
+      ? await sql`
+          SELECT id, line_number, nickname, instagram_handle, full_name, hero_id, team_id, created_at
+          FROM registrations
+          WHERE team_id = ${teamId}
+          ORDER BY line_number
+        `
+      : await sql`
+          SELECT id, line_number, nickname, instagram_handle, full_name, hero_id, team_id, created_at
+          FROM registrations
+          ORDER BY line_number
+        `;
 
-    // Fetch all registrations for this team
-    const { data, error } = await supabase
-      .from("registrations")
-      .select(
-        "id, line_number, nickname, instagram_handle, full_name, hero_id, created_at",
-      )
-      .eq("team_id", teamId)
-      .order("line_number");
-
-    if (error) {
-      const errorResponse = handleDatabaseError(error);
-      console.error("Error fetching team members:", error);
-      return NextResponse.json(
-        { error: errorResponse.message },
-        { status: errorResponse.status },
-      );
-    }
-
-    return NextResponse.json({ members: data || [] });
+    return NextResponse.json({ members: rows });
   } catch (error) {
     const errorResponse = handleDatabaseError(error);
     console.error("Error in team members API:", error);

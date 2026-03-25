@@ -1,0 +1,48 @@
+{
+  "schemaVersion": 1,
+  "taskId": "T02",
+  "unitId": "M001/S03/T02",
+  "timestamp": 1774424042368,
+  "passed": false,
+  "discoverySource": "task-plan",
+  "checks": [
+    {
+      "command": "bun run build exits 0",
+      "exitCode": 1,
+      "durationMs": 313,
+      "verdict": "fail"
+    },
+    {
+      "command": "rg -i 'choose your hero' src/ --glob '*.tsx' returns 0 matches",
+      "exitCode": 2,
+      "durationMs": 21,
+      "verdict": "fail"
+    },
+    {
+      "command": "rg -i 'Heroes Available' src/ --glob '*.tsx' returns 0 matches",
+      "exitCode": 2,
+      "durationMs": 14,
+      "verdict": "fail"
+    },
+    {
+      "command": "rg 'CONSTANTS.HEROES' src/ --glob '*.tsx' returns 0 matches",
+      "exitCode": 2,
+      "durationMs": 14,
+      "verdict": "fail"
+    },
+    {
+      "command": "rg 'CONSTANTS.TEAMS' src/ --glob '*.tsx' returns 0 matches",
+      "exitCode": 2,
+      "durationMs": 13,
+      "verdict": "fail"
+    },
+    {
+      "command": "rg 'HERO_IMAGE_PATHS' src/ --glob '*.tsx' returns 0 matches",
+      "exitCode": 2,
+      "durationMs": 14,
+      "verdict": "fail"
+    }
+  ],
+  "retryAttempt": 1,
+  "maxRetries": 2
+}

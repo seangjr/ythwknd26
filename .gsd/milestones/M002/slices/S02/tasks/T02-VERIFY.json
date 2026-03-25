@@ -1,0 +1,18 @@
+{
+  "schemaVersion": 1,
+  "taskId": "T02",
+  "unitId": "M002/S02/T02",
+  "timestamp": 1774448058859,
+  "passed": false,
+  "discoverySource": "task-plan",
+  "checks": [
+    {
+      "command": "rg 'from.*@/lib/supabase' src/app/api/ returns zero matches",
+      "exitCode": 2,
+      "durationMs": 22,
+      "verdict": "fail"
+    }
+  ],
+  "retryAttempt": 1,
+  "maxRetries": 2
+}

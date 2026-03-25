@@ -1,0 +1,60 @@
+{
+  "schemaVersion": 1,
+  "taskId": "T04",
+  "unitId": "M001/S03/T04",
+  "timestamp": 1774424309345,
+  "passed": false,
+  "discoverySource": "task-plan",
+  "checks": [
+    {
+      "command": "bun run build exits 0",
+      "exitCode": 1,
+      "durationMs": 222,
+      "verdict": "fail"
+    },
+    {
+      "command": "! grep -q 'use client' 'src/app/(landing)/page.tsx'",
+      "exitCode": 0,
+      "durationMs": 9,
+      "verdict": "pass"
+    },
+    {
+      "command": "grep -q 'force-dynamic' 'src/app/(landing)/page.tsx'",
+      "exitCode": 0,
+      "durationMs": 8,
+      "verdict": "pass"
+    },
+    {
+      "command": "! grep -q 'useState' 'src/app/(landing)/page.tsx'",
+      "exitCode": 0,
+      "durationMs": 7,
+      "verdict": "pass"
+    },
+    {
+      "command": "! grep -q 'useEffect' 'src/app/(landing)/page.tsx'",
+      "exitCode": 0,
+      "durationMs": 9,
+      "verdict": "pass"
+    },
+    {
+      "command": "test -f src/components/registration-cta.tsx",
+      "exitCode": 0,
+      "durationMs": 5,
+      "verdict": "pass"
+    },
+    {
+      "command": "grep -q 'use client' src/components/registration-cta.tsx",
+      "exitCode": 0,
+      "durationMs": 8,
+      "verdict": "pass"
+    },
+    {
+      "command": "grep -q 'RegistrationCTA' 'src/app/(landing)/page.tsx'",
+      "exitCode": 0,
+      "durationMs": 7,
+      "verdict": "pass"
+    }
+  ],
+  "retryAttempt": 1,
+  "maxRetries": 2
+}

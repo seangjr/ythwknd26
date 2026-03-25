@@ -2,7 +2,6 @@
 
 import { Button } from "@/components/ui/button";
 import { CONSTANTS } from "@/lib/constants";
-import { createClient } from "@/lib/supabase";
 import { cn } from "@/lib/utils";
 import { ArrowLeft, Facebook, Globe, Instagram } from "lucide-react";
 import { useEffect, useState } from "react";
@@ -58,15 +57,17 @@ export function CharacterSelectionScreen({
       if (!teamId) return;
 
       try {
-        const supabase = createClient();
-        const { data, error } = await supabase
-          .from("registrations")
-          .select("instagram_handle, hero_id, line_number")
-          .eq("team_id", teamId)
-          .order("line_number");
-
-        if (error) throw error;
-        setTeamMembers((data as TeamMember[]) || []);
+        const res = await fetch(`/api/team-members?teamId=${teamId}`);
+        if (!res.ok) throw new Error("Failed to fetch team members");
+        const json = await res.json();
+        const members: TeamMember[] = (json.members || []).map(
+          (m: { instagram_handle?: string; hero_id: string; line_number: number }) => ({
+            instagram_handle: m.instagram_handle,
+            hero_id: m.hero_id,
+            line_number: m.line_number,
+          }),
+        );
+        setTeamMembers(members);
       } catch (error) {
         console.error("Error fetching team members:", error);
       } finally {

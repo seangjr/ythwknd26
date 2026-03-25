@@ -1,4 +1,4 @@
-import { createClient } from "@/lib/supabase";
+import { getClient, handleDatabaseError } from "@/lib/db";
 import { nanoid } from "nanoid";
 import { NextResponse } from "next/server";
 
@@ -15,30 +15,19 @@ export async function POST(request: Request) {
       );
     }
 
-    const supabase = createClient();
+    const sql = getClient();
 
     // Generate a unique invite code
     const inviteCode = nanoid(10);
+    const expiresAt = new Date(
+      Date.now() + 7 * 24 * 60 * 60 * 1000,
+    ).toISOString(); // 7 days from now
 
     // Insert the invite code
-    const { data, error } = await supabase
-      .from("team_invites")
-      .insert({
-        team_id: teamId,
-        invite_code: inviteCode,
-        expires_at: new Date(
-          Date.now() + 7 * 24 * 60 * 60 * 1000,
-        ).toISOString(), // 7 days from now
-      })
-      .select();
-
-    if (error) {
-      console.error("Error creating team invite:", error);
-      return NextResponse.json(
-        { error: "Failed to create team invite" },
-        { status: 500 },
-      );
-    }
+    await sql`
+      INSERT INTO team_invites (team_id, invite_code, expires_at)
+      VALUES (${teamId}, ${inviteCode}, ${expiresAt})
+    `;
 
     return NextResponse.json({
       inviteCode,
@@ -47,7 +36,7 @@ export async function POST(request: Request) {
   } catch (error) {
     console.error("Error in team invite API:", error);
     return NextResponse.json(
-      { error: "Internal server error" },
+      { error: "Failed to create team invite" },
       { status: 500 },
     );
   }
@@ -66,57 +55,45 @@ export async function GET(request: Request) {
       );
     }
 
-    const supabase = createClient();
+    const sql = getClient();
 
-    // Get the invite details
-    const { data, error } = await supabase
-      .from("team_invites")
-      .select("team_id, expires_at")
-      .eq("invite_code", inviteCode)
-      .single();
+    // Get the invite + team details in one query via JOIN
+    const rows = await sql`
+      SELECT ti.team_id, ti.expires_at, t.id, t.name, t.color
+      FROM team_invites ti
+      JOIN teams t ON t.id = ti.team_id
+      WHERE ti.invite_code = ${inviteCode}
+    `;
 
-    if (error) {
-      console.error("Error fetching team invite:", error);
+    if (rows.length === 0) {
       return NextResponse.json(
         { error: "Invalid invite code" },
         { status: 404 },
       );
     }
 
+    const row = rows[0];
+
     // Check if the invite has expired
-    if (new Date(data.expires_at as string) < new Date()) {
+    if (new Date(row.expires_at as string) < new Date()) {
       return NextResponse.json(
         { error: "Invite has expired" },
         { status: 410 },
       );
     }
 
-    // Get team details
-    const { data: teamData, error: teamError } = await supabase
-      .from("teams")
-      .select("id, name, color")
-      .eq("id", data.team_id as number)
-      .single();
-
-    if (teamError) {
-      console.error("Error fetching team details:", teamError);
-      return NextResponse.json(
-        { error: "Failed to fetch team details" },
-        { status: 500 },
-      );
-    }
-
     return NextResponse.json({
-      teamId: data.team_id,
-      teamName: teamData.name,
-      teamColor: teamData.color,
-      expiresAt: data.expires_at,
+      teamId: row.team_id,
+      teamName: row.name,
+      teamColor: row.color,
+      expiresAt: row.expires_at,
     });
   } catch (error) {
+    const errorResponse = handleDatabaseError(error);
     console.error("Error in team invite API:", error);
     return NextResponse.json(
-      { error: "Internal server error" },
-      { status: 500 },
+      { error: errorResponse.message },
+      { status: errorResponse.status },
     );
   }
 }

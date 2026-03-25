@@ -4,7 +4,6 @@ import { RegistrationModal } from "@/components/registration-modal";
 import { TeamInviteModal } from "@/components/team-invite-modal";
 import { Button } from "@/components/ui/button";
 import { CONSTANTS } from "@/lib/constants";
-import { createClient } from "@/lib/supabase";
 import { cn } from "@/lib/utils";
 import { Share2, Users } from "lucide-react";
 import { useEffect, useState } from "react";
@@ -55,35 +54,22 @@ export default function Registration() {
   useEffect(() => {
     async function fetchData() {
       try {
-        const supabase = createClient();
+        // Fetch all registrations via API
+        const regRes = await fetch("/api/team-members");
+        if (!regRes.ok) throw new Error("Failed to fetch registrations");
+        const regJson = await regRes.json();
+        const regData: Registration[] = regJson.members || [];
 
-        // Fetch registrations
-        const { data: regData, error: regError } = await supabase
-          .from("registrations")
-          .select("*")
-          .order("line_number");
+        // Fetch all hero availability via API
+        const heroRes = await fetch("/api/hero-availability");
+        if (!heroRes.ok) throw new Error("Failed to fetch hero availability");
+        const heroData: HeroAvailability[] = await heroRes.json();
 
-        if (regError) throw regError;
-
-        // Fetch hero availability for all teams
-        const { data: heroData, error: heroError } = await supabase
-          .from("hero_availability")
-          .select("hero_id, team_id, is_available")
-          .order("team_id");
-
-        if (heroError) throw heroError;
-
-        setRegistrations((regData as unknown as Registration[]) || []);
-        setHeroAvailability(
-          (heroData as { hero_id: string; team_id: number; is_available: boolean }[]).map((h) => ({
-            heroId: h.hero_id,
-            teamId: h.team_id,
-            isAvailable: h.is_available,
-          })),
-        );
+        setRegistrations(regData);
+        setHeroAvailability(heroData);
 
         // Calculate available heroes
-        const available = (heroData as { is_available: boolean }[]).filter((h) => h.is_available).length;
+        const available = heroData.filter((h) => h.isAvailable).length;
         setAvailableHeroes(available);
         setTotalHeroes(heroData.length);
       } catch (error) {

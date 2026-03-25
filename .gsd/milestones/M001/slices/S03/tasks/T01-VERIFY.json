@@ -1,0 +1,66 @@
+{
+  "schemaVersion": 1,
+  "taskId": "T01",
+  "unitId": "M001/S03/T01",
+  "timestamp": 1774423495034,
+  "passed": false,
+  "discoverySource": "task-plan",
+  "checks": [
+    {
+      "command": "bun run build exits 0",
+      "exitCode": 1,
+      "durationMs": 309,
+      "verdict": "fail"
+    },
+    {
+      "command": "rg 'HEROES' src/lib/constants.ts returns 0 matches",
+      "exitCode": 2,
+      "durationMs": 20,
+      "verdict": "fail"
+    },
+    {
+      "command": "rg 'CLASSES' src/lib/constants.ts returns matches",
+      "exitCode": 2,
+      "durationMs": 10,
+      "verdict": "fail"
+    },
+    {
+      "command": "rg 'PARTIES' src/lib/constants.ts returns matches",
+      "exitCode": 2,
+      "durationMs": 11,
+      "verdict": "fail"
+    },
+    {
+      "command": "rg 'HERO_IMAGE_PATHS' src/lib/constants.ts returns 0 matches",
+      "exitCode": 2,
+      "durationMs": 14,
+      "verdict": "fail"
+    },
+    {
+      "command": "rg 'Rumble Brave' src/styles/fonts.css returns 0 matches",
+      "exitCode": 2,
+      "durationMs": 12,
+      "verdict": "fail"
+    },
+    {
+      "command": "rg 'Jeju Hallasan' src/styles/fonts.css returns matches",
+      "exitCode": 2,
+      "durationMs": 11,
+      "verdict": "fail"
+    },
+    {
+      "command": "rg 'Peacehaven' 'src/app/(landing)/page.tsx' returns matches",
+      "exitCode": 2,
+      "durationMs": 11,
+      "verdict": "fail"
+    },
+    {
+      "command": "test -f public/fonts/JejuHallasan-Regular.ttf",
+      "exitCode": 0,
+      "durationMs": 5,
+      "verdict": "pass"
+    }
+  ],
+  "retryAttempt": 1,
+  "maxRetries": 2
+}
