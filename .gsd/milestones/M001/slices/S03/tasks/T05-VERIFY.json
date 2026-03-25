@@ -1,0 +1,48 @@
+{
+  "schemaVersion": 1,
+  "taskId": "T05",
+  "unitId": "M001/S03/T05",
+  "timestamp": 1774424574192,
+  "passed": false,
+  "discoverySource": "task-plan",
+  "checks": [
+    {
+      "command": "bun run build exits 0",
+      "exitCode": 1,
+      "durationMs": 234,
+      "verdict": "fail"
+    },
+    {
+      "command": "rg 'whileInView' 'src/app/(everywhere-else)/register/page.tsx' returns matches",
+      "exitCode": 2,
+      "durationMs": 12,
+      "verdict": "fail"
+    },
+    {
+      "command": "rg 'spring' 'src/app/(everywhere-else)/register/page.tsx' returns matches",
+      "exitCode": 2,
+      "durationMs": 16,
+      "verdict": "fail"
+    },
+    {
+      "command": "rg 'AnimatePresence' src/components/multi-step-registration-form.tsx returns matches",
+      "exitCode": 2,
+      "durationMs": 12,
+      "verdict": "fail"
+    },
+    {
+      "command": "rg 'whileInView' 'src/app/(everywhere-else)/invite/[code]/page.tsx' returns matches",
+      "exitCode": 2,
+      "durationMs": 11,
+      "verdict": "fail"
+    },
+    {
+      "command": "rg 'spring' src/components/character-selection-screen.tsx returns matches",
+      "exitCode": 2,
+      "durationMs": 11,
+      "verdict": "fail"
+    }
+  ],
+  "retryAttempt": 1,
+  "maxRetries": 2
+}
