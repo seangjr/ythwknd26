@@ -72,3 +72,11 @@ Change the year rather than removing conditionals — preserves component struct
 ## nanoid is used in team-invite but was transitive-only
 
 `src/app/api/team-invite/route.ts` imports `nanoid` directly, but it was only available as a transitive dependency. Added as explicit dep (`nanoid@^5.1.7`) in S04/T01 to prevent breakage on fresh installs.
+
+## Pre-existing TypeScript errors from untyped Supabase generics
+
+The `next build` fails with 23 TypeScript errors before any M002 changes. Root cause: Supabase client returns untyped generics (type `never`) in several route files, especially `invite/[code]/page.tsx` (`Property 'line_number' does not exist on type 'never'`). These errors will resolve naturally as S02 migrates each route from Supabase to Neon with properly typed queries. To verify new code compiles cleanly, use `npx tsc --noEmit 2>&1 | grep <your-file>` instead of relying on full build exit code.
+
+## Neon client pattern: getClient() lazy singleton
+
+`src/lib/db.ts` provides `getClient()` which returns a lazy singleton `neon()` tagged-template function. All API routes should import from `@/lib/db` and use `const sql = getClient()` followed by tagged template queries: `sql\`SELECT * FROM teams WHERE id = ${id}\``. The client is HTTP-based (no persistent connection pool), optimized for serverless. Error handling: wrap queries in try/catch with `handleDatabaseError(error)` which maps Postgres error codes to HTTP status codes.

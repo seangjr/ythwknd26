@@ -14,7 +14,7 @@
 
 ## Slices
 
-- [ ] **S01: Neon DB Client & Schema** `risk:high` `depends:[]`
+- [x] **S01: Neon DB Client & Schema** `risk:high` `depends:[]`
   > After this: After this: health-check endpoint returns 'healthy' from Neon DB, schema and seed data provisioned, new db.ts client module works
 
 - [ ] **S02: API Route Migration** `risk:medium` `depends:[S01]`
