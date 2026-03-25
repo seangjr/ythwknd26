@@ -51,7 +51,7 @@ Upstream: none. Produces: src/lib/db.ts (sql client, withTransaction, handleData
   - Files: `package.json`, `src/lib/db.ts`, `schema.sql`, `seed.sql`, `.env.example`
   - Verify: bun run build exits 0 with new db.ts; schema.sql and seed.sql exist and are non-empty
 
-- [ ] **T02: Provision Neon schema, update health-check route, verify end-to-end** `est:20m`
+- [x] **T02: Provision Neon schema, update health-check route, verify end-to-end** `est:20m`
   Collect DATABASE_URL, run schema.sql and seed.sql against Neon, update health-check route to use new db.ts, and verify the full chain works.
   - Files: `src/app/api/health-check/route.ts`, `.env.local`
   - Verify: curl http://localhost:3000/api/health-check returns {"status":"healthy"}

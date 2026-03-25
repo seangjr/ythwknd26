@@ -1,21 +1,17 @@
-import { createClient, handleDatabaseError } from "@/lib/supabase";
+import { getClient, handleDatabaseError, DatabaseConnectionError } from "@/lib/db";
 import { NextResponse } from "next/server";
 
 export async function GET() {
   try {
-    const supabase = createClient();
+    const sql = getClient();
 
     // Test the connection with a simple query
-    const { error } = await supabase
-      .from("registrations")
-      .select("id")
-      .limit(1);
+    const rows = await sql`SELECT 1 AS ok`;
 
-    if (error) {
-      const errorResponse = handleDatabaseError(error);
+    if (!rows || rows.length === 0) {
       return NextResponse.json(
-        { error: errorResponse.message },
-        { status: errorResponse.status },
+        { error: "Unexpected empty result from database" },
+        { status: 500 },
       );
     }
 
@@ -27,4 +23,4 @@ export async function GET() {
       { status: errorResponse.status },
     );
   }
-} 
+}
