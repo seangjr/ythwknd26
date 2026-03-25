@@ -17,7 +17,7 @@
 - [x] **S01: Neon DB Client & Schema** `risk:high` `depends:[]`
   > After this: After this: health-check endpoint returns 'healthy' from Neon DB, schema and seed data provisioned, new db.ts client module works
 
-- [ ] **S02: API Route Migration** `risk:medium` `depends:[S01]`
+- [x] **S02: API Route Migration** `risk:medium` `depends:[S01]`
   > After this: After this: all 6 API routes use Neon SQL instead of Supabase — curl tests confirm correct responses for registration, hero-availability, team-invite, team-members
 
 - [ ] **S03: Client Refactor & SSE Real-time** `risk:medium` `depends:[S02]`

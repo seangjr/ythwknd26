@@ -80,3 +80,17 @@ The `next build` fails with 23 TypeScript errors before any M002 changes. Root c
 ## Neon client pattern: getClient() lazy singleton
 
 `src/lib/db.ts` provides `getClient()` which returns a lazy singleton `neon()` tagged-template function. All API routes should import from `@/lib/db` and use `const sql = getClient()` followed by tagged template queries: `sql\`SELECT * FROM teams WHERE id = ${id}\``. The client is HTTP-based (no persistent connection pool), optimized for serverless. Error handling: wrap queries in try/catch with `handleDatabaseError(error)` which maps Postgres error codes to HTTP status codes.
+
+## Neon migration: Supabase → Neon query translation patterns
+
+When migrating Supabase fluent API to Neon tagged-template SQL:
+- `.from('table').select('*').eq('col', val)` → `` sql`SELECT * FROM table WHERE col = ${val}` ``
+- `.single()` → `rows[0]` with `rows.length === 0` check (no PGRST116 error in Neon)
+- `{ data, error }` destructuring → direct array result (`const rows = await sql\`...\``)
+- `.insert({...})` → `` sql`INSERT INTO table (...) VALUES (...)` ``
+- `.update({...}).eq()` → `` sql`UPDATE table SET ... WHERE ... RETURNING *` ``
+- Error handling: wrap in try/catch with `handleDatabaseError(error)` from db.ts
+
+## team-invite GET uses a JOIN instead of two queries
+
+The original Supabase code did two sequential queries: first lookup invite by code, then lookup team by team_id. The Neon version uses a single `SELECT i.*, t.name as team_name FROM team_invites i JOIN teams t ON i.team_id = t.id WHERE i.code = ${code}` query. This is more efficient and avoids a race condition.
