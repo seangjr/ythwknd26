@@ -1,7 +1,7 @@
 # Requirements: YTH WKND 2026
 
 **Defined:** 2026-03-25
-**Core Value:** The registration flow must work flawlessly — users pick a hero, join a team, and complete registration without friction.
+**Core Value:** The registration flow must work flawlessly -- users pick a hero, join a team, and complete registration without friction.
 
 ## v1 Requirements
 
@@ -61,7 +61,7 @@ Deferred to future release. Tracked but not in current roadmap.
 | Authentication/user accounts | Remains public registration |
 | Admin dashboard | Not needed for 105-slot event |
 | Real-time WebSockets | Polling/refresh sufficient for scale |
-| Registration form refactoring | 1,771-line file — cosmetic changes only on tight timeline |
+| Registration form refactoring | 1,771-line file -- cosmetic changes only on tight timeline |
 
 ## Traceability
 
@@ -69,32 +69,32 @@ Which phases cover which requirements. Updated during roadmap creation.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| UPGR-01 | — | Pending |
-| UPGR-02 | — | Pending |
-| UPGR-03 | — | Pending |
-| BRND-01 | — | Pending |
-| BRND-02 | — | Pending |
-| BRND-03 | — | Pending |
-| BRND-04 | — | Pending |
-| CONT-01 | — | Pending |
-| CONT-02 | — | Pending |
-| CONT-03 | — | Pending |
-| CONT-04 | — | Pending |
-| CONT-05 | — | Pending |
-| ANIM-01 | — | Pending |
-| ANIM-02 | — | Pending |
-| ANIM-03 | — | Pending |
-| ANIM-04 | — | Pending |
-| VERF-01 | — | Pending |
-| VERF-02 | — | Pending |
-| VERF-03 | — | Pending |
-| VERF-04 | — | Pending |
+| UPGR-01 | Phase 1 | Pending |
+| UPGR-02 | Phase 1 | Pending |
+| UPGR-03 | Phase 3 | Pending |
+| BRND-01 | Phase 1 | Pending |
+| BRND-02 | Phase 2 | Pending |
+| BRND-03 | Phase 2 | Pending |
+| BRND-04 | Phase 2 | Pending |
+| CONT-01 | Phase 2 | Pending |
+| CONT-02 | Phase 2 | Pending |
+| CONT-03 | Phase 2 | Pending |
+| CONT-04 | Phase 2 | Pending |
+| CONT-05 | Phase 2 | Pending |
+| ANIM-01 | Phase 3 | Pending |
+| ANIM-02 | Phase 3 | Pending |
+| ANIM-03 | Phase 3 | Pending |
+| ANIM-04 | Phase 3 | Pending |
+| VERF-01 | Phase 4 | Pending |
+| VERF-02 | Phase 4 | Pending |
+| VERF-03 | Phase 4 | Pending |
+| VERF-04 | Phase 4 | Pending |
 
 **Coverage:**
 - v1 requirements: 20 total
-- Mapped to phases: 0
-- Unmapped: 20 ⚠️
+- Mapped to phases: 20
+- Unmapped: 0
 
 ---
 *Requirements defined: 2026-03-25*
-*Last updated: 2026-03-25 after initial definition*
+*Last updated: 2026-03-25 after roadmap creation*
