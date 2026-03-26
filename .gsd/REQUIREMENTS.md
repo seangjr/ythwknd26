@@ -57,33 +57,6 @@ Google Sheets sync verified after registration
 
 Cross-browser testing (Chrome, Safari, mobile)
 
-### NEON-01 — Supabase client replaced with Neon serverless driver across all API routes
-
-- Status: active
-- Class: core-capability
-- Source: user (D006)
-- Primary Slice: M002/S02
-
-Replace @supabase/supabase-js with @neondatabase/serverless. All 6 API routes rewritten from Supabase fluent API to parameterized SQL. No Supabase imports remain in source code.
-
-### NEON-02 — Client-side Supabase queries moved behind API routes
-
-- Status: active
-- Class: integration
-- Source: inferred
-- Primary Slice: M002/S03
-
-Three components (character-selection-screen, register/page, invite/page) currently import Supabase client directly for client-side queries. These must be refactored to call API routes instead since Neon's driver is server-only.
-
-### NEON-03 — Real-time team member updates via SSE replacing Supabase channels
-
-- Status: active
-- Class: core-capability
-- Source: user
-- Primary Slice: M002/S03
-
-Replace Supabase real-time subscription (postgres_changes channel) with SSE polling endpoint. Team member updates appear in near-real-time when new registrations occur.
-
 ### NEON-04 — Neon database schema and seed data provisioned
 
 - Status: active
@@ -94,6 +67,30 @@ Replace Supabase real-time subscription (postgres_changes channel) with SSE poll
 SQL schema script for 4 tables (registrations, hero_availability, team_invites, teams) with indexes, constraints, and seed data for 21 parties × 5 classes. DATABASE_URL configured.
 
 ## Validated
+
+### NEON-01 — Supabase client replaced with Neon serverless driver across all API routes
+
+- Status: validated
+- Class: core-capability
+- Source: user (D006)
+- Primary Slice: M002/S02
+- Validation: All API routes use Neon serverless driver. @supabase/supabase-js removed from package.json. `rg 'supabase' src/ -g '*.ts' -g '*.tsx'` returns zero matches. src/lib/supabase.ts deleted. `bun run build` exits 0.
+
+### NEON-02 — Client-side Supabase queries moved behind API routes
+
+- Status: validated
+- Class: integration
+- Source: inferred
+- Primary Slice: M002/S03
+- Validation: All three client components (register/page.tsx, character-selection-screen.tsx, invite/[code]/page.tsx) refactored from Supabase createClient() to fetch() against API routes. Zero Supabase imports remain. `npx tsc --noEmit` exits 0.
+
+### NEON-03 — Real-time team member updates via SSE replacing Supabase channels
+
+- Status: validated
+- Class: core-capability
+- Source: user
+- Primary Slice: M002/S03
+- Validation: SSE endpoint at /api/team-updates polls registrations table every 3s and streams change notifications. team-members-subscription.tsx rewritten to use EventSource with auto-reconnect. Build passes with route compiled. Runtime verification deferred to S04.
 
 ### UPGR-01 — Next.js upgraded to latest stable version (16.x)
 

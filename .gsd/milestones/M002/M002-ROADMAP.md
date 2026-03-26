@@ -20,7 +20,7 @@
 - [x] **S02: API Route Migration** `risk:medium` `depends:[S01]`
   > After this: After this: all 6 API routes use Neon SQL instead of Supabase — curl tests confirm correct responses for registration, hero-availability, team-invite, team-members
 
-- [ ] **S03: Client Refactor & SSE Real-time** `risk:medium` `depends:[S02]`
+- [x] **S03: Client Refactor & SSE Real-time** `risk:medium` `depends:[S02]`
   > After this: After this: register page, character selection, and invite page all work without Supabase client — team member updates arrive via SSE within seconds of registration
 
 - [ ] **S04: E2E Verification** `risk:low` `depends:[S03]`

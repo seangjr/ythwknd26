@@ -94,3 +94,11 @@ When migrating Supabase fluent API to Neon tagged-template SQL:
 ## team-invite GET uses a JOIN instead of two queries
 
 The original Supabase code did two sequential queries: first lookup invite by code, then lookup team by team_id. The Neon version uses a single `SELECT i.*, t.name as team_name FROM team_invites i JOIN teams t ON i.team_id = t.id WHERE i.code = ${code}` query. This is more efficient and avoids a race condition.
+
+## SSE endpoint pattern for Next.js with Neon
+
+`/api/team-updates/route.ts` uses edge runtime with `ReadableStream` for SSE. Key pattern: create a `ReadableStream` with a `start(controller)` callback that sets up a `setInterval` for polling, uses `controller.enqueue()` to send events, and cleans up via `request.signal.addEventListener('abort', ...)`. Send keepalive comments (`: keepalive\n\n`) to prevent connection timeout. The Neon HTTP client works fine inside the polling interval since it's stateless.
+
+## API routes with optional query params pattern
+
+hero-availability and team-members routes accept optional `teamId` query param. When provided, they filter by team; when omitted, they return all rows. This eliminates the need for separate "get all" endpoints and allows client components to use the same route for both filtered and bulk data fetching.
