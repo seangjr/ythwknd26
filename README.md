@@ -1,36 +1,38 @@
-# YTHWKND 2025
+# YTHWKND 2025/2026
 
-A Next.js-based web application for managing team registrations and hero selections for YTHWKND 2025.
+A Next.js event registration app for a youth high school weekend event by YMFGAKL. Users register by choosing a hero class (Warrior, Archer, Scout, Guardian, Scholar) and joining one of 20 color-named teams (5 slots each). Registration syncs to Google Sheets.
 
 ## Tech Stack
 
-- **Framework**: Next.js 15.3.1 with App Router
+- **Framework**: Next.js 16 with App Router (Turbopack)
 - **Language**: TypeScript
-- **Styling**: Tailwind CSS
-- **UI Components**: Radix UI
+- **Styling**: Tailwind CSS v4 with custom parchment theme
+- **UI Components**: Radix UI (Dialog, Label, RadioGroup, Select, Tooltip)
 - **Animation**: Framer Motion
+- **Cards**: 3D holographic class cards (react-parallax-tilt)
 - **Form Handling**: React Hook Form with Zod validation
-- **Database**: Supabase
-- **Authentication**: Supabase Auth
+- **Database**: Neon Serverless Postgres (primary), Supabase (legacy)
+- **Integrations**: Google Sheets sync, Google Analytics
 - **Deployment**: Vercel
 
 ## Features
 
-- Team registration and management
-- Hero selection system
-- Real-time availability tracking
-- Responsive design
-- Animated UI components
-- Form validation
-- Team member management
+- 3D holographic class selection cards with tilt, sparkle, and team-color overlay effects
+- Team registration with 20 color-named parties (5 hero slots each)
+- Hero class system: Warrior, Archer, Scout, Guardian, Scholar
+- Team invite links with shareable codes
+- Real-time hero availability tracking
+- Instagram handle display for claimed classes
+- Parchment-themed UI with custom fonts (Jeju Hallasan, Jetsy Trial)
+- Responsive design: compact holo badges on mobile, full portrait cards on desktop
+- Google Sheets sync for registration data
 
 ## Getting Started
 
 ### Prerequisites
 
-- Node.js 18+ or Bun
-- npm, yarn, or pnpm
-- Supabase account and project
+- Node.js 18+
+- npm
 
 ### Installation
 
@@ -43,30 +45,21 @@ cd ythwknd25
 2. Install dependencies:
 ```bash
 npm install
-# or
-yarn install
-# or
-pnpm install
-# or
-bun install
 ```
 
 3. Set up environment variables:
-Create a `.env.local` file in the root directory with the following variables:
+Create a `.env.local` file in the root directory:
 ```env
+DATABASE_URL=your_neon_postgres_connection_string
 NEXT_PUBLIC_SUPABASE_URL=your_supabase_url
 NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
+GOOGLE_SERVICE_ACCOUNT_KEY=your_google_service_account_json_or_base64
+GOOGLE_SHEET_ID=your_google_sheet_id
 ```
 
 4. Run the development server:
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
@@ -75,48 +68,29 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 
 ```
 src/
-├── app/                    # Next.js app directory
-│   ├── (everywhere-else)/  # Public routes
-│   └── api/               # API routes
-├── components/            # React components
-├── lib/                   # Utility functions and constants
-└── types/                # TypeScript type definitions
+├── app/
+│   ├── (landing)/              # Marketing/landing page at /
+│   ├── (everywhere-else)/      # Registration flows (/register, /invite/[code])
+│   ├── api/                    # API routes (register, hero-availability, team-invite, sheets-sync)
+│   └── design-lab/             # Design lab for iterating on UI components
+├── components/
+│   ├── ui/                     # UI primitives (button, dialog, holo-card, etc.)
+│   └── ...                     # Feature components (registration, navbar, etc.)
+├── lib/                        # Utilities, constants, DB clients
+└── styles/                     # Custom fonts (Jeju Hallasan, Jetsy Trial)
 ```
 
 ## Development
 
 - `npm run dev` - Start development server with Turbopack
 - `npm run build` - Build for production
-- `npm run start` - Start production server
-- `npm run lint` - Run ESLint
+- `npm run lint` - ESLint
+- `npx tsc --noEmit` - Type check without emitting
 
 ## Deployment
 
-The application is configured for deployment on Vercel. Simply connect your repository to Vercel for automatic deployments.
-
-## Contributing
-
-1. Fork the repository
-2. Create your feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add some amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
+The application is configured for deployment on Vercel. Connect your repository for automatic deployments.
 
 ## License
 
 This project is private and confidential.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
