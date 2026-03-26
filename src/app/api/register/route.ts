@@ -1,4 +1,5 @@
 import { getClient, handleDatabaseError } from "@/lib/db";
+import { createSheetsClient } from "@/lib/google-sheets";
 import { NextResponse } from "next/server";
 
 export async function POST(request: Request) {
@@ -111,6 +112,33 @@ export async function POST(request: Request) {
 
     const registration = result[0].register_user_extended;
 
+    // Fire-and-forget Google Sheets sync — don't block the response
+    syncToGoogleSheets({
+      lineNumber,
+      groupNumber,
+      email,
+      fullName,
+      age,
+      gender,
+      nricPassport,
+      contactNumber,
+      instagramHandle,
+      schoolName,
+      ymMember: ymMember === true || ymMember === "Yes",
+      cgLeader,
+      heroId,
+      emergencyContactName,
+      emergencyContactRelationship,
+      emergencyContactPhone,
+      emergencyContactEmail,
+      isChristian,
+      eventSource,
+      otherEventSource,
+      invitedByFriend,
+    }).catch((err) => {
+      console.error("Google Sheets sync failed (non-blocking):", err);
+    });
+
     return NextResponse.json({ success: true, data: registration });
   } catch (error) {
     console.error("Registration error:", error);
@@ -120,4 +148,110 @@ export async function POST(request: Request) {
       { status: dbError.status },
     );
   }
+}
+
+/**
+ * Sync registration data to Google Sheets.
+ * Silently skips if Google Sheets is not configured.
+ * Ensures header row exists on first sync.
+ */
+async function syncToGoogleSheets(data: Record<string, unknown>) {
+  if (
+    !process.env.GOOGLE_SERVICE_ACCOUNT_KEY ||
+    !process.env.GOOGLE_SHEET_ID
+  ) {
+    console.log("Google Sheets not configured, skipping sync");
+    return;
+  }
+
+  const sheets = await createSheetsClient();
+  const spreadsheetId = process.env.GOOGLE_SHEET_ID;
+
+  // Get the actual first sheet name (might not be "Sheet1")
+  const meta = await sheets.spreadsheets.get({
+    spreadsheetId,
+    fields: "sheets.properties.title",
+  });
+  const sheetName =
+    meta.data.sheets?.[0]?.properties?.title || "Sheet1";
+
+  // Check if headers exist — if row 1 is empty, write them first
+  const headerCheck = await sheets.spreadsheets.values.get({
+    spreadsheetId,
+    range: `'${sheetName}'!A1:V1`,
+  });
+
+  if (!headerCheck.data.values || headerCheck.data.values.length === 0) {
+    await sheets.spreadsheets.values.update({
+      spreadsheetId,
+      range: `'${sheetName}'!A1:V1`,
+      valueInputOption: "RAW",
+      requestBody: {
+        values: [
+          [
+            "Line Number",
+            "Group Number",
+            "Email",
+            "Full Name",
+            "Age",
+            "Gender",
+            "NRIC/Passport",
+            "Contact Number",
+            "Instagram",
+            "School",
+            "YM Member",
+            "CG Leader",
+            "Class",
+            "Emergency Contact Name",
+            "Emergency Contact Relationship",
+            "Emergency Contact Phone",
+            "Emergency Contact Email",
+            "Is Christian",
+            "Event Source",
+            "Other Event Source",
+            "Invited By Friend",
+            "Registered At",
+          ],
+        ],
+      },
+    });
+    console.log("Google Sheets headers written");
+  }
+
+  await sheets.spreadsheets.values.append({
+    spreadsheetId,
+    range: `'${sheetName}'!A:V`,
+    valueInputOption: "RAW",
+    insertDataOption: "INSERT_ROWS",
+    requestBody: {
+      values: [
+        [
+          data.lineNumber,
+          data.groupNumber,
+          data.email,
+          data.fullName,
+          data.age,
+          data.gender,
+          data.nricPassport,
+          data.contactNumber,
+          data.instagramHandle || "",
+          data.schoolName,
+          data.ymMember ? "Yes" : "No",
+          data.cgLeader,
+          data.heroId,
+          data.emergencyContactName,
+          data.emergencyContactRelationship,
+          data.emergencyContactPhone,
+          data.emergencyContactEmail,
+          data.isChristian || "",
+          data.eventSource || "",
+          data.otherEventSource || "",
+          data.invitedByFriend || "",
+          new Date().toISOString(),
+        ],
+      ],
+    },
+  });
+
+  console.log("Google Sheets sync successful");
 }

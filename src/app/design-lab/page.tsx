@@ -1,66 +1,114 @@
 "use client";
-import { useState } from "react";
-import { VariationRefined } from "./variation-refined";
-import { Variation1 } from "./variation-1";
-import { Variation2 } from "./variation-2";
-import { Variation3 } from "./variation-3";
-import { Variation4 } from "./variation-4";
-import { Variation5 } from "./variation-5";
 
-const variations = [
-  { id: 0, name: "Refined", desc: "Keeps existing hero, redesigned details: typographic, organic, hand-crafted feel" },
-  { id: 1, name: "Storybook Journey", desc: "Parallax hero, chapter-style scroll sections, earthy forest palette" },
-  { id: 2, name: "Mountain Trail", desc: "Waypoint navigation, alternating L/R layout, deep slate & moss" },
-  { id: 3, name: "Enchanted Meadow", desc: "Soft Ghibli feel, floating particles, rounded cards, warm mint" },
-  { id: 4, name: "Expedition Log", desc: "Editorial grid, numbered sections, structured & clean" },
-  { id: 5, name: "Campfire Carnival", desc: "High energy, ribbon dividers, interactive hero picker" },
-];
+import { HoloCard } from "@/components/ui/holo-card";
+import { CONSTANTS } from "@/lib/constants";
+import { cn } from "@/lib/utils";
 
-const components = [VariationRefined, Variation1, Variation2, Variation3, Variation4, Variation5];
+// Class-specific overlay colors
+const CLASS_COLORS: Record<string, string> = {
+  warrior: "#ef4444",
+  archer: "#22c55e",
+  scout: "#0ea5e9",
+  guardian: "#f59e0b",
+  scholar: "#8b5cf6",
+};
 
-export default function DesignLabPage() {
-  const [active, setActive] = useState(0);
-  const ActiveComponent = components[active];
+// SVG background images per hero (high quality)
+const HERO_BG: Record<string, string> = {
+  warrior: "/card-bg/Warrior.svg",
+  archer: "/card-bg/Archer.svg",
+  scout: "/card-bg/Scout.svg",
+  guardian: "/card-bg/Guardian.svg",
+  scholar: "/card-bg/Scholar.svg",
+};
+
+// Demo: simulate 2 taken heroes with IG handles
+const demoTaken: Record<string, string> = {
+  guardian: "@josh_yap",
+  archer: "@jenisha.k",
+};
+
+export default function DesignLab() {
+  const demoTeam = CONSTANTS.TEAMS[0]; // Crimson
 
   return (
-    <div className="min-h-screen bg-black text-white">
-      {/* Sticky nav bar */}
-      <div className="fixed top-0 left-0 right-0 z-50 bg-black/90 backdrop-blur-md border-b border-white/10">
-        <div className="max-w-6xl mx-auto px-4 py-3">
-          <div className="flex items-center gap-4 mb-2">
-            <span className="text-xs tracking-widest uppercase text-white/50">Design Lab</span>
-            <span className="text-xs text-white/30">|</span>
-            <span className="text-xs text-white/40">{variations[active].name}</span>
-          </div>
-          <div className="flex gap-2 overflow-x-auto pb-1">
-            {variations.map((v, i) => (
-              <button
-                key={v.id}
-                onClick={() => { setActive(i); window.scrollTo({ top: 0, behavior: "smooth" }); }}
-                className={`px-4 py-2 rounded-lg text-sm whitespace-nowrap transition-all ${
-                  active === i
-                    ? "bg-white text-black font-medium"
-                    : "bg-white/10 text-white/60 hover:bg-white/20"
-                }`}
+    <main className="min-h-screen bg-black text-white p-6 sm:p-10">
+      <div className="max-w-7xl mx-auto">
+        <h1 className="text-3xl sm:text-5xl font-jetsytrial mb-2">
+          Design Lab
+        </h1>
+        <p className="text-white/50 mb-2">
+          Class Cards &mdash; {demoTeam.code} {demoTeam.name}
+        </p>
+        <p className="text-white/30 text-sm mb-10">
+          PNG backgrounds, SVG icons top-right, Jetsy Trial for names &amp;
+          buttons. Guardian &amp; Archer greyed out.
+        </p>
+
+        {/* Hero cards row */}
+        <div className="flex flex-wrap justify-center gap-6">
+          {CONSTANTS.HEROES.map((hero) => {
+            const isTaken = hero.id in demoTaken;
+
+            return (
+              <div
+                key={hero.id}
+                className={cn(
+                  "transition-all duration-300",
+                  isTaken && "grayscale opacity-50"
+                )}
               >
-                {v.id === 0 ? "Refined" : `V${v.id}`}: {v.name}
-              </button>
-            ))}
-          </div>
+                <HoloCard
+                  data={{
+                    name: isTaken ? demoTaken[hero.id] : hero.name,
+                    subtitle: hero.perk,
+                    description: hero.description,
+                    backgroundImage: HERO_BG[hero.id],
+                    iconImage: hero.icon,
+                    overlayColor: CLASS_COLORS[hero.id],
+                    overlayOpacity: 25,
+                  }}
+                  width={200}
+                  height={280}
+                  showSparkles={!isTaken}
+                  forceSide={isTaken ? "front" : undefined}
+                  actionLabel={isTaken ? "Claimed" : "Claim Class"}
+                  onAction={isTaken ? undefined : () => alert(`Claiming ${hero.name}!`)}
+                />
+              </div>
+            );
+          })}
+        </div>
+
+        {/* Second row: team overlay color */}
+        <h2 className="text-xl font-jejuhallasan uppercase tracking-wide mt-16 mb-2">
+          With team overlay color
+        </h2>
+        <p className="text-white/30 text-sm mb-6">
+          {CONSTANTS.TEAMS[4].name} team hex as overlay.
+        </p>
+        <div className="flex flex-wrap justify-center gap-6">
+          {CONSTANTS.HEROES.map((hero) => (
+            <HoloCard
+              key={hero.id}
+              data={{
+                name: hero.name,
+                subtitle: hero.perk,
+                description: hero.description,
+                backgroundImage: HERO_BG[hero.id],
+                iconImage: hero.icon,
+                overlayColor: CONSTANTS.TEAMS[4].hex,
+                overlayOpacity: 30,
+              }}
+              width={200}
+              height={280}
+              showSparkles={true}
+              actionLabel="Claim Class"
+              onAction={() => alert(`Claiming ${hero.name}!`)}
+            />
+          ))}
         </div>
       </div>
-
-      {/* Variation description */}
-      <div className="pt-28 pb-4 px-6 text-center">
-        <p className="text-sm text-white/50 max-w-xl mx-auto">
-          {variations[active].desc}
-        </p>
-      </div>
-
-      {/* Active variation */}
-      <div className="relative">
-        <ActiveComponent />
-      </div>
-    </div>
+    </main>
   );
 }

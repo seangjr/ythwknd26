@@ -3,6 +3,7 @@
 import { RegistrationModal } from "@/components/registration-modal";
 import { TeamInviteModal } from "@/components/team-invite-modal";
 import { Button } from "@/components/ui/button";
+import { HoloCard } from "@/components/ui/holo-card";
 import { CONSTANTS } from "@/lib/constants";
 import { cn } from "@/lib/utils";
 import { HugeiconsIcon } from "@hugeicons/react";
@@ -10,6 +11,33 @@ import { Share01Icon, UserGroupIcon } from "@hugeicons/core-free-icons";
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Image from "next/image";
+
+// Class-specific overlay colors for HoloCard
+const CLASS_COLORS: Record<string, string> = {
+  warrior: "#ef4444",
+  archer: "#22c55e",
+  scout: "#0ea5e9",
+  guardian: "#f59e0b",
+  scholar: "#8b5cf6",
+};
+
+// SVG background images per hero
+const HERO_BG: Record<string, string> = {
+  warrior: "/card-bg/Warrior.svg",
+  archer: "/card-bg/Archer.svg",
+  scout: "/card-bg/Scout.svg",
+  guardian: "/card-bg/Guardian.svg",
+  scholar: "/card-bg/Scholar.svg",
+};
+
+// Alt icons for mobile view
+const HERO_ALT_ICON: Record<string, string> = {
+  warrior: "/icons-alt/Warrior.svg",
+  archer: "/icons-alt/Archer.svg",
+  scout: "/icons-alt/Scout.svg",
+  guardian: "/icons-alt/Guardian.svg",
+  scholar: "/icons-alt/Scholar.svg",
+};
 
 interface Registration {
   id: number;
@@ -20,6 +48,7 @@ interface Registration {
   team_id: number;
   full_name: string;
   age: number;
+  instagram_handle?: string;
 }
 
 interface HeroAvailability {
@@ -152,7 +181,8 @@ export default function Registration() {
   // Handle invite modal close
   const handleInviteModalClose = () => {
     setIsInviteModalOpen(false);
-    setInviteTeam(null);
+    // Delay clearing inviteTeam so the Dialog exit animation can play
+    setTimeout(() => setInviteTeam(null), 350);
   };
 
   // Handle successful registration
@@ -204,17 +234,6 @@ export default function Registration() {
       .length;
   };
 
-  const getHeroImagePath = (heroId: string, teamId: number) => {
-    // Find the hero name from CONSTANTS.HEROES
-    const heroObj = CONSTANTS.HEROES.find(h => h.id === heroId);
-    if (!heroObj) return "/placeholder.svg";
-    const heroName = heroObj.name.split(" ")[0]; // "Alex", "Suzzy", etc.
-
-    const heroImage = CONSTANTS.HERO_IMAGE_PATHS.find(
-      h => h.teamId === teamId && h.hero === heroName
-    );
-    return heroImage?.path || "/placeholder.svg";
-  };
 
   const blocks = [
     "PLEASE READ BEFORE PROCEEDING.",
@@ -240,7 +259,7 @@ export default function Registration() {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.5 }}
-      className="flex flex-col justify-center px-4 md:px-8 mt-16 md:mt-32"
+      className="flex flex-col justify-center px-4 md:px-8 mt-16"
     >
       {/* Desc section */}
       <motion.section 
@@ -262,7 +281,7 @@ export default function Registration() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.3 }}
-          className="text-4xl md:text-6xl text-center font-jejuhallasan"
+          className="text-4xl md:text-6xl text-center font-jetsytrial"
         >
           Choose your class
         </motion.h1>
@@ -376,8 +395,8 @@ export default function Registration() {
                     >
                       <Button
                         size="sm"
-                        variant="outline"
-                        className="bg-transparent border-gray-700 text-white hover:bg-gray-800 hover:text-white cursor-pointer"
+                        variant="parchment"
+                        className="cursor-pointer"
                         onClick={() => handleInviteClick(team.id)}
                       >
                         <HugeiconsIcon icon={Share01Icon} size={16} className="mr-1" />
@@ -388,36 +407,73 @@ export default function Registration() {
                 </motion.div>
 
                 {/* Hero Grid */}
-                <div className="grid grid-cols-5 gap-2 md:gap-4 w-full">
+                <div className="grid grid-cols-5 gap-2 md:gap-3 w-full">
                   {CONSTANTS.HEROES.map((hero, heroIndex) => {
                     const isAvailable = isHeroAvailable(hero.id, team.id);
+                    const takenByMember = !isAvailable
+                      ? registrations.find(
+                          (r) => r.hero_id === hero.id && r.team_id === team.id,
+                        )
+                      : null;
+                    const displayName = !isAvailable && takenByMember?.instagram_handle
+                      ? `@${takenByMember.instagram_handle.replace(/^@/, "")}`
+                      : hero.name;
+
                     return (
                       <motion.div
                         key={`team-${team.id}-${hero.id}`}
                         initial={{ opacity: 0, scale: 0.8 }}
                         animate={{ opacity: 1, scale: 1 }}
-                        transition={{ 
-                          duration: 0.4, 
-                          delay: 1.8 + teamIndex * 0.2 + heroIndex * 0.1 
+                        transition={{
+                          duration: 0.4,
+                          delay: 1.8 + teamIndex * 0.2 + heroIndex * 0.1
                         }}
-                        className="text-center w-full"
+                        className="w-full"
                       >
-                        <motion.button
-                          whileHover={isAvailable ? { scale: 1.05 } : {}}
-                          whileTap={isAvailable ? { scale: 0.95 } : {}}
-                          onClick={() =>
-                            isAvailable && handleRegisterClick(hero.id, team.id)
-                          }
-                          style={{ backgroundColor: team.hex }}
+                        {/* Mobile: compact HoloCard with alt icons */}
+                        <div
                           className={cn(
-                            "w-16 h-16 rounded-full sm:rounded-lg sm:w-full sm:h-36 mx-auto",
-                            isAvailable
-                              ? "cursor-pointer hover:opacity-80 transition-opacity duration-300"
-                              : "opacity-50 cursor-not-allowed grayscale",
+                            "md:hidden w-full aspect-square transition-all duration-300",
+                            !isAvailable && "grayscale opacity-50"
                           )}
-                          disabled={!isAvailable}
-                          aria-label={`Select ${hero.name} class from ${team.name}`}
-                        />
+                          onClick={() => isAvailable && handleRegisterClick(hero.id, team.id)}
+                        >
+                          <HoloCard
+                            data={{
+                              name: "",
+                              backgroundImage: HERO_ALT_ICON[hero.id],
+                              overlayColor: team.hex,
+                              overlayOpacity: 20,
+                            }}
+                            width="full"
+                            showSparkles={isAvailable}
+                            forceSide="front"
+                            minimal
+                          />
+                        </div>
+
+                        {/* Desktop: full HoloCard */}
+                        <div className={cn(
+                          "hidden md:block w-full aspect-[5/7] transition-all duration-300",
+                          !isAvailable && "grayscale opacity-50"
+                        )}>
+                          <HoloCard
+                            data={{
+                              name: displayName,
+                              subtitle: hero.perk,
+                              description: hero.description,
+                              backgroundImage: HERO_BG[hero.id],
+                              iconImage: hero.icon,
+                              overlayColor: team.hex,
+                              overlayOpacity: 25,
+                            }}
+                            width="full"
+                            showSparkles={isAvailable}
+                            forceSide={!isAvailable ? "front" : undefined}
+                            actionLabel={isAvailable ? "Claim Class" : "Claimed"}
+                            onAction={isAvailable ? () => handleRegisterClick(hero.id, team.id) : undefined}
+                          />
+                        </div>
                       </motion.div>
                     );
                   })}

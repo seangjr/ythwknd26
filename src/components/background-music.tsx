@@ -202,7 +202,7 @@ export function BackgroundMusic() {
           exit={{ opacity: 0, scale: 0.8 }}
           transition={{ duration: 0.3 }}
           onClick={toggle}
-          className="fixed top-6 right-6 z-50 flex h-10 w-10 items-center justify-center rounded-full bg-white/10 backdrop-blur-sm border border-white/20 text-white hover:bg-white/20 transition-colors"
+          className="fixed top-6 right-6 z-50 flex h-10 w-10 items-center justify-center rounded-full bg-white/10 backdrop-blur-sm border border-white/20 text-[#F7EAD9] hover:bg-white/20 transition-colors"
           aria-label={playing ? "Mute music" : "Unmute music"}
         >
           {playing ? <HugeiconsIcon icon={VolumeHighIcon} size={18} /> : <HugeiconsIcon icon={VolumeMute01Icon} size={18} />}

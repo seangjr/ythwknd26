@@ -128,18 +128,18 @@ export function TeamInviteModal({
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-md bg-black text-[#bababa] border-gray-800">
+      <DialogContent className="sm:max-w-md">
         <DialogHeader>
           {/* <div
             className={`h-2 ${teamColor} rounded-t-lg -mt-6 -mx-6 mb-4`}
           ></div> */}
-          <DialogTitle className="text-2xl font-jejuhallasan text-center uppercase">
+          <DialogTitle className="text-2xl text-center">
             Invite Friends to {teamName}
           </DialogTitle>
         </DialogHeader>
 
         <div className="space-y-6 py-4">
-          <p className="text-center text-gray-400">
+          <p className="text-center text-parchment-ink/60">
             Generate a link to invite your friends to join your team. They'll be
             able to register for an available line in this universe.
           </p>
@@ -152,7 +152,7 @@ export function TeamInviteModal({
 
           {isGenerating ? (
             <div className="flex justify-center py-4">
-              <HugeiconsIcon icon={Loading03Icon} size={32} className="animate-spin text-amber-500" />
+              <HugeiconsIcon icon={Loading03Icon} size={32} className="animate-spin text-parchment-accent" />
             </div>
           ) : inviteLink ? (
             <div className="space-y-4">
@@ -160,13 +160,13 @@ export function TeamInviteModal({
                 <Input
                   value={inviteLink}
                   readOnly
-                  className="bg-gray-900 border-gray-700 text-white flex-1"
+                  className="bg-parchment-darker/20 border-parchment-dark text-parchment-ink flex-1"
                 />
                 <Button
                   size="icon"
                   variant="outline"
                   onClick={copyInviteLink}
-                  className="cursor-pointer bg-transparent border-gray-700 text-white hover:bg-gray-800 hover:text-white"
+                  className="cursor-pointer bg-transparent border-parchment-dark text-parchment-ink hover:bg-parchment-dark/20"
                 >
                   {copied ? (
                     <HugeiconsIcon icon={Tick02Icon} size={16} />
@@ -179,7 +179,7 @@ export function TeamInviteModal({
               <div className="flex flex-col space-y-2">
                 <Button
                   onClick={shareInviteLink}
-                  className="bg-amber-500 text-black hover:bg-amber-600 font-jejuhallasan text-xl"
+                  variant="parchment" size="xl"
                   disabled={!inviteLink}
                 >
                   <HugeiconsIcon icon={Share01Icon} size={16} className="mr-2" />
@@ -187,8 +187,7 @@ export function TeamInviteModal({
                 </Button>
                 <Button
                   onClick={generateInviteLink}
-                  variant="outline"
-                  className="bg-transparent border-gray-700 text-white hover:bg-gray-800 hover:text-white cursor-pointer font-jejuhallasan text-xl"
+                  variant="parchment-outline" size="xl" className="cursor-pointer"
                   disabled={isGenerating}
                 >
                   {isGenerating ? "Generating..." : "Generate New Link"}
@@ -198,7 +197,7 @@ export function TeamInviteModal({
           ) : (
             <Button
               onClick={generateInviteLink}
-              className="bg-amber-500 text-black hover:bg-amber-600 font-jejuhallasan text-xl"
+              variant="parchment" size="xl"
               disabled={isGenerating}
             >
               {isGenerating
@@ -214,7 +213,7 @@ export function TeamInviteModal({
           <Button
             onClick={onClose}
             variant="outline"
-            className="w-full bg-transparent border-gray-700 text-white hover:bg-gray-800"
+            className="w-full bg-transparent border-gray-700 text-[#F7EAD9] hover:bg-gray-800"
           >
             Close
           </Button>

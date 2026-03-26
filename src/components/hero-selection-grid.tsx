@@ -13,15 +13,9 @@ interface HeroSelectionGridProps {
   teamId: number;
 }
 
-// Add this helper function before the HeroSelectionGrid component
-const getHeroImagePath = (heroId: string, teamId: number) => {
+const getHeroIcon = (heroId: string) => {
   const heroObj = CONSTANTS.HEROES.find(h => h.id === heroId);
-  if (!heroObj) return "/placeholder.svg";
-  const heroName = heroObj.name.split(" ")[0];
-  const heroImage = CONSTANTS.HERO_IMAGE_PATHS.find(
-    h => h.teamId === teamId && h.hero === heroName
-  );
-  return heroImage?.path || "/placeholder.svg";
+  return heroObj?.icon || "/placeholder.svg";
 };
 
 export function HeroSelectionGrid({
@@ -65,7 +59,7 @@ export function HeroSelectionGrid({
               )}
             >
               <Image
-                src={getHeroImagePath(hero.id, teamId)}
+                src={getHeroIcon(hero.id)}
                 alt={hero.name}
                 fill
                 className="object-cover"

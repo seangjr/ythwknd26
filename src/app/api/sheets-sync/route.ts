@@ -58,11 +58,20 @@ export async function POST(request: Request) {
 
       // Create Google Sheets client
       const sheets = await createSheetsClient();
+      const spreadsheetId = process.env.GOOGLE_SHEET_ID;
+
+      // Get the actual first sheet name
+      const meta = await sheets.spreadsheets.get({
+        spreadsheetId,
+        fields: "sheets.properties.title",
+      });
+      const sheetName =
+        meta.data.sheets?.[0]?.properties?.title || "Sheet1";
 
       // Append data to the spreadsheet
       await sheets.spreadsheets.values.append({
-        spreadsheetId: process.env.GOOGLE_SHEET_ID,
-        range: "Registrations!A:V", // Extended range to accommodate new fields
+        spreadsheetId,
+        range: `'${sheetName}'!A:V`,
         valueInputOption: "RAW",
         insertDataOption: "INSERT_ROWS",
         requestBody: {

@@ -1,22 +1,29 @@
 import { HugeiconsIcon } from "@hugeicons/react"
 import { Facebook01Icon, GlobeIcon, InstagramIcon } from "@hugeicons/core-free-icons"
 
+interface FooterProps {
+  variant?: "dark" | "parchment";
+}
+
 // 🎮 Press Up, Up, Down, Down, Left, Right, Left, Right, B, A to unlock the secret level
-export function Footer() {
+export function Footer({ variant = "dark" }: FooterProps) {
+  const textClass = variant === "parchment" ? "text-parchment-ink/50" : "text-[#F7EAD9]/50";
+  const hoverClass = variant === "parchment" ? "hover:text-parchment-ink" : "hover:text-[#F7EAD9]";
+
   return (
-      <footer className="p-4 text-center text-[#BABABA] mt-auto py-12 bg-black">
+      <footer className={`p-4 text-center ${textClass} mt-auto py-12`}>
       <div className="flex justify-center space-x-2 mb-2">
-        <a href="https://ymfgakl.com" target="_blank" rel="noopener noreferrer" className="text-[#BABABA] hover:text-white">
+        <a href="https://ymfgakl.com" target="_blank" rel="noopener noreferrer" className={`${textClass} ${hoverClass}`}>
           <HugeiconsIcon icon={GlobeIcon} size={20} />
         </a>
-        <a href="https://www.instagram.com/ymfgakl" target="_blank" rel="noopener noreferrer" className="text-[#BABABA] hover:text-white">
+        <a href="https://www.instagram.com/ymfgakl" target="_blank" rel="noopener noreferrer" className={`${textClass} ${hoverClass}`}>
           <HugeiconsIcon icon={InstagramIcon} size={20} />
         </a>
-        <a href="https://www.facebook.com/ymfgakl" target="_blank" rel="noopener noreferrer" className="text-[#BABABA] hover:text-white">
+        <a href="https://www.facebook.com/ymfgakl" target="_blank" rel="noopener noreferrer" className={`${textClass} ${hoverClass}`}>
           <HugeiconsIcon icon={Facebook01Icon} size={20} />
         </a>
       </div>
-      <p className="text-sm">A HIGHSCHOOL EVENT BY @YMFGAKL</p>
+      <p className={`text-sm ${textClass}`}>A HIGHSCHOOL EVENT BY @YMFGAKL</p>
     </footer>
   )
-} 
+}

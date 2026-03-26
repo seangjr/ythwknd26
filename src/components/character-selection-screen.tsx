@@ -24,14 +24,9 @@ interface TeamMember {
   line_number: number;
 }
 
-const getHeroImagePath = (heroId: string, teamId: number) => {
+const getHeroIcon = (heroId: string) => {
   const heroObj = CONSTANTS.HEROES.find(h => h.id === heroId);
-  if (!heroObj) return "/placeholder.svg";
-  const heroName = heroObj.name.split(" ")[0];
-  const heroImage = CONSTANTS.HERO_IMAGE_PATHS.find(
-    h => h.teamId === teamId && h.hero === heroName
-  );
-  return heroImage?.path || "/placeholder.svg";
+  return heroObj?.icon || "/placeholder.svg";
 };
 
 export function CharacterSelectionScreen({
@@ -107,7 +102,7 @@ export function CharacterSelectionScreen({
     if (heroId === selectedHero) return "text-amber-500";
 
     const member = teamMembers.find((m) => m.hero_id === heroId);
-    if (member) return "text-gray-400";
+    if (member) return "text-parchment-ink/50";
 
     return "text-green-500";
   };
@@ -141,10 +136,11 @@ export function CharacterSelectionScreen({
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      className="fixed inset-0 z-50 bg-black flex flex-col overflow-auto"
+      className="fixed inset-0 z-50 parchment-bg flex flex-col overflow-auto"
+      data-lenis-prevent
     >
       {/* Header */}
-      <Navbar />
+      <Navbar variant="parchment" />
 
       {/* Back button */}
       <motion.div 
@@ -155,7 +151,7 @@ export function CharacterSelectionScreen({
       >
         <button
           onClick={onClose}
-          className="flex cursor-pointer items-center text-gray-400 hover:text-white transition-colors"
+          className="flex cursor-pointer items-center text-parchment-ink/60 hover:text-parchment-ink transition-colors"
         >
           <HugeiconsIcon icon={ArrowLeft02Icon} size={16} className="mr-2" />
           <span>BACK</span>
@@ -163,17 +159,17 @@ export function CharacterSelectionScreen({
       </motion.div>
 
       {/* Main content */}
-      <div className="flex-1 px-4 pb-4 flex flex-col items-center !text-[#BABABA]">
+      <div className="flex-1 px-4 pb-4 flex flex-col items-center text-parchment-ink">
         <motion.div 
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
           className="text-center mb-6 flex flex-col gap-4"
         >
-          <h3 className="text-gray-400 uppercase text-sm">
+          <h3 className="text-parchment-ink/60 uppercase text-sm">
             CLASS SELECTION
           </h3>
-          <h2 className="text-6xl font-jejuhallasan">CONFIRM CLASS</h2>
+          <h2 className="text-6xl font-jetsytrial">CONFIRM CLASS</h2>
         </motion.div>
 
         <AnimatePresence mode="wait">
@@ -183,17 +179,17 @@ export function CharacterSelectionScreen({
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -20 }}
               transition={{ duration: 0.5 }}
-              className="w-full max-w-md bg-[#1A1A1A] rounded-lg p-6 mb-6"
+              className="w-full max-w-md bg-parchment-darker/15 rounded-lg p-6 mb-6 border border-parchment-dark"
             >
               <div className="flex flex-col items-center">
                 <motion.div 
                   initial={{ scale: 0.8 }}
                   animate={{ scale: 1 }}
                   transition={{ duration: 0.5, delay: 0.2 }}
-                  className="w-24 h-24 rounded-full overflow-hidden mb-4 border-2 border-gray-700"
+                  className="w-24 h-24 rounded-full overflow-hidden mb-4 border-2 border-parchment-dark"
                 >
                   <img
-                    src={getHeroImagePath(selectedHero, teamId)}
+                    src={getHeroIcon(selectedHero)}
                     alt={selectedHeroDetails.name}
                     className="w-full h-full object-cover"
                   />
@@ -203,26 +199,19 @@ export function CharacterSelectionScreen({
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.4, delay: 0.3 }}
-                  className="text-4xl font-jejuhallasan mb-6"
+                  className="text-4xl font-jetsytrial mb-6"
                 >
                   {selectedHeroDetails.name}
                 </motion.h3>
 
-                <motion.div 
+                <motion.p
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   transition={{ duration: 0.4, delay: 0.4 }}
-                  className="grid grid-cols-2 gap-8 w-full mb-6"
+                  className="text-sm w-full mb-6 uppercase text-center"
                 >
-                  <div>
-                    <h4 className="text-2xl font-jejuhallasan mb-2">CLASS</h4>
-                    <p className="text-sm">{selectedHeroDetails.class}</p>
-                  </div>
-                  <div>
-                    <h4 className="text-2xl font-jejuhallasan mb-2">PERK</h4>
-                    <p className="text-sm">{selectedHeroDetails.perk} - {selectedHeroDetails.description.toUpperCase()}</p>
-                  </div>
-                </motion.div>
+                  {selectedHeroDetails.description}
+                </motion.p>
 
                 <motion.div 
                   initial={{ opacity: 0 }}
@@ -251,17 +240,17 @@ export function CharacterSelectionScreen({
                           whileHover={!isTaken || isSelected ? { scale: 1.02 } : {}}
                           className={cn(
                             "cursor-pointer flex items-center p-2 rounded-lg transition-all",
-                            isSelected ? "bg-black/50" : "hover:bg-black/50",
+                            isSelected ? "bg-parchment-darker/20" : "hover:bg-parchment-darker/20",
                             isTaken && !isSelected && "opacity-70 cursor-not-allowed",
                           )}
                           onClick={() => handleHeroSelect(hero.id)}
                         >
-                          <div className="w-6 mr-3 text-gray-400">
+                          <div className="w-6 mr-3 text-parchment-ink/50">
                             {index + 1}
                           </div>
                           <div className="w-10 h-10 rounded-full overflow-hidden mr-3">
                             <img
-                              src={getHeroImagePath(hero.id, teamId)}
+                              src={getHeroIcon(hero.id)}
                               alt={hero.name}
                               className={cn(
                                 "w-full h-full object-cover",
@@ -295,7 +284,7 @@ export function CharacterSelectionScreen({
           <Button
             onClick={handleConfirm}
             disabled={!selectedHero}
-            className="w-full cursor-pointer max-w-md bg-white text-black hover:bg-gray-200 rounded-full py-6 text-2xl font-jejuhallasan"
+            variant="parchment" size="2xl" className="w-full cursor-pointer max-w-md"
           >
             Confirm Class
           </Button>
@@ -307,27 +296,27 @@ export function CharacterSelectionScreen({
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 0.5, delay: 1 }}
-        className="p-4 text-center text-gray-500"
+        className="p-4 text-center text-parchment-ink/40"
       >
         <div className="flex justify-center space-x-4 mb-2">
           <motion.a 
             whileHover={{ scale: 1.1 }}
             href="#" 
-            className="text-gray-500 hover:text-white"
+            className="text-parchment-ink/40 hover:text-parchment-ink"
           >
             <HugeiconsIcon icon={GlobeIcon} size={20} />
           </motion.a>
           <motion.a 
             whileHover={{ scale: 1.1 }}
             href="#" 
-            className="text-gray-500 hover:text-white"
+            className="text-parchment-ink/40 hover:text-parchment-ink"
           >
             <HugeiconsIcon icon={InstagramIcon} size={20} />
           </motion.a>
           <motion.a 
             whileHover={{ scale: 1.1 }}
             href="#" 
-            className="text-gray-500 hover:text-white"
+            className="text-parchment-ink/40 hover:text-parchment-ink"
           >
             <HugeiconsIcon icon={Facebook01Icon} size={20} />
           </motion.a>

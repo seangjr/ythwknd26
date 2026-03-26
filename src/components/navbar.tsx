@@ -1,18 +1,24 @@
 import Image from "next/image";
-import Link from "next/link";
+import { TransitionLink } from "./transition-link";
 
-export default function Navbar() {
+interface NavbarProps {
+  variant?: "dark" | "parchment";
+}
+
+export default function Navbar({ variant = "dark" }: NavbarProps) {
+  const src = variant === "parchment" ? "/assets/masthead.svg" : "/assets/masthead.svg";
+
   return (
     <nav className="flex flex-col items-center justify-center py-4 md:py-8">
-      <Link href="/">
+      <TransitionLink href="/">
         <Image
-          src="/assets/masthead-white.svg"
+          src={src}
           alt="Logo for YTHWKND 2026"
           className="w-[200] md:w-[250]"
           width={250}
           height={100}
         />
-      </Link>
+      </TransitionLink>
     </nav>
   );
 }

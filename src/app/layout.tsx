@@ -3,13 +3,15 @@ import "@/styles/fonts.css";
 import "lenis/dist/lenis.css";
 import { BackgroundMusic } from "@/components/background-music";
 import { LenisProvider } from "@/components/lenis-provider";
+import { PageTransitionProvider } from "@/components/page-transition";
+import { VideoBackground } from "@/components/video-background";
 import type { Metadata } from "next";
 import { GoogleAnalytics } from "@next/third-parties/google";
 
 export const metadata: Metadata = {
-  title: "YTHWKND 2026: The Multiverse of Mystery",
-  description: "When Eric Veed mysteriously vanishes, five classmates set out to investigate. Their search leads them to a strange beach where reality begins to unravel. Join the battle to save the multiverse.",
-  keywords: ["YTHWKND", "YMFGAKL", "multiverse", "mystery", "sci-fi", "adventure", "2026", "high school event"],
+  title: "YTHWKND and the Giant at the Gate",
+  description: "The city needs your help. The gate is shut. A giant stands in the way. Begin your training, assemble your party, take the gate.",
+  keywords: ["YTHWKND", "YMFGAKL", "giant", "gate", "adventure", "2026", "high school event"],
   authors: [{ name: "YMFGAKL" }],
   creator: "YMFGAKL",
   publisher: "YMFGAKL",
@@ -20,8 +22,8 @@ export const metadata: Metadata = {
   },
   metadataBase: new URL("https://ythwknd.ymfgakl.com"),
   openGraph: {
-    title: "YTHWKND 2026: The Multiverse of Mystery",
-    description: "When Eric Veed mysteriously vanishes, five classmates set out to investigate. Their search leads them to a strange beach where reality begins to unravel. Join the battle to save the multiverse.",
+    title: "YTHWKND and the Giant at the Gate",
+    description: "The city needs your help. The gate is shut. A giant stands in the way. Begin your training, assemble your party, take the gate.",
     url: "https://ythwknd.ymfgakl.com",
     siteName: "YTHWKND 2026",
     images: [
@@ -29,7 +31,7 @@ export const metadata: Metadata = {
         url: "/landing.png",
         width: 1200,
         height: 630,
-        alt: "YTHWKND 2026: The Multiverse of Mystery",
+        alt: "YTHWKND and the Giant at the Gate",
       },
     ],
     locale: "en_US",
@@ -37,8 +39,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "YTHWKND 2026: The Multiverse of Mystery",
-    description: "When Eric Veed mysteriously vanishes, five classmates set out to investigate. Their search leads them to a strange beach where reality begins to unravel. Join the battle to save the multiverse.",
+    title: "YTHWKND and the Giant at the Gate",
+    description: "The city needs your help. The gate is shut. A giant stands in the way. Begin your training, assemble your party, take the gate.",
     images: ["/landing.png"],
   },
   icons: {
@@ -79,12 +81,15 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className="antialiased bg-black text-[#BABABA] min-h-screen flex flex-col"
+        className="antialiased text-[#F7EAD9] min-h-screen flex flex-col"
       >
-        <LenisProvider>
-          <BackgroundMusic />
-          {children}
-        </LenisProvider>
+        <VideoBackground />
+        <PageTransitionProvider>
+          <LenisProvider>
+            <BackgroundMusic />
+            {children}
+          </LenisProvider>
+        </PageTransitionProvider>
       </body>
       <GoogleAnalytics gaId="GTM-W5JTJM5Q" />
     </html>

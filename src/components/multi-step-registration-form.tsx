@@ -19,26 +19,26 @@ import {
   InstagramIcon as Instagram,
   Link01Icon as LinkIcon,
 } from "@hugeicons/core-free-icons";
-import { useRouter } from "next/navigation";
+import { usePageTransition } from "./page-transition";
 import { useEffect, useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import Navbar from "./navbar";
 import { toast } from "sonner";
 import { Footer } from "./footer";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
+
+const stepVariants = {
+  enter: (direction: number) => ({ x: direction > 0 ? 60 : -60, opacity: 0 }),
+  center: { x: 0, opacity: 1 },
+  exit: (direction: number) => ({ x: direction > 0 ? -60 : 60, opacity: 0 }),
+};
 import Image from "next/image";
 import Link from "next/link";
 
-// Add getHeroImagePath function
-const getHeroImagePath = (heroId: string, teamId: number) => {
+const getHeroIcon = (heroId: string) => {
   const heroObj = CONSTANTS.HEROES.find(h => h.id === heroId);
-  if (!heroObj) return "/placeholder.svg";
-  const heroName = heroObj.name.split(" ")[0];
-  const heroImage = CONSTANTS.HERO_IMAGE_PATHS.find(
-    h => h.teamId === teamId && h.hero === heroName
-  );
-  return heroImage?.path || "/placeholder.svg";
+  return heroObj?.icon || "/placeholder.svg";
 };
 
 // Form schema
@@ -184,8 +184,9 @@ export function MultiStepRegistrationForm({
   error,
   onBackToCharacterSelection,
 }: MultiStepRegistrationFormProps) {
-  const router = useRouter();
+  const { navigateTo } = usePageTransition();
   const [step, setStep] = useState(1);
+  const [direction, setDirection] = useState(1);
   const [registrationComplete, setRegistrationComplete] = useState(false);
   const [inviteLink, setInviteLink] = useState<string | null>(null);
   const [inviteLinkLoading, setInviteLinkLoading] = useState(false);
@@ -416,6 +417,7 @@ export function MultiStepRegistrationForm({
 
   // Handle next step
   const handleNext = async () => {
+    setDirection(1);
     let isValid = false;
 
     if (step === 1) {
@@ -470,6 +472,7 @@ export function MultiStepRegistrationForm({
 
   // Handle back
   const handleBack = () => {
+    setDirection(-1);
     if (registrationComplete) {
       // Refresh team members data before closing
       fetchTeamMembers();
@@ -533,7 +536,7 @@ export function MultiStepRegistrationForm({
 
   // Return to main page
   const handleReturnToMain = () => {
-    router.push("/");
+    navigateTo("/");
     onClose();
   };
 
@@ -546,15 +549,15 @@ export function MultiStepRegistrationForm({
   // Registration Unavailable Screen
   if (registrationUnavailable) {
     return (
-      <div className="fixed inset-0 z-50 bg-black flex flex-col overflow-auto">
+      <div className="fixed inset-0 z-50 parchment-bg flex flex-col overflow-auto text-parchment-ink" data-lenis-prevent>
         {/* Header */}
-        <Navbar />
+        <Navbar variant="parchment" />
 
         {/* Back button */}
         <div className="p-4">
           <button
             onClick={handleBack}
-            className="cursor-pointer flex items-center text-gray-400 hover:text-white transition-colors"
+            className="cursor-pointer flex items-center text-parchment-ink/60 hover:text-parchment-ink transition-colors"
           >
             <HugeiconsIcon icon={ArrowLeft} size={16} className="mr-2" />
             <span>BACK</span>
@@ -564,16 +567,16 @@ export function MultiStepRegistrationForm({
         {/* Main content */}
         <div className="flex-1 px-4 pb-4 flex flex-col items-center max-w-md mx-auto w-full">
           <div className="text-center mb-6 flex flex-col gap-4">
-            <h3 className="text-gray-400 uppercase text-sm">
+            <h3 className="text-parchment-ink/60 uppercase text-sm">
               REGISTRATION UNAVAILABLE
             </h3>
-            <h2 className="text-6xl font-jejuhallasan">We&apos;re Sorry</h2>
+            <h2 className="text-6xl font-jetsytrial">We&apos;re Sorry</h2>
 
-            <p className="text-[#BABABA] mb-2">
+            <p className="text-parchment-ink mb-2">
               THANK YOU FOR YOUR INTEREST IN JOINING OUR EVENT.
             </p>
 
-            <p className="text-[#BABABA] mb-2">
+            <p className="text-parchment-ink mb-2">
               WE REGRET TO INFORM YOU THAT WE&apos;RE UNABLE TO PROCEED WITH
               YOUR SUBMISSION BECAUSE THIS IS AN EVANGELISTIC CAMP AND
               WE&apos;RE ENCOURAGING OUR YMFGAKL MEMBERS TO REACH OUT TO THEIR
@@ -581,18 +584,18 @@ export function MultiStepRegistrationForm({
               TO HAVE THE CHANCE TO ENCOUNTER CHRIST.
             </p>
 
-            <p className="text-[#BABABA] mb-2">
+            <p className="text-parchment-ink mb-2">
               PLEASE REACH OUT TO YOUR FRIEND FROM YMFGAKL IF THERE&apos;S ANY
               CONFIRMATION REQUIRED OR CONTACT US THROUGH OUR SOCIAL MEDIA.
             </p>
 
-            <p className="text-[#BABABA] mb-2">
+            <p className="text-parchment-ink mb-2">
               THANK YOU FOR YOUR UNDERSTANDING.
             </p>
 
             <Button
               onClick={handleReturnToMain}
-              className="w-full bg-white text-black hover:bg-gray-200 rounded-full py-6 text-xl font-jejuhallasan"
+              variant="parchment" size="xl" className="w-full"
             >
               RETURN TO MAIN PAGE
             </Button>
@@ -600,21 +603,21 @@ export function MultiStepRegistrationForm({
         </div>
 
         {/* Footer */}
-        <Footer />
+        <Footer variant="parchment" />
       </div>
     );
   }
 
   return (
-    <div className="fixed inset-0 z-50 bg-black flex flex-col overflow-auto py-6">
+    <div className="fixed inset-0 z-50 parchment-bg flex flex-col overflow-auto py-6 text-parchment-ink" data-lenis-prevent>
       {/* Header */}
-      <Navbar />
+      <Navbar variant="parchment" />
 
       {/* Back button */}
       <div className="p-4">
         <button
           onClick={handleBack}
-          className="cursor-pointer flex items-center text-gray-400 hover:text-white transition-colors"
+          className="cursor-pointer flex items-center text-parchment-ink/60 hover:text-parchment-ink transition-colors"
         >
           <HugeiconsIcon icon={ArrowLeft} size={16} className="mr-2" />
           <span>BACK</span>
@@ -626,24 +629,26 @@ export function MultiStepRegistrationForm({
         {!registrationComplete ? (
           <>
             <div className="text-center mb-6 flex flex-col gap-4">
-              <h3 className="text-gray-400 uppercase text-sm">
+              <h3 className="text-parchment-ink/60 uppercase text-sm">
                 REGISTRATION FORM
               </h3>
-              {step === 1 && (
-                <h2 className="text-6xl font-jejuhallasan">PERSONAL DETAILS</h2>
-              )}
-              {step === 2 && (
-                <h2 className="text-6xl font-jejuhallasan">CG DETAILS</h2>
-              )}
-              {step === 3 && (
-                <h2 className="text-6xl font-jejuhallasan">MORE DETAILS</h2>
-              )}
-              {step === 4 && (
-                <h2 className="text-6xl font-jejuhallasan">CHURCH DETAILS</h2>
-              )}
-              {step === 5 && (
-                <h2 className="text-6xl font-jejuhallasan">EMERGENCY CONTACT</h2>
-              )}{" "}
+              <AnimatePresence mode="wait" custom={direction}>
+                {step === 1 && (
+                  <motion.h2 key="step-1-title" custom={direction} variants={stepVariants} initial="enter" animate="center" exit="exit" transition={{ duration: 0.3 }} className="text-6xl font-jetsytrial">PERSONAL DETAILS</motion.h2>
+                )}
+                {step === 2 && (
+                  <motion.h2 key="step-2-title" custom={direction} variants={stepVariants} initial="enter" animate="center" exit="exit" transition={{ duration: 0.3 }} className="text-6xl font-jetsytrial">CG DETAILS</motion.h2>
+                )}
+                {step === 3 && (
+                  <motion.h2 key="step-3-title" custom={direction} variants={stepVariants} initial="enter" animate="center" exit="exit" transition={{ duration: 0.3 }} className="text-6xl font-jetsytrial">MORE DETAILS</motion.h2>
+                )}
+                {step === 4 && (
+                  <motion.h2 key="step-4-title" custom={direction} variants={stepVariants} initial="enter" animate="center" exit="exit" transition={{ duration: 0.3 }} className="text-6xl font-jetsytrial">CHURCH DETAILS</motion.h2>
+                )}
+                {step === 5 && (
+                  <motion.h2 key="step-5-title" custom={direction} variants={stepVariants} initial="enter" animate="center" exit="exit" transition={{ duration: 0.3 }} className="text-6xl font-jetsytrial">EMERGENCY CONTACT</motion.h2>
+                )}
+              </AnimatePresence>
             </div>
 
             {/* {error && (
@@ -657,9 +662,10 @@ export function MultiStepRegistrationForm({
               onSubmit={form.handleSubmit(handleFormSubmit)}
               className="w-full space-y-6"
             >
+              <AnimatePresence mode="wait" custom={direction}>
               {/* Step 1: Personal Details */}
               {step === 1 && (
-                <div className="space-y-6 w-full">
+                <motion.div key="step-1" custom={direction} variants={stepVariants} initial="enter" animate="center" exit="exit" transition={{ duration: 0.3 }} className="space-y-6 w-full">
                   {/* Email */}
                   <div className="space-y-2">
                     <Label
@@ -711,36 +717,36 @@ export function MultiStepRegistrationForm({
                     >
                       Age (as of 2026)<span className="text-red-500">*</span>
                     </Label>
-                    <p className="text-sm text-gray-400">
+                    <p className="text-sm text-parchment-ink/50">
                       This camp is only open for ages 13 to 17. If you're above
                       18, do stay tuned for our campus camp!
                     </p>
                     <select
                       id="age"
                       {...form.register("age")}
-                      className="w-full bg-transparent border-b border-gray-700 rounded-none px-0 h-10 focus-visible:ring-0 focus-visible:border-gray-400 text-white"
+                      className="w-full bg-transparent border-b border-parchment-dark rounded-none px-0 h-10 focus-visible:ring-0 focus-visible:border-parchment-darker text-parchment-ink"
                     >
                       <option
                         value=""
                         disabled
                         selected
-                        className="bg-gray-900"
+                        className="bg-parchment-darker/10"
                       >
                         Choose answer
                       </option>
-                      <option value="13" className="bg-gray-900">
+                      <option value="13" className="bg-parchment-darker/10">
                         13
                       </option>
-                      <option value="14" className="bg-gray-900">
+                      <option value="14" className="bg-parchment-darker/10">
                         14
                       </option>
-                      <option value="15" className="bg-gray-900">
+                      <option value="15" className="bg-parchment-darker/10">
                         15
                       </option>
-                      <option value="16" className="bg-gray-900">
+                      <option value="16" className="bg-parchment-darker/10">
                         16
                       </option>
-                      <option value="17" className="bg-gray-900">
+                      <option value="17" className="bg-parchment-darker/10">
                         17
                       </option>
                     </select>{" "}
@@ -768,7 +774,7 @@ export function MultiStepRegistrationForm({
                           id="gender-male"
                           className="border-white"
                         />
-                        <Label htmlFor="gender-male" className="text-[#bababa]">
+                        <Label htmlFor="gender-male" className="text-parchment-ink">
                           Male
                         </Label>
                       </div>
@@ -778,7 +784,7 @@ export function MultiStepRegistrationForm({
                           id="gender-female"
                           className="border-white"
                         />
-                        <Label htmlFor="gender-female" className="text-[#bababa]">
+                        <Label htmlFor="gender-female" className="text-parchment-ink">
                           Female
                         </Label>
                       </div>
@@ -799,7 +805,7 @@ export function MultiStepRegistrationForm({
                       NRIC/Passport Number
                       <span className="text-red-500">*</span>
                     </Label>
-                    <p className="text-sm text-gray-400">e.g. 123456-78-9000</p>
+                    <p className="text-sm text-parchment-ink/50">e.g. 123456-78-9000</p>
                     <Input
                       id="nricPassport"
                       type="text"
@@ -821,7 +827,7 @@ export function MultiStepRegistrationForm({
                     >
                       Contact Number<span className="text-red-500">*</span>
                     </Label>
-                    <p className="text-sm text-gray-400">e.g. 60123456789</p>
+                    <p className="text-sm text-parchment-ink/50">e.g. 60123456789</p>
                     <Input
                       id="contactNumber"
                       type="text"
@@ -896,7 +902,7 @@ export function MultiStepRegistrationForm({
                           id="ym-yes"
                           className="border-white !accent-white"
                         />
-                        <Label htmlFor="ym-yes" className="text-[#bababa]">
+                        <Label htmlFor="ym-yes" className="text-parchment-ink">
                           Yes
                         </Label>
                       </div>
@@ -906,7 +912,7 @@ export function MultiStepRegistrationForm({
                           id="ym-no"
                           className="border-white !accent-white"
                         />
-                        <Label htmlFor="ym-no" className="text-[#bababa]">
+                        <Label htmlFor="ym-no" className="text-parchment-ink">
                           No
                         </Label>
                       </div>
@@ -921,23 +927,23 @@ export function MultiStepRegistrationForm({
                   <Button
                     type="button"
                     onClick={handleNext}
-                    className="cursor-pointer w-full bg-white text-black hover:bg-gray-200 rounded-full py-6 text-xl font-jejuhallasan"
+                    variant="parchment" size="xl" className="cursor-pointer w-full"
                   >
                     NEXT
                   </Button>
-                </div>
+                </motion.div>
               )}
 
               {/* Step 2: CG Details */}
               {step === 2 && (
-                <div className="space-y-6 w-full">
+                <motion.div key="step-2" custom={direction} variants={stepVariants} initial="enter" animate="center" exit="exit" transition={{ duration: 0.3 }} className="space-y-6 w-full">
                   {/* CG Leader */}
                   <div className="space-y-2">
                     <Label className="text-2xl uppercase font-jejuhallasan">
                       Select your CG Leader
                       <span className="text-red-500">*</span>
                     </Label>
-                    <p className="text-sm text-[#BABABA] pb-2">
+                    <p className="text-sm text-parchment-ink pb-2">
                       If you're not sure who your CG leader is, kindly select
                       "Not sure"
                     </p>
@@ -957,10 +963,10 @@ export function MultiStepRegistrationForm({
                           <RadioGroupItem
                             value="N/A"
                             id="cg-na"
-                            className="border-gray-600"
+                            className="border-parchment-dark"
                             checked
                           />
-                          <Label htmlFor="cg-na" className="text-[#BABABA]">
+                          <Label htmlFor="cg-na" className="text-parchment-ink">
                             N/A
                           </Label>
                         </div>
@@ -982,11 +988,11 @@ export function MultiStepRegistrationForm({
                               <RadioGroupItem
                                 value={leader}
                                 id={`cg-${leader.replace(/\s+/g, "-").toLowerCase()}`}
-                                className="border-gray-600"
+                                className="border-parchment-dark"
                               />
                               <Label
                                 htmlFor={`cg-${leader.replace(/\s+/g, "-").toLowerCase()}`}
-                                className="text-[#BABABA] cursor-pointer"
+                                className="text-parchment-ink cursor-pointer"
                               >
                                 {" "}
                                 {leader}
@@ -1006,11 +1012,11 @@ export function MultiStepRegistrationForm({
                             <RadioGroupItem
                               value="Not Sure"
                               id="cg-not-sure"
-                              className="border-gray-600"
+                              className="border-parchment-dark"
                             />
                             <Label
                               htmlFor="cg-not-sure"
-                              className="text-[#bababa] cursor-pointer"
+                              className="text-parchment-ink cursor-pointer"
                             >
                               Not sure
                             </Label>
@@ -1028,16 +1034,16 @@ export function MultiStepRegistrationForm({
                   <Button
                     type="button"
                     onClick={handleNext}
-                    className="cursor-pointer w-full bg-white text-black hover:bg-gray-200 rounded-full py-6 text-xl font-jejuhallasan"
+                    variant="parchment" size="xl" className="cursor-pointer w-full"
                   >
                     NEXT
                   </Button>
-                </div>
+                </motion.div>
               )}
 
-              {/* Step 3: Emergency Contact */}
+              {/* Step 3: More Details */}
               {step === 3 && (
-                <div className="space-y-6 w-full">
+                <motion.div key="step-3" custom={direction} variants={stepVariants} initial="enter" animate="center" exit="exit" transition={{ duration: 0.3 }} className="space-y-6 w-full">
                   {/* Religious Affiliation */}
                   <div className="space-y-2">
                     <Label className="text-2xl uppercase font-jejuhallasan">
@@ -1058,11 +1064,11 @@ export function MultiStepRegistrationForm({
                         <RadioGroupItem
                           value="attending_other"
                           id="christian-attending"
-                          className="border-gray-600"
+                          className="border-parchment-dark"
                         />
                         <Label
                           htmlFor="christian-attending"
-                          className="text-[#bababa]"
+                          className="text-parchment-ink"
                         >
                           Yes, I'm actively attending another church
                         </Label>
@@ -1071,11 +1077,11 @@ export function MultiStepRegistrationForm({
                         <RadioGroupItem
                           value="not_attending"
                           id="christian-not-attending"
-                          className="border-gray-600"
+                          className="border-parchment-dark"
                         />
                         <Label
                           htmlFor="christian-not-attending"
-                          className="text-[#bababa]"
+                          className="text-parchment-ink"
                         >
                           Yes, but I'm not attending any church
                         </Label>
@@ -1084,11 +1090,11 @@ export function MultiStepRegistrationForm({
                         <RadioGroupItem
                           value="no"
                           id="not-christian"
-                          className="border-gray-600"
+                          className="border-parchment-dark"
                         />
                         <Label
                           htmlFor="not-christian"
-                          className="text-[#bababa]"
+                          className="text-parchment-ink"
                         >
                           No
                         </Label>
@@ -1126,9 +1132,9 @@ export function MultiStepRegistrationForm({
                         <RadioGroupItem
                           value="ym_services"
                           id="source-ym"
-                          className="border-gray-600"
+                          className="border-parchment-dark"
                         />
-                        <Label htmlFor="source-ym" className="text-[#bababa]">
+                        <Label htmlFor="source-ym" className="text-parchment-ink">
                           YM Sunday Services
                         </Label>
                       </div>
@@ -1136,11 +1142,11 @@ export function MultiStepRegistrationForm({
                         <RadioGroupItem
                           value="friend"
                           id="source-friend"
-                          className="border-gray-600"
+                          className="border-parchment-dark"
                         />
                         <Label
                           htmlFor="source-friend"
-                          className="text-[#bababa]"
+                          className="text-parchment-ink"
                         >
                           A friend who attends YMFGAKL
                         </Label>
@@ -1149,11 +1155,11 @@ export function MultiStepRegistrationForm({
                         <RadioGroupItem
                           value="social_media"
                           id="source-social"
-                          className="border-gray-600"
+                          className="border-parchment-dark"
                         />
                         <Label
                           htmlFor="source-social"
-                          className="text-[#bababa]"
+                          className="text-parchment-ink"
                         >
                           Social media (e.g. Instagram, Facebook)
                         </Label>
@@ -1162,11 +1168,11 @@ export function MultiStepRegistrationForm({
                         <RadioGroupItem
                           value="school"
                           id="source-school"
-                          className="border-gray-600"
+                          className="border-parchment-dark"
                         />
                         <Label
                           htmlFor="source-school"
-                          className="text-[#bababa]"
+                          className="text-parchment-ink"
                         >
                           Announcements at school event/chapel/CF
                         </Label>
@@ -1175,11 +1181,11 @@ export function MultiStepRegistrationForm({
                         <RadioGroupItem
                           value="other"
                           id="source-other"
-                          className="border-gray-600"
+                          className="border-parchment-dark"
                         />
                         <Label
                           htmlFor="source-other"
-                          className="text-[#bababa]"
+                          className="text-parchment-ink"
                         >
                           Other:
                         </Label>
@@ -1191,7 +1197,7 @@ export function MultiStepRegistrationForm({
                         type="text"
                         placeholder="Your answer"
                         {...form.register("otherEventSource")}
-                        className="bg-transparent border-b border-gray-700 rounded-none px-0 h-10 focus-visible:ring-0 focus-visible:border-gray-400 mt-2"
+                        className="bg-transparent border-b border-parchment-dark rounded-none px-0 h-10 focus-visible:ring-0 focus-visible:border-parchment-darker text-parchment-ink mt-2"
                       />
                     )}
                     {form.formState.errors.eventSource && (
@@ -1215,7 +1221,7 @@ export function MultiStepRegistrationForm({
                       Name of the friend who invited you
                       <span className="text-red-500">*</span>
                     </Label>
-                    <p className="text-sm text-gray-400">
+                    <p className="text-sm text-parchment-ink/50">
                       If not applicable, put "N/A"
                     </p>
                     <Input
@@ -1234,29 +1240,29 @@ export function MultiStepRegistrationForm({
                   <Button
                     type="button"
                     onClick={handleNext}
-                    className="w-full bg-white text-black hover:bg-gray-200 rounded-full py-6 text-xl font-jejuhallasan"
+                    variant="parchment" size="xl" className="w-full"
                   >
                     NEXT
                   </Button>
-                </div>
+                </motion.div>
               )}
 
               {/* Step 4: Church Details (for Christians attending other churches) */}
               {step === 4 && (
-                <div className="space-y-6 w-full">
+                <motion.div key="step-4" custom={direction} variants={stepVariants} initial="enter" animate="center" exit="exit" transition={{ duration: 0.3 }} className="space-y-6 w-full">
                   <Button
                     type="button"
                     onClick={handleNext}
-                    className="w-full bg-white text-black hover:bg-gray-200 rounded-full py-6 text-lg font-bold"
+                    variant="parchment" size="xl" className="w-full"
                   >
                     NEXT
                   </Button>
-                </div>
+                </motion.div>
               )}
 
               {/* Step 5: Emergency Contact */}
               {step === 5 && (
-                <div className="space-y-6 w-full">
+                <motion.div key="step-5" custom={direction} variants={stepVariants} initial="enter" animate="center" exit="exit" transition={{ duration: 0.3 }} className="space-y-6 w-full">
                   {/* Emergency Contact Name */}
                   <div className="space-y-2">
                     <Label
@@ -1266,7 +1272,7 @@ export function MultiStepRegistrationForm({
                       Emergency Contact's Name
                       <span className="text-red-500">*</span>
                     </Label>
-                    <p className="text-sm text-gray-400">
+                    <p className="text-sm text-parchment-ink/50">
                       In the event of any emergencies (touch wood), this is who
                       we will be contacting.
                     </p>
@@ -1298,9 +1304,9 @@ export function MultiStepRegistrationForm({
                         <RadioGroupItem
                           value="Father"
                           id="rel-father"
-                          className="border-gray-600"
+                          className="border-parchment-dark"
                         />
-                        <Label htmlFor="rel-father" className="text-[#bababa]">
+                        <Label htmlFor="rel-father" className="text-parchment-ink">
                           Father
                         </Label>
                       </div>
@@ -1308,9 +1314,9 @@ export function MultiStepRegistrationForm({
                         <RadioGroupItem
                           value="Mother"
                           id="rel-mother"
-                          className="border-gray-600"
+                          className="border-parchment-dark"
                         />
-                        <Label htmlFor="rel-mother" className="text-[#bababa]">
+                        <Label htmlFor="rel-mother" className="text-parchment-ink">
                           Mother
                         </Label>
                       </div>
@@ -1318,9 +1324,9 @@ export function MultiStepRegistrationForm({
                         <RadioGroupItem
                           value="Legal Guardian"
                           id="rel-guardian"
-                          className="border-gray-600"
+                          className="border-parchment-dark"
                         />
-                        <Label htmlFor="rel-guardian" className="text-[#bababa]">
+                        <Label htmlFor="rel-guardian" className="text-parchment-ink">
                           Legal Guardian
                         </Label>
                       </div>
@@ -1328,9 +1334,9 @@ export function MultiStepRegistrationForm({
                         <RadioGroupItem
                           value="Other"
                           id="rel-other"
-                          className="border-gray-600"
+                          className="border-parchment-dark"
                         />
-                        <Label htmlFor="rel-other" className="text-[#bababa]">
+                        <Label htmlFor="rel-other" className="text-parchment-ink">
                           Other:
                         </Label>
                       </div>
@@ -1408,12 +1414,13 @@ export function MultiStepRegistrationForm({
                   <Button
                     type="submit"
                     disabled={isSubmitting}
-                    className="cursor-pointer w-full bg-white text-black hover:bg-gray-200 rounded-full py-6 text-xl font-jejuhallasan"
+                    variant="parchment" size="xl" className="cursor-pointer w-full"
                   >
                     {isSubmitting ? "SUBMITTING..." : "SUBMIT"}
                   </Button>
-                </div>
+                </motion.div>
               )}
+              </AnimatePresence>
             </form>
           </>
         ) : (
@@ -1434,7 +1441,7 @@ export function MultiStepRegistrationForm({
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ duration: 0.4, delay: 0.3 }}
-                className="text-gray-400 uppercase text-sm pb-4"
+                className="text-parchment-ink/60 uppercase text-sm pb-4"
               >
                 REGISTRATION COMPLETE
               </motion.h3>
@@ -1442,7 +1449,7 @@ export function MultiStepRegistrationForm({
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.4, delay: 0.4 }}
-                className="text-6xl font-jejuhallasan text-[#BABABA] mb-6"
+                className="text-6xl font-jetsytrial text-parchment-ink mb-6"
               >
                 See You At Camp
               </motion.h2>
@@ -1450,7 +1457,7 @@ export function MultiStepRegistrationForm({
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ duration: 0.4, delay: 0.5 }}
-                className="text-[#BABABA] mb-6"
+                className="text-parchment-ink mb-6"
               >
                 PLEASE KEEP AN EYE ON YOUR INBOX — WE&apos;LL BE SENDING YOU THE
                 PAYMENT DETAILS AND THE PARENTAL CONSENT FORM TO SECURE YOUR
@@ -1460,7 +1467,7 @@ export function MultiStepRegistrationForm({
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ duration: 0.4, delay: 0.6 }}
-                className="text-[#BABABA] mb-8"
+                className="text-parchment-ink mb-8"
               >
                 IN THE MEANTIME, STAY CONNECTED WITH US THROUGH OUR SOCIALS FOR
                 THE LATEST UPDATES!
@@ -1473,7 +1480,7 @@ export function MultiStepRegistrationForm({
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
               >
-                <Button asChild className="w-full bg-white text-black hover:bg-gray-200 rounded-full py-6 text-2xl font-jejuhallasan mb-8 cursor-pointer">
+                <Button asChild variant="parchment" size="2xl" className="w-full mb-8 cursor-pointer">
                   <a 
                     href="https://forms.gle/qv5ze5FUQkGZo3bd6" 
                     target="_blank" 
@@ -1490,13 +1497,13 @@ export function MultiStepRegistrationForm({
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: 0.8 }}
-              className="bg-[#1A1A1A] rounded-lg p-6 mb-6"
+              className="bg-parchment-darker/15 border border-parchment-dark rounded-lg p-6 mb-6"
             >
               <motion.h3 
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ duration: 0.4, delay: 0.9 }}
-                className="text-2xl font-jejuhallasan text-[#BABABA] mb-4"
+                className="text-2xl font-jejuhallasan text-parchment-ink mb-4"
               >
                 Your Hero
               </motion.h3>
@@ -1513,7 +1520,7 @@ export function MultiStepRegistrationForm({
                   className="relative w-12 h-12 rounded-full overflow-hidden mr-3"
                 >
                   <Image
-                    src={getHeroImagePath(selectedHero, teamId)}
+                    src={getHeroIcon(selectedHero)}
                     alt={heroDetails?.name || "Hero"}
                     fill
                     className="object-contain"
@@ -1522,7 +1529,7 @@ export function MultiStepRegistrationForm({
                     loading="lazy"
                   />
                 </motion.div>
-                <span className="text-[#BABABA] font-medium">
+                <span className="text-parchment-ink font-medium">
                   {heroDetails?.name}
                 </span>
               </motion.div>
@@ -1531,7 +1538,7 @@ export function MultiStepRegistrationForm({
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ duration: 0.4, delay: 1.2 }}
-                className="text-2xl font-jejuhallasan text-[#BABABA] mb-4"
+                className="text-2xl font-jejuhallasan text-parchment-ink mb-4"
               >
                 Current Team
               </motion.h3>
@@ -1539,7 +1546,7 @@ export function MultiStepRegistrationForm({
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ duration: 0.4, delay: 1.3 }}
-                className="text-gray-300 mb-4"
+                className="text-parchment-ink/70 mb-4"
               >
                 {team?.code} {team?.name}
               </motion.p>
@@ -1552,7 +1559,7 @@ export function MultiStepRegistrationForm({
                   className="flex justify-center py-4"
                 >
                   <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-white" />
-                  <span className="ml-2 text-gray-300">
+                  <span className="ml-2 text-parchment-ink/70">
                     Loading team members...
                   </span>
                 </motion.div>
@@ -1585,7 +1592,7 @@ export function MultiStepRegistrationForm({
                           className="relative w-10 h-10 rounded-full overflow-hidden mr-3"
                         >
                           <Image
-                            src={getHeroImagePath(hero.id, teamId)}
+                            src={getHeroIcon(hero.id)}
                             alt={hero.name}
                             fill
                             className={`object-contain ${isTaken ? "grayscale" : ""}`}
@@ -1596,7 +1603,7 @@ export function MultiStepRegistrationForm({
                         </motion.div>
 
                         <div className="flex-1">
-                          <p className="font-medium text-gray-200">
+                          <p className="font-medium text-parchment-ink">
                             {hero.name}
                             {isCurrentUser && (
                               <span className="ml-2 text-amber-500 text-xs">
@@ -1608,7 +1615,7 @@ export function MultiStepRegistrationForm({
                           <p
                             className={cn(
                               "text-xs uppercase",
-                              isTaken ? "text-[#bababa]" : "text-green-500",
+                              isTaken ? "text-parchment-ink/50" : "text-green-700",
                             )}
                           >
                             {isTaken
@@ -1619,7 +1626,7 @@ export function MultiStepRegistrationForm({
                           </p>
 
                           {isTaken && (
-                            <p className="text-xs text-gray-500">
+                            <p className="text-xs text-parchment-ink/40">
                               Joined {getRelativeTimeString(member!.created_at)}
                             </p>
                           )}
@@ -1633,7 +1640,7 @@ export function MultiStepRegistrationForm({
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   transition={{ duration: 0.4, delay: 1.4 }}
-                  className="text-center py-4 text-gray-400"
+                  className="text-center py-4 text-parchment-ink/50"
                 >
                   <p>No team members found. Be the first to join!</p>
                 </motion.div>
@@ -1652,8 +1659,8 @@ export function MultiStepRegistrationForm({
                 >
                   <Button
                     onClick={fetchTeamMembers}
-                    variant="outline"
-                    className="w-full self-center bg-white text-black hover:bg-gray-200 rounded-full py-6 text-2xl font-jejuhallasan cursor-pointer"
+                    variant="parchment" size="2xl"
+                    className="w-full self-center cursor-pointer"
                   >
                     Refresh Team Members
                   </Button>
@@ -1666,13 +1673,13 @@ export function MultiStepRegistrationForm({
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: 2.1 }}
-              className="bg-[#1a1a1a] rounded-lg p-6 flex flex-col"
+              className="bg-parchment-darker/15 border border-parchment-dark rounded-lg p-6 flex flex-col"
             >
               <motion.h3 
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ duration: 0.4, delay: 2.2 }}
-                className="text-2xl font-jejuhallasan text-[#bababa] mb-4"
+                className="text-2xl font-jejuhallasan text-parchment-ink mb-4"
               >
                 Team Invite Link
               </motion.h3>
@@ -1680,7 +1687,7 @@ export function MultiStepRegistrationForm({
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ duration: 0.4, delay: 2.3 }}
-                className="text-[#bababa] mb-4"
+                className="text-parchment-ink mb-4"
               >
                 Share your team invite link to your friends so they can join
                 your group. Five participants per team.
@@ -1700,7 +1707,7 @@ export function MultiStepRegistrationForm({
                     className="flex items-center justify-center py-4"
                   >
                     <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-white" />
-                    <span className="ml-2 text-gray-300">
+                    <span className="ml-2 text-parchment-ink/70">
                       Generating invite link...
                     </span>
                   </motion.div>
@@ -1731,7 +1738,7 @@ export function MultiStepRegistrationForm({
                 >
                   <Button
                     onClick={handleRegenerateInviteLink}
-                    className="w-fit bg-white text-black hover:bg-gray-200 rounded-full py-6 text-2xl font-jejuhallasan"
+                    variant="parchment" size="2xl" className="w-fit"
                   >
                     Try Again
                   </Button>
@@ -1748,7 +1755,7 @@ export function MultiStepRegistrationForm({
                   <Button
                     onClick={copyInviteLink}
                     disabled={!inviteLink || inviteLinkLoading}
-                    className="w-fit bg-white text-black hover:bg-gray-200 rounded-full py-6 text-2xl font-jejuhallasan"
+                    variant="parchment" size="2xl" className="w-fit"
                   >
                     {copied ? "Copied!" : "Copy Link"}
                   </Button>
@@ -1766,7 +1773,7 @@ export function MultiStepRegistrationForm({
       </div>
 
       {/* Footer */}
-      <Footer />
+      <Footer variant="parchment" />
     </div>
   );
 }

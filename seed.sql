@@ -1,39 +1,39 @@
--- ythwknd25 seed data — matches constants.ts on this branch
+-- ythwknd25 seed data — matches constants.ts
 -- Run after schema.sql to populate initial data.
 
--- Teams (21 teams from CONSTANTS.TEAMS)
+-- Teams (21 parties from CONSTANTS.TEAMS)
 INSERT INTO teams (id, name, color, code) VALUES
-  ( 1, 'The Original Five',    'bg-team-01', 'U001'),
-  ( 2, 'The Shrek Five',       'bg-team-02', 'U002'),
-  ( 3, 'The Powerpuff Five',   'bg-team-03', 'U003'),
-  ( 4, 'The Real Five',        'bg-team-04', 'U004'),
-  ( 5, 'The Funko Five',       'bg-team-05', 'U005'),
-  ( 6, 'The Spider Five',      'bg-team-06', 'U006'),
-  ( 7, 'The Panda Five',       'bg-team-07', 'U007'),
-  ( 8, 'The Little Miss Five', 'bg-team-08', 'U008'),
-  ( 9, 'The Conan Five',       'bg-team-09', 'U009'),
-  (10, 'The Minion Five',      'bg-team-10', 'U010'),
-  (11, 'The Lego Five',        'bg-team-11', 'U011'),
-  (12, 'The Avengers Five',    'bg-team-12', 'U012'),
-  (13, 'The Smurfed Five',     'bg-team-13', 'U013'),
-  (14, 'The Minecraft Five',   'bg-team-14', 'U014'),
-  (15, 'The Clay Five',        'bg-team-15', 'U015'),
-  (16, 'The Barbie Five',      'bg-team-16', 'U016'),
-  (17, 'The 8 bit Five',       'bg-team-17', 'U017'),
-  (18, 'The Quest Five',       'bg-team-18', 'U018'),
-  (19, 'The Future Five',      'bg-team-19', 'U019'),
-  (20, 'The Steampunk Five',   'bg-team-20', 'U020'),
-  (21, 'The Cars Five',        'bg-team-21', 'U021')
-ON CONFLICT (id) DO NOTHING;
+  ( 1, 'Crimson',   'bg-team-01', 'P001'),
+  ( 2, 'Sapphire',  'bg-team-02', 'P002'),
+  ( 3, 'Emerald',   'bg-team-03', 'P003'),
+  ( 4, 'Amber',     'bg-team-04', 'P004'),
+  ( 5, 'Violet',    'bg-team-05', 'P005'),
+  ( 6, 'Cobalt',    'bg-team-06', 'P006'),
+  ( 7, 'Jade',      'bg-team-07', 'P007'),
+  ( 8, 'Coral',     'bg-team-08', 'P008'),
+  ( 9, 'Slate',     'bg-team-09', 'P009'),
+  (10, 'Gold',      'bg-team-10', 'P010'),
+  (11, 'Ivory',     'bg-team-11', 'P011'),
+  (12, 'Onyx',      'bg-team-12', 'P012'),
+  (13, 'Rust',      'bg-team-13', 'P013'),
+  (14, 'Teal',      'bg-team-14', 'P014'),
+  (15, 'Bronze',    'bg-team-15', 'P015'),
+  (16, 'Silver',    'bg-team-16', 'P016'),
+  (17, 'Scarlet',   'bg-team-17', 'P017'),
+  (18, 'Azure',     'bg-team-18', 'P018'),
+  (19, 'Maroon',    'bg-team-19', 'P019'),
+  (20, 'Indigo',    'bg-team-20', 'P020')
+ON CONFLICT (id) DO UPDATE SET name = EXCLUDED.name, color = EXCLUDED.color, code = EXCLUDED.code;
 
 -- Reset the teams id sequence so future inserts don't collide
 SELECT setval('teams_id_seq', (SELECT MAX(id) FROM teams));
 
--- Hero availability: 5 heroes × 21 teams = 105 rows, all initially available
+-- Hero availability: 5 classes × 21 teams = 105 rows, all initially available
+-- Class IDs match CONSTANTS.HEROES[].id in constants.ts
 INSERT INTO hero_availability (team_id, hero_id, is_available)
 SELECT t.id, h.hero_id, TRUE
 FROM teams t
 CROSS JOIN (
-  VALUES ('alex'), ('suzzy'), ('charlotte'), ('charlie'), ('kai')
+  VALUES ('warrior'), ('archer'), ('scout'), ('guardian'), ('scholar')
 ) AS h(hero_id)
 ON CONFLICT (team_id, hero_id) DO NOTHING;

@@ -1,11 +1,9 @@
 "use client";
 
-import { Footer } from "@/components/footer";
-import { HeroDetails } from "@/components/hero-details";
-import { HeroSelectionGrid } from "@/components/hero-selection-grid";
 import { RegistrationModal } from "@/components/registration-modal";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
+import { HoloCard } from "@/components/ui/holo-card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { CONSTANTS } from "@/lib/constants";
 import { cn } from "@/lib/utils";
@@ -14,14 +12,30 @@ import {
   AlertCircleIcon,
   Alert02Icon,
   ArrowLeft02Icon,
-  Facebook01Icon,
-  GlobeIcon,
-  InstagramIcon,
   UserGroupIcon,
 } from "@hugeicons/core-free-icons";
-import { useParams, useRouter } from "next/navigation";
+import { usePageTransition } from "@/components/page-transition";
+import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+
+// SVG background images per hero
+const HERO_BG: Record<string, string> = {
+  warrior: "/card-bg/Warrior.svg",
+  archer: "/card-bg/Archer.svg",
+  scout: "/card-bg/Scout.svg",
+  guardian: "/card-bg/Guardian.svg",
+  scholar: "/card-bg/Scholar.svg",
+};
+
+// Alt icons for mobile view
+const HERO_ALT_ICON: Record<string, string> = {
+  warrior: "/icons-alt/Warrior.svg",
+  archer: "/icons-alt/Archer.svg",
+  scout: "/icons-alt/Scout.svg",
+  guardian: "/icons-alt/Guardian.svg",
+  scholar: "/icons-alt/Scholar.svg",
+};
 
 interface TeamInvite {
   teamId: number;
@@ -35,19 +49,14 @@ interface HeroAvailability {
   isAvailable: boolean;
 }
 
-const getHeroImagePath = (heroId: string, teamId: number) => {
+const getHeroIcon = (heroId: string) => {
   const heroObj = CONSTANTS.HEROES.find(h => h.id === heroId);
-  if (!heroObj) return "/placeholder.svg";
-  const heroName = heroObj.name.split(" ")[0];
-  const heroImage = CONSTANTS.HERO_IMAGE_PATHS.find(
-    h => h.teamId === teamId && h.hero === heroName
-  );
-  return heroImage?.path || "/placeholder.svg";
+  return heroObj?.icon || "/placeholder.svg";
 };
 
 export default function TeamInvitePage() {
   const params = useParams();
-  const router = useRouter();
+  const { navigateTo } = usePageTransition();
   const [invite, setInvite] = useState<TeamInvite | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -199,7 +208,27 @@ export default function TeamInvitePage() {
 
   // Handle successful registration
   const handleRegistrationSuccess = (registration: any) => {
-    // Redirect to success page with hero and team info
+    // Mark the selected hero as taken locally
+    if (selectedHero) {
+      setTeamMembers((prev) => [
+        ...prev,
+        { hero_id: selectedHero, line_number: selectedLine },
+      ]);
+      setAvailableHeroes((prev) =>
+        prev.map((h) =>
+          h.heroId === selectedHero
+            ? { ...h, isAvailable: false }
+            : h,
+        ),
+      );
+      setAvailableHeroCount((prev) => prev - 1);
+      setAvailableLines((prev) =>
+        prev.filter((line) => line !== selectedLine),
+      );
+    }
+    // Close modal
+    setIsModalOpen(false);
+    setSelectedLine(null);
   };
 
   // Check if a hero is available
@@ -209,7 +238,7 @@ export default function TeamInvitePage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen text-white flex flex-col">
+      <div className="min-h-screen text-[#F7EAD9] flex flex-col">
         {/* Header */}
         <div className="flex-1 flex items-center justify-center p-4">
           <div className="max-w-2xl w-full space-y-12">
@@ -247,7 +276,7 @@ export default function TeamInvitePage() {
 
   if (error || !invite) {
     return (
-      <div className="min-h-screen bg-black text-white flex flex-col">
+      <div className="min-h-screen text-[#F7EAD9] flex flex-col">
         {/* Header */}
         <div className="flex-1 flex items-center justify-center p-4">
           <motion.div 
@@ -281,8 +310,8 @@ export default function TeamInvitePage() {
                 whileTap={{ scale: 0.98 }}
               >
                 <Button
-                  onClick={() => router.push("/")}
-                  className="mt-6 bg-white text-black hover:bg-gray-200 rounded-full py-6 px-8 text-lg font-bold"
+                  onClick={() => navigateTo("/")}
+                  variant="parchment" size="xl" className="mt-6"
                 >
                   RETURN TO HOME
                 </Button>
@@ -330,7 +359,7 @@ export default function TeamInvitePage() {
       </AnimatePresence>
 
       {!selectedLine && (
-        <div className="min-h-screen bg-black text-white flex flex-col">
+        <div className="min-h-screen text-[#F7EAD9] flex flex-col">
           {/* Back button */}
           <motion.div 
             initial={{ opacity: 0, x: -20 }}
@@ -339,15 +368,15 @@ export default function TeamInvitePage() {
             className="p-4"
           >
             <button
-              onClick={() => router.push("/register")}
-              className="cursor-pointer flex items-center text-gray-400 hover:text-white transition-colors"
+              onClick={() => navigateTo("/register")}
+              className="cursor-pointer flex items-center text-gray-400 hover:text-[#F7EAD9] transition-colors"
             >
               <HugeiconsIcon icon={ArrowLeft02Icon} size={16} className="mr-2" />
               <span>BACK</span>
             </button>
           </motion.div>
 
-          <main className="flex-1 container mx-auto px-4 py-4 flex flex-col items-center text-[#bababa]">
+          <main className="flex-1 container mx-auto px-4 py-4 flex flex-col items-center text-[#F7EAD9]">
             <motion.div 
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
@@ -357,7 +386,7 @@ export default function TeamInvitePage() {
               <div className="uppercase text-center">
                 <p className="text-xs md:text-base">Class selection</p>
               </div>
-              <h1 className="text-4xl md:text-6xl text-center font-jejuhallasan mt-4">
+              <h1 className="text-4xl md:text-6xl text-center font-jetsytrial mt-4">
                 Choose your class
               </h1>
             </motion.div>
@@ -386,7 +415,7 @@ export default function TeamInvitePage() {
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 0.5, delay: 0.6 }}
-              className="text-center py-10 my-10 border-y-2 border-gray-400"
+              className="text-center py-10 my-10"
             >
               <h2 className="text-8xl mb-2 font-jejuhallasan">
                 <span className="text-amber-500">{availableHeroesCount}</span>/
@@ -404,7 +433,7 @@ export default function TeamInvitePage() {
                   exit={{ opacity: 0, y: -10 }}
                   transition={{ duration: 0.3 }}
                 >
-                  <Alert className="bg-red-900/50 border-red-800 text-white mb-4 max-w-2xl">
+                  <Alert className="bg-red-900/50 border-red-800 text-[#F7EAD9] mb-4 max-w-2xl">
                     <HugeiconsIcon icon={Alert02Icon} size={16} />
                     <AlertDescription>{selectionError}</AlertDescription>
                   </Alert>
@@ -412,106 +441,158 @@ export default function TeamInvitePage() {
               )}
             </AnimatePresence>
 
-            {/* Team Card */}
-            <motion.div 
+            {/* Team Header */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.4, delay: 0.7 }}
+              className="w-full max-w-4xl flex justify-between items-center mb-4 px-2"
+            >
+              <h3 className="text-xs md:text-base uppercase">
+                {team.code} {team.name}
+              </h3>
+              <span className={cn(
+                "uppercase md:text-base text-xs",
+                availableHeroesCount === 0 ? "text-red-500" : availableHeroesCount < 5 ? "text-amber-500" : "text-green-500",
+              )}>
+                {availableHeroesCount > 0 ? `${availableHeroesCount}/5 Classes` : "Unavailable"}
+              </span>
+            </motion.div>
+
+            {/* Hero Grid — HoloCards */}
+            <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: 0.7 }}
-              className="w-full max-w-2xl bg-[#1a1a1a] rounded-lg mb-8"
+              transition={{ duration: 0.5, delay: 0.8 }}
+              className="w-full max-w-4xl mb-8"
             >
-              <div className="p-6">
-                <motion.div 
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  transition={{ duration: 0.4, delay: 0.8 }}
-                  className="flex justify-between items-center mb-4"
-                >
-                  <h3 className="text-xs sm:text-base">
-                    {team.code} {team.name}
-                  </h3>
-                </motion.div>
+              <div className="grid grid-cols-5 gap-2 md:gap-3 w-full">
+                {CONSTANTS.HEROES.map((hero, heroIndex) => {
+                  const isAvail = isHeroAvailable(hero.id);
+                  const member = teamMembers.find((m: any) => m.hero_id === hero.id);
+                  const displayName = !isAvail && member?.instagram_handle
+                    ? `@${member.instagram_handle.replace(/^@/, "")}`
+                    : hero.name;
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  {/* Hero Selection */}
-                  <motion.div
-                    initial={{ opacity: 0, x: -20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ duration: 0.4, delay: 0.9 }}
-                  >
-                    <h4 className="text-2xl font-jejuhallasan text-[#bababa] mb-3">
-                      Select Your Class
-                    </h4>
-                    <HeroSelectionGrid
-                      teamMembers={teamMembers}
-                      onSelectHero={handleHeroSelect}
-                      selectedHero={selectedHero}
-                      teamId={team.id}
-                    />
-                  </motion.div>
-
-                  {/* Class Details */}
-                  <motion.div
-                    initial={{ opacity: 0, x: 20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ duration: 0.4, delay: 1 }}
-                  >
-                    <h4 className="text-2xl font-jejuhallasan text-[#bababa] mb-3">
-                      Class Details
-                    </h4>
-                    <HeroDetails heroId={selectedHero} teamId={team.id} />
-                  </motion.div>
-                </div>
-
-                {/* Join Button */}
-                <motion.div 
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.4, delay: 1.1 }}
-                  className="mt-6"
-                >
-                  {availableLines.length > 0 ? (
-                      <Button
-                        onClick={handleRegister}
-                        disabled={!isHeroesLoaded || (isHeroesLoaded && (!selectedHero || !isHeroAvailable(selectedHero)))}
-                        className={cn(
-                          "cursor-pointer w-full bg-white text-black hover:bg-gray-200 rounded-full py-6 text-xl font-jejuhallasan",
-                        )}
-                      >
-                        {!isHeroesLoaded 
-                          ? "Loading Classes..."
-                          : !selectedHero || !isHeroAvailable(selectedHero)
-                            ? "Select A Class To Continue"
-                            : "Register With Selected Class"}
-                      </Button>
-                  ) : (
+                  return (
                     <motion.div
-                      initial={{ opacity: 0, scale: 0.9 }}
+                      key={hero.id}
+                      initial={{ opacity: 0, scale: 0.8 }}
                       animate={{ opacity: 1, scale: 1 }}
-                      transition={{ duration: 0.3 }}
+                      transition={{ duration: 0.4, delay: 0.9 + heroIndex * 0.1 }}
+                      className="w-full"
                     >
-                      <Alert className="bg-red-900/50 border-red-800 !text-white">
-                        <HugeiconsIcon icon={AlertCircleIcon} size={20} />
-                        <AlertDescription className="text-white font-jejuhallasan text-lg">
-                          ALL CLASSES FOR THIS PARTY ARE TAKEN!
-                        </AlertDescription>
-                      </Alert>
+                      {/* Mobile: compact HoloCard */}
+                      <div
+                        className={cn(
+                          "md:hidden w-full aspect-square transition-all duration-300",
+                          !isAvail && "grayscale opacity-50"
+                        )}
+                        onClick={() => isAvail && handleHeroSelect(hero.id)}
+                      >
+                        <HoloCard
+                          data={{
+                            name: "",
+                            backgroundImage: HERO_ALT_ICON[hero.id],
+                            overlayColor: team.hex,
+                            overlayOpacity: 20,
+                          }}
+                          width="full"
+                          showSparkles={isAvail}
+                          forceSide="front"
+                          minimal
+                        />
+                      </div>
+
+                      {/* Desktop: full HoloCard */}
+                      <div className={cn(
+                        "hidden md:block w-full aspect-[5/7] transition-all duration-300",
+                        !isAvail && "grayscale opacity-50"
+                      )}>
+                        <HoloCard
+                          data={{
+                            name: displayName,
+                            subtitle: hero.perk,
+                            description: hero.description,
+                            backgroundImage: HERO_BG[hero.id],
+                            iconImage: hero.icon,
+                            overlayColor: team.hex,
+                            overlayOpacity: 25,
+                          }}
+                          width="full"
+                          showSparkles={isAvail}
+                          forceSide={!isAvail ? "front" : undefined}
+                          actionLabel={isAvail ? "Claim Class" : "Claimed"}
+                          onAction={isAvail ? () => {
+                            handleHeroSelect(hero.id);
+                            handleRegister();
+                          } : undefined}
+                        />
+                      </div>
                     </motion.div>
-                  )}
-                </motion.div>
+                  );
+                })}
               </div>
+
+              {/* Mobile: Register button */}
+              <motion.div
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.4, delay: 1.2 }}
+                className="md:hidden mt-4"
+              >
+                {availableLines.length > 0 ? (
+                  <Button
+                    onClick={handleRegister}
+                    disabled={!isHeroesLoaded || !selectedHero || !isHeroAvailable(selectedHero)}
+                    variant="parchment" size="xl"
+                    className="cursor-pointer w-full"
+                  >
+                    {!isHeroesLoaded
+                      ? "Loading..."
+                      : !selectedHero || !isHeroAvailable(selectedHero)
+                        ? "Select A Class"
+                        : `Register as ${CONSTANTS.HEROES.find(h => h.id === selectedHero)?.name}`}
+                  </Button>
+                ) : (
+                  <Alert className="bg-red-900/50 border-red-800 !text-[#F7EAD9]">
+                    <HugeiconsIcon icon={AlertCircleIcon} size={20} />
+                    <AlertDescription className="text-[#F7EAD9] font-jejuhallasan text-lg">
+                      ALL CLASSES FOR THIS PARTY ARE TAKEN!
+                    </AlertDescription>
+                  </Alert>
+                )}
+              </motion.div>
+
+              {/* Desktop: "All taken" alert if needed */}
+              {availableLines.length === 0 && (
+                <motion.div
+                  initial={{ opacity: 0, scale: 0.9 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  transition={{ duration: 0.3, delay: 1.2 }}
+                  className="hidden md:block mt-4"
+                >
+                  <Alert className="bg-red-900/50 border-red-800 !text-[#F7EAD9]">
+                    <HugeiconsIcon icon={AlertCircleIcon} size={20} />
+                    <AlertDescription className="text-[#F7EAD9] font-jejuhallasan text-lg">
+                      ALL CLASSES FOR THIS PARTY ARE TAKEN!
+                    </AlertDescription>
+                  </Alert>
+                </motion.div>
+              )}
             </motion.div>
 
             {/* Team Members */}
             <AnimatePresence>
               {teamMembers.length > 0 && (
-                <motion.div 
+                <motion.div
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -20 }}
                   transition={{ duration: 0.5, delay: 1.2 }}
-                  className="w-full max-w-2xl bg-[#1a1a1a] rounded-lg overflow-hidden mb-8 p-6"
+                  className="w-full max-w-2xl parchment-bg parchment-border rounded-lg overflow-hidden mb-8 p-6"
                 >
-                  <h4 className="text-2xl font-jejuhallasan text-[#bababa] mb-4">
+                  <h4 className="text-2xl font-jejuhallasan text-parchment-ink mb-4">
                     Current Team Members
                   </h4>
                   <div className="space-y-3">
@@ -528,18 +609,18 @@ export default function TeamInvitePage() {
                           transition={{ duration: 0.3, delay: 1.3 + index * 0.1 }}
                           className="flex items-center"
                         >
-                          <div className="w-10 h-10 rounded-full overflow-hidden mr-3">
+                          <div className="w-10 h-10 rounded-full overflow-hidden mr-3 border border-parchment-dark">
                             <img
-                              src={hero ? getHeroImagePath(hero.id, invite.teamId) : "/placeholder.svg"}
+                              src={hero ? getHeroIcon(hero.id) : "/placeholder.svg"}
                               alt={hero?.name || "Class"}
                               className="w-full h-full object-cover"
                             />
                           </div>
                           <div className="flex-1">
-                            <p className="font-medium text-gray-200">
+                            <p className="font-medium text-parchment-ink">
                               {hero?.name}
                             </p>
-                            <p className="text-xs text-gray-400">
+                            <p className="text-xs text-parchment-ink/50">
                               {member.instagram_handle || "Unknown Class"}
                             </p>
                           </div>
@@ -552,24 +633,24 @@ export default function TeamInvitePage() {
 
               {/* No Team Members */}
               {teamMembers.length === 0 && (
-                <motion.div 
+                <motion.div
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -20 }}
                   transition={{ duration: 0.5, delay: 1.2 }}
-                  className="w-full max-w-2xl bg-[#1a1a1a] rounded-lg overflow-hidden mb-8 p-6 text-center"
+                  className="w-full max-w-2xl parchment-bg parchment-border rounded-lg overflow-hidden mb-8 p-6 text-center"
                 >
                   <motion.div
                     initial={{ scale: 0.8 }}
                     animate={{ scale: 1 }}
                     transition={{ duration: 0.5, delay: 1.3 }}
                   >
-                    <HugeiconsIcon icon={UserGroupIcon} size={48} className="text-gray-600 mx-auto mb-3" />
+                    <HugeiconsIcon icon={UserGroupIcon} size={48} className="text-parchment-ink/40 mx-auto mb-3" />
                   </motion.div>
-                  <h4 className="text-2xl font-jejuhallasan text-[#bababa] mb-2">
+                  <h4 className="text-2xl font-jejuhallasan text-parchment-ink mb-2">
                     No Team Members Yet
                   </h4>
-                  <p className="text-[#bababa] text-sm">Be the first to join this team!</p>
+                  <p className="text-parchment-ink/60 text-sm">Be the first to join this team!</p>
                 </motion.div>
               )}
             </AnimatePresence>

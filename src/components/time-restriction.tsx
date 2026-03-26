@@ -29,15 +29,15 @@ export function TimeRestriction({ children }: TimeRestrictionProps) {
 
   if (!isAllowed) {
     return (
-      <div className="min-h-screen bg-black text-white flex flex-col items-center justify-center p-4">
+      <div className="min-h-screen text-[#F7EAD9] flex flex-col items-center justify-center p-4">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
           className="text-center space-y-8"
         >
-          <h1 className="text-4xl md:text-6xl font-jejuhallasan">Coming Soon</h1>
-          <p className="text-[#BABABA] text-lg">
+          <h1 className="text-4xl md:text-6xl font-jetsytrial">Coming Soon</h1>
+          <p className="text-[#F7EAD9] text-lg">
             The registration will be available on March 30, 2026 at 12:30 PM
           </p>
           <CountdownTimer targetDate={targetDate} />

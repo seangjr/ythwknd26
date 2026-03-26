@@ -53,7 +53,7 @@ CREATE TABLE IF NOT EXISTS registrations (
   emergency_contact_phone         VARCHAR(30),
   emergency_contact_email         VARCHAR(255),
   -- Extended registration fields
-  is_christian                    VARCHAR(10),
+  is_christian                    VARCHAR(50),
   event_source                    VARCHAR(100),
   other_event_source              VARCHAR(255),
   invited_by_friend               VARCHAR(255),

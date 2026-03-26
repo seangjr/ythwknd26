@@ -88,3 +88,11 @@ NOT SURE
 **Applied-at:** M001/S04/T02
 
 ---
+
+## Override: 2026-03-26T05:49:16.514Z
+
+**Change:** it shouldnt be the hero's name, it should be the class name
+**Scope:** active
+**Applied-at:** M002/none/none
+
+---

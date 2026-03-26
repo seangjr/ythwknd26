@@ -147,7 +147,7 @@ export function TeamDrawer({
         </SheetHeader>
 
         <div className="py-6">
-          <h3 className="text-sm font-medium text-gray-500 mb-3">
+          <h3 className="text-sm font-medium text-parchment-ink/60 mb-3">
             Team Members
           </h3>
 
@@ -155,7 +155,7 @@ export function TeamDrawer({
             {registrations.map((reg) => (
               <div
                 key={reg.id}
-                className="flex items-center p-3 bg-gray-50 dark:bg-gray-800 rounded-lg"
+                className="flex items-center p-3 bg-parchment-darker/15 rounded-lg"
               >
                 <div className="flex-shrink-0 mr-3">
                   <img
@@ -169,8 +169,8 @@ export function TeamDrawer({
                 </div>
 
                 <div className="flex-1">
-                  <p className="font-medium">{reg.nickname}</p>
-                  <p className="text-xs text-gray-500">Line {reg.lineNumber}</p>
+                  <p className="font-medium text-parchment-ink">{reg.nickname}</p>
+                  <p className="text-xs text-parchment-ink/50">Line {reg.lineNumber}</p>
                 </div>
               </div>
             ))}
@@ -178,9 +178,9 @@ export function TeamDrawer({
             {Array.from({ length: 5 - registrations.length }).map((_, i) => (
               <div
                 key={`empty-${i}`}
-                className="flex items-center p-3 border border-dashed border-gray-300 dark:border-gray-700 rounded-lg"
+                className="flex items-center p-3 border border-dashed border-parchment-dark rounded-lg"
               >
-                <p className="text-sm text-gray-500 w-full text-center">
+                <p className="text-sm text-parchment-ink/40 w-full text-center">
                   Empty Slot
                 </p>
               </div>
@@ -196,9 +196,9 @@ export function TeamDrawer({
                   type="text"
                   value={inviteLink}
                   readOnly
-                  className="flex-1 p-2 text-sm border rounded bg-gray-50 dark:bg-gray-800"
+                  className="flex-1 p-2 text-sm border rounded bg-parchment-darker/20 border-parchment-dark text-parchment-ink"
                 />
-                <Button onClick={copyInviteLink} variant="outline" size="sm">
+                <Button onClick={copyInviteLink} variant="parchment-outline" size="sm">
                   {copied ? (
                     <HugeiconsIcon icon={Tick02Icon} size={16} />
                   ) : (
@@ -206,13 +206,13 @@ export function TeamDrawer({
                   )}
                 </Button>
               </div>
-              <Button onClick={shareInviteLink} className="w-full">
+              <Button onClick={shareInviteLink} variant="parchment" className="w-full">
                 <HugeiconsIcon icon={Share01Icon} size={16} className="mr-2" />
                 Share Link
               </Button>
               <Button
                 onClick={() => setInviteLink(null)}
-                variant="outline"
+                variant="parchment-outline"
                 className="w-full"
               >
                 Generate New Link
@@ -222,6 +222,7 @@ export function TeamDrawer({
             <div className="flex flex-col space-y-2 w-full">
               <Button
                 onClick={generateInviteLink}
+                variant="parchment"
                 disabled={isGeneratingLink || registrations.length === 0}
                 className="w-full"
               >
@@ -229,6 +230,7 @@ export function TeamDrawer({
               </Button>
               <Button
                 onClick={handleJoinTeam}
+                variant="parchment-outline"
                 disabled={!nextAvailableLine}
                 className="w-full"
               >

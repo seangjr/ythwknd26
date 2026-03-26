@@ -7,8 +7,17 @@
     font-display: swap;
 }
 
+@font-face {
+    font-family: "Jetsy Trial";
+    src: url("/fonts/JetsyTrial.otf") format("opentype");
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+
 @layer base {
     :root {
         --font-jejuhallasan: "Jeju Hallasan", system-ui, sans-serif;
+        --font-jetsytrial: "Jetsy Trial", system-ui, sans-serif;
     }
 }
