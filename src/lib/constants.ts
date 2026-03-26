@@ -8,7 +8,7 @@ export const CONSTANTS = { SITE_TITLE: "YTHWKND",
     {
       id: "warrior",
       name: "Warrior",
-      icon: "/icons-alt/Warrior.svg",
+      icon: "/icons-alt/Warrior.webp",
       class: "WARRIOR",
       perk: "FRONTLINE BREAKER",
       description:
@@ -17,7 +17,7 @@ export const CONSTANTS = { SITE_TITLE: "YTHWKND",
     {
       id: "archer",
       name: "Archer",
-      icon: "/icons-alt/Archer.svg",
+      icon: "/icons-alt/Archer.webp",
       class: "ARCHER",
       perk: "PRECISION STRIKER",
       description:
@@ -26,7 +26,7 @@ export const CONSTANTS = { SITE_TITLE: "YTHWKND",
     {
       id: "scout",
       name: "Scout",
-      icon: "/icons-alt/Scout.svg",
+      icon: "/icons-alt/Scout.webp",
       class: "SCOUT",
       perk: "RAPID PATHFINDER",
       description:
@@ -35,7 +35,7 @@ export const CONSTANTS = { SITE_TITLE: "YTHWKND",
     {
       id: "guardian",
       name: "Guardian",
-      icon: "/icons-alt/Guardian.svg",
+      icon: "/icons-alt/Guardian.webp",
       class: "GUARDIAN",
       perk: "IRON WALL",
       description:
@@ -44,7 +44,7 @@ export const CONSTANTS = { SITE_TITLE: "YTHWKND",
     {
       id: "scholar",
       name: "Scholar",
-      icon: "/icons-alt/Scholar.svg",
+      icon: "/icons-alt/Scholar.webp",
       class: "SCHOLAR",
       perk: "TACTICAL MIND",
       description:

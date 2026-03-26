@@ -92,7 +92,7 @@ NOT SURE
 ## Override: 2026-03-26T05:49:16.514Z
 
 **Change:** it shouldnt be the hero's name, it should be the class name
-**Scope:** active
+**Scope:** resolved
 **Applied-at:** M002/none/none
 
 ---

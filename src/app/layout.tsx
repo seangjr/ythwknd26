@@ -28,7 +28,7 @@ export const metadata: Metadata = {
     siteName: "YTHWKND 2026",
     images: [
       {
-        url: "/landing.png?v=2",
+        url: "/landing.jpg",
         width: 1200,
         height: 630,
         alt: "YTHWKND and the Giant at the Gate",
@@ -41,7 +41,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "YTHWKND and the Giant at the Gate",
     description: "The city needs your help. The gate is shut. A giant stands in the way. Begin your training, assemble your party, take the gate.",
-    images: ["/landing.png?v=2"],
+    images: ["/landing.jpg"],
   },
   icons: {
     icon: [

@@ -23,20 +23,20 @@ const CLASS_COLORS: Record<string, string> = {
 
 // SVG background images per hero
 const HERO_BG: Record<string, string> = {
-  warrior: "/card-bg/Warrior.svg",
-  archer: "/card-bg/Archer.svg",
-  scout: "/card-bg/Scout.svg",
-  guardian: "/card-bg/Guardian.svg",
-  scholar: "/card-bg/Scholar.svg",
+  warrior: "/card-bg/Warrior.webp",
+  archer: "/card-bg/Archer.webp",
+  scout: "/card-bg/Scout.webp",
+  guardian: "/card-bg/Guardian.webp",
+  scholar: "/card-bg/Scholar.webp",
 };
 
 // Alt icons for mobile view
 const HERO_ALT_ICON: Record<string, string> = {
-  warrior: "/icons-alt/Warrior.svg",
-  archer: "/icons-alt/Archer.svg",
-  scout: "/icons-alt/Scout.svg",
-  guardian: "/icons-alt/Guardian.svg",
-  scholar: "/icons-alt/Scholar.svg",
+  warrior: "/icons-alt/Warrior.webp",
+  archer: "/icons-alt/Archer.webp",
+  scout: "/icons-alt/Scout.webp",
+  guardian: "/icons-alt/Guardian.webp",
+  scholar: "/icons-alt/Scholar.webp",
 };
 
 interface Registration {

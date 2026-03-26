@@ -15,11 +15,11 @@ const CLASS_COLORS: Record<string, string> = {
 
 // SVG background images per hero (high quality)
 const HERO_BG: Record<string, string> = {
-  warrior: "/card-bg/Warrior.svg",
-  archer: "/card-bg/Archer.svg",
-  scout: "/card-bg/Scout.svg",
-  guardian: "/card-bg/Guardian.svg",
-  scholar: "/card-bg/Scholar.svg",
+  warrior: "/card-bg/Warrior.webp",
+  archer: "/card-bg/Archer.webp",
+  scout: "/card-bg/Scout.webp",
+  guardian: "/card-bg/Guardian.webp",
+  scholar: "/card-bg/Scholar.webp",
 };
 
 // Demo: simulate 2 taken heroes with IG handles

@@ -1,4 +1,5 @@
-import { google } from "googleapis";
+import { sheets_v4 } from "@googleapis/sheets";
+import { GoogleAuth } from "google-auth-library";
 
 /**
  * Helper function to safely parse the Google service account key
@@ -86,11 +87,11 @@ export async function createSheetsClient() {
   console.log("Credential structure:", credentialStructure);
 
   // Initialize auth client
-  const auth = new google.auth.GoogleAuth({
+  const auth = new GoogleAuth({
     credentials,
     scopes: ["https://www.googleapis.com/auth/spreadsheets"],
   });
 
   // Create and return sheets client
-  return google.sheets({ version: "v4", auth });
+  return new sheets_v4.Sheets({ auth });
 }

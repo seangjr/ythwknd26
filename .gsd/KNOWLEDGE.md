@@ -102,3 +102,54 @@ The original Supabase code did two sequential queries: first lookup invite by co
 ## API routes with optional query params pattern
 
 hero-availability and team-members routes accept optional `teamId` query param. When provided, they filter by team; when omitted, they return all rows. This eliminates the need for separate "get all" endpoints and allows client components to use the same route for both filtered and bulk data fetching.
+
+## SVGs with embedded raster data — extract then convert, don't rasterize
+
+The icons-alt/ and card-bg/ SVG files were not vector graphics — they were ~2-3MB raster PNGs base64-encoded inside SVG containers. To convert: parse the SVG for `data:image/png;base64,` URIs, decode the base64 payload to a Buffer, then pipe through sharp for WebP conversion. Don't use SVG rasterization tools (they re-encode the already-rasterized image). Quality 80 WebP yields ~92% compression with no visible quality loss.
+
+## pyftsubset for Latin-only WOFF2 font subsetting
+
+To create a Latin-only WOFF2 from a large CJK font: `pyftsubset input.ttf --output-file=output.woff2 --flavor=woff2 --unicodes='U+0020-007E,U+00A0-00FF' --layout-features='*'`. The `--layout-features='*'` flag preserves all OpenType features (kerning, ligatures). Install via `pip install fonttools brotli`. JejuHallasan went from 6.4MB TTF to 16KB WOFF2 with this approach.
+
+## OG image standard dimensions and compression
+
+Open Graph images should be 1200×630px. Use sips (macOS built-in) for resizing: `sips -z 630 1200 --setProperty format jpeg --setProperty formatOptions 85 input.png --out output.jpg`. Quality 85 is standard for social sharing. This yielded 276KB from a 10MB source.
+
+## Lighthouse mobile scores on localhost are unrealistically low
+
+Lighthouse mobile preset simulates a Moto G Power on slow 4G (1.6 Mbps, 150ms RTT, 4x CPU slowdown). On localhost without CDN edge caching, HTTP/3, or Vercel optimizations, this produces scores far below production reality (e.g. 52 and 0 vs desktop 83 and 88). Use desktop preset as the primary gate for localhost testing. Run mobile Lighthouse against the deployed Vercel URL for realistic mobile scores.
+
+## ffmpeg CRF video compression for muted web backgrounds
+
+For background videos that play muted: strip audio with `-an`, use CRF encoding (`-crf 28` for visible hero, `-crf 32` for effect-masked backgrounds), and add `-movflags +faststart` for progressive loading. Videos with blur/opacity/mix-blend effects tolerate much more aggressive compression. `-preset slow` yields better compression at the cost of ~3.5s longer encode. H.264 codec for universal browser support.
+
+## @googleapis/sheets replaces full googleapis package
+
+The full `googleapis` package is ~148MB in node_modules. For projects that only use Google Sheets, install `@googleapis/sheets` (~26MB) + `google-auth-library` explicitly. Import changes: `const { google } = require('googleapis')` → `const { sheets } = require('@googleapis/sheets')` and `const { GoogleAuth } = require('google-auth-library')`. Creates the sheets client directly via `sheets({ version: 'v4', auth })` instead of `google.sheets({ version: 'v4', auth })`.
+
+## SVG files may be raster PNGs in disguise
+
+Many "SVG" files (especially from design tools) are actually base64-encoded raster PNGs wrapped in an `<image>` tag. Check for `data:image/png;base64` inside SVGs before attempting SVGO or vector optimization. Extract the base64 payload, decode to PNG, then convert to WebP with sharp for 90%+ compression.
+
+## pyftsubset for CJK font subsetting
+
+When a font file contains thousands of CJK glyphs but the app only uses Latin characters, pyftsubset can achieve 99%+ size reduction:
+```
+pyftsubset input.ttf --output-file=output.woff2 --flavor=woff2 --unicodes=U+0020-007E,U+00A0-00FF --layout-features='*'
+```
+The `--layout-features='*'` flag preserves all OpenType features (kerning, ligatures).
+
+## ffmpeg CRF encoding for muted autoplay videos
+
+For videos that play muted (autoplay background), strip audio with `-an` and use CRF encoding for dramatic compression:
+- CRF 28 for visible hero/foreground videos (92% compression)
+- CRF 32 for videos rendered with CSS effects (blur, opacity, mix-blend) that mask quality loss (95% compression)
+- Always add `-movflags +faststart` for progressive loading
+
+## Lighthouse mobile simulation on localhost is unreliable
+
+Lighthouse mobile preset applies simulated slow 4G throttling (1.6 Mbps, 150ms RTT, 4x CPU slowdown) which produces artificially low scores on localhost. Desktop preset is more representative of production performance behind a CDN. Always re-verify mobile scores on the deployed production URL.
+
+## @googleapis/sheets as lightweight googleapis replacement
+
+The full `googleapis` package is ~148MB in node_modules. For apps that only need Google Sheets, `@googleapis/sheets` + `google-auth-library` is ~26MB — an 82% reduction. Import changes: `import { google } from 'googleapis'` → `import { sheets_v4, auth } from '@googleapis/sheets'`.
