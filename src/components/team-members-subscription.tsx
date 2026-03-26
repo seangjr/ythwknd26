@@ -1,6 +1,5 @@
 "use client";
 
-import { createClient } from "@/lib/supabase";
 import { useEffect } from "react";
 
 interface TeamMembersSubscriptionProps {
@@ -13,29 +12,27 @@ export function TeamMembersSubscription({
   onNewMember,
 }: TeamMembersSubscriptionProps) {
   useEffect(() => {
-    const supabase = createClient();
+    const eventSource = new EventSource(
+      `/api/team-updates?teamId=${teamId}`,
+    );
 
-    // Subscribe to changes in the registrations table for this team
-    const subscription = supabase
-      .channel("registrations-changes")
-      .on(
-        "postgres_changes",
-        {
-          event: "INSERT",
-          schema: "public",
-          table: "registrations",
-          filter: `team_id=eq.${teamId}`,
-        },
-        (payload) => {
-          console.log("New team member registered:", payload);
+    eventSource.onmessage = (event) => {
+      try {
+        const data = JSON.parse(event.data);
+        if (data.type === "new_member") {
           onNewMember();
-        },
-      )
-      .subscribe();
+        }
+      } catch (err) {
+        console.error("[TeamMembersSubscription] failed to parse SSE data:", err);
+      }
+    };
 
-    // Clean up subscription on unmount
+    eventSource.onerror = (err) => {
+      console.error("[TeamMembersSubscription] SSE error, will auto-reconnect:", err);
+    };
+
     return () => {
-      subscription.unsubscribe();
+      eventSource.close();
     };
   }, [teamId, onNewMember]);
 

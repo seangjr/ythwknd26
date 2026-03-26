@@ -37,7 +37,7 @@ Upstream: All 6 API routes from S02 (hero-availability, team-members, team-invit
   - Files: `src/app/(everywhere-else)/invite/[code]/page.tsx`
   - Verify: rg 'supabase' src/app/\(everywhere-else\)/invite/\[code\]/page.tsx returns zero matches && npx tsc --noEmit exits 0
 
-- [ ] **T03: Create SSE endpoint, rewrite subscription component, and remove all Supabase remnants** `est:40m`
+- [x] **T03: Create SSE endpoint, rewrite subscription component, and remove all Supabase remnants** `est:40m`
   Create /api/team-updates/route.ts SSE endpoint that polls registrations count and streams change notifications. Rewrite team-members-subscription.tsx to use EventSource. Delete src/lib/supabase.ts. Remove @supabase/supabase-js from package.json. Verify zero Supabase references remain anywhere in source.
   - Files: `src/app/api/team-updates/route.ts`, `src/components/team-members-subscription.tsx`, `src/lib/supabase.ts`, `package.json`
   - Verify: rg 'supabase' src/ -g '*.ts' -g '*.tsx' returns zero matches && rg '@supabase/supabase-js' package.json returns zero matches && test ! -f src/lib/supabase.ts && npx tsc --noEmit exits 0 && bun run build exits 0

@@ -31,8 +31,8 @@ export function getClient(): NeonQueryFunction<false, false> {
 
 /**
  * Map a database error to a structured { error, message, status } object.
- * Preserves the same interface shape as the former supabase.ts module
- * so downstream API routes can migrate incrementally.
+ * Preserves a consistent { error, message, status } shape
+ * for downstream API routes.
  */
 export function handleDatabaseError(error: unknown): {
   error: string;
