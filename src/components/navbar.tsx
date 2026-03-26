@@ -3,7 +3,7 @@ import Link from "next/link";
 
 export default function Navbar() {
   return (
-    <nav className="flex flex-col items-center justify-center py-4 md:py-8 border-[#BABABA] border-b">
+    <nav className="flex flex-col items-center justify-center py-4 md:py-8">
       <Link href="/">
         <Image
           src="/assets/masthead-white.svg"

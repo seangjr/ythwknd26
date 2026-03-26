@@ -281,7 +281,7 @@ export default function Registration() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 1 }}
-          className="text-center py-10 my-10 border-y-2 border-gray-400"
+          className="text-center py-10 my-10"
         >
           <h2 className="text-8xl mb-2 font-jejuhallasan">
             <motion.span
@@ -408,9 +408,9 @@ export default function Registration() {
                           onClick={() =>
                             isAvailable && handleRegisterClick(hero.id, team.id)
                           }
+                          style={{ backgroundColor: team.hex }}
                           className={cn(
                             "w-16 h-16 rounded-full sm:rounded-lg sm:w-full sm:h-36 mx-auto",
-                            team.color,
                             isAvailable
                               ? "cursor-pointer hover:opacity-80 transition-opacity duration-300"
                               : "opacity-50 cursor-not-allowed grayscale",

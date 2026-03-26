@@ -1,16 +1,16 @@
 [
   {
-    "id": "74dc7bfe",
+    "id": "c48629b6",
     "label": "next-dev",
     "command": "cd /Users/seangjr/Developer/Personal/ythwknd25 && npm run dev",
     "cwd": "/Users/seangjr/Developer/Personal/ythwknd25",
-    "ownerSessionFile": "/Users/seangjr/.gsd/sessions/--Users-seangjr-Developer-Personal-ythwknd25--/2026-03-26T03-52-26-668Z_a6777dc1-87db-4986-9a17-3fdbe20c60c2.jsonl",
+    "ownerSessionFile": "/Users/seangjr/.gsd/sessions/--Users-seangjr-Developer-Personal-ythwknd25--/2026-03-26T04-10-47-239Z_03363bd9-51b5-4884-a5ae-0fd3aaf7d30b.jsonl",
     "persistAcrossSessions": false,
-    "startedAt": 1774497751870,
+    "startedAt": 1774498258752,
     "processType": "server",
     "group": null,
     "readyPattern": null,
     "readyPort": 3000,
-    "pid": 95268
+    "pid": 63271
   }
 ]
