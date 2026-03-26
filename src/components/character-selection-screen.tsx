@@ -225,48 +225,67 @@ export function CharacterSelectionScreen({
                   </p>
 
                   <div className="space-y-3">
-                    {CONSTANTS.HEROES.map((hero, index) => {
-                      const isSelected = hero.id === selectedHero;
-                      const isTaken = isHeroTaken(hero.id);
-                      const statusText = getHeroStatus(hero.id);
-                      const statusColor = getHeroStatusColor(hero.id);
+                    {loading
+                      ? Array.from({ length: 5 }).map((_, index) => (
+                          <motion.div
+                            key={index}
+                            initial={{ opacity: 0, x: -20 }}
+                            animate={{ opacity: 1, x: 0 }}
+                            transition={{ duration: 0.3, delay: 0.6 + index * 0.1 }}
+                            className="flex items-center p-2 rounded-lg"
+                          >
+                            <div className="w-6 mr-3">
+                              <div className="h-4 w-4 rounded bg-parchment-dark/30 animate-pulse" />
+                            </div>
+                            <div className="w-10 h-10 rounded-full mr-3 bg-parchment-dark/30 animate-pulse" />
+                            <div className="flex-1 space-y-2">
+                              <div className="h-4 w-24 rounded bg-parchment-dark/30 animate-pulse" />
+                              <div className="h-3 w-32 rounded bg-parchment-dark/20 animate-pulse" />
+                            </div>
+                          </motion.div>
+                        ))
+                      : CONSTANTS.HEROES.map((hero, index) => {
+                          const isSelected = hero.id === selectedHero;
+                          const isTaken = isHeroTaken(hero.id);
+                          const statusText = getHeroStatus(hero.id);
+                          const statusColor = getHeroStatusColor(hero.id);
 
-                      return (
-                        <motion.div
-                          key={hero.id}
-                          initial={{ opacity: 0, x: -20 }}
-                          animate={{ opacity: 1, x: 0 }}
-                          transition={{ duration: 0.3, delay: 0.6 + index * 0.1 }}
-                          whileHover={!isTaken || isSelected ? { scale: 1.02 } : {}}
-                          className={cn(
-                            "cursor-pointer flex items-center p-2 rounded-lg transition-all",
-                            isSelected ? "bg-parchment-darker/20" : "hover:bg-parchment-darker/20",
-                            isTaken && !isSelected && "opacity-70 cursor-not-allowed",
-                          )}
-                          onClick={() => handleHeroSelect(hero.id)}
-                        >
-                          <div className="w-6 mr-3 text-parchment-ink/50">
-                            {index + 1}
-                          </div>
-                          <div className="w-10 h-10 rounded-full overflow-hidden mr-3">
-                            <img
-                              src={getHeroIcon(hero.id)}
-                              alt={hero.name}
+                          return (
+                            <motion.div
+                              key={hero.id}
+                              initial={{ opacity: 0, x: -20 }}
+                              animate={{ opacity: 1, x: 0 }}
+                              transition={{ duration: 0.3, delay: 0.6 + index * 0.1 }}
+                              whileHover={!isTaken || isSelected ? { scale: 1.02 } : {}}
                               className={cn(
-                                "w-full h-full object-cover",
-                                isTaken && !isSelected && "grayscale",
+                                "cursor-pointer flex items-center p-2 rounded-lg transition-all",
+                                isSelected ? "bg-parchment-darker/20" : "hover:bg-parchment-darker/20",
+                                isTaken && !isSelected && "opacity-70 cursor-not-allowed",
                               )}
-                            />
-                          </div>
-                          <div className="flex-1">
-                            <p className="font-medium uppercase">{hero.name}</p>
-                            <p className={cn("text-sm", statusColor)}>
-                              {statusText}
-                            </p>
-                          </div>
-                        </motion.div>
-                      );
-                    })}
+                              onClick={() => handleHeroSelect(hero.id)}
+                            >
+                              <div className="w-6 mr-3 text-parchment-ink/50">
+                                {index + 1}
+                              </div>
+                              <div className="w-10 h-10 rounded-full overflow-hidden mr-3">
+                                <img
+                                  src={getHeroIcon(hero.id)}
+                                  alt={hero.name}
+                                  className={cn(
+                                    "w-full h-full object-cover",
+                                    isTaken && !isSelected && "grayscale",
+                                  )}
+                                />
+                              </div>
+                              <div className="flex-1">
+                                <p className="font-medium uppercase">{hero.name}</p>
+                                <p className={cn("text-sm", statusColor)}>
+                                  {statusText}
+                                </p>
+                              </div>
+                            </motion.div>
+                          );
+                        })}
                   </div>
                 </motion.div>
               </div>
