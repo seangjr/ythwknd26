@@ -13,6 +13,8 @@ import "./holo-card.css";
 
 export interface HoloCardDisplayData {
   name: string;
+  /** Username shown below the name (e.g. @handle) */
+  username?: string;
   subtitle?: string;
   description?: string;
   primaryId?: string | number;
@@ -79,6 +81,7 @@ export const HoloCard = ({
 
   const {
     name,
+    username,
     subtitle,
     description,
     primaryId,
@@ -277,6 +280,12 @@ export const HoloCard = ({
           "text-parchment-ink font-jetsytrial",
           isCompact ? "text-lg" : "text-4xl"
         )}>{name}</div>
+        {username && (
+          <div className={cn(
+            "text-parchment-ink/40 font-sans",
+            isCompact ? "text-[9px]" : "text-xs"
+          )}>{username}</div>
+        )}
         {subtitle && (
           <div className={cn(
             "text-parchment-ink/60",
@@ -354,6 +363,12 @@ export const HoloCard = ({
           )}>
             {name}
           </div>
+          {username && (
+            <div className={cn(
+              "text-parchment-ink/40 font-sans",
+              isCompact ? "text-[8px] -mt-0.5 mb-1" : "text-xs -mt-1 mb-2"
+            )}>{username}</div>
+          )}
           {subtitle && (
             <div className={cn(
               "text-parchment-ink/60",

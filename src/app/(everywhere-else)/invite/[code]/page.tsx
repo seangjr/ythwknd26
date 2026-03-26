@@ -470,9 +470,9 @@ export default function TeamInvitePage() {
                 {CONSTANTS.HEROES.map((hero, heroIndex) => {
                   const isAvail = isHeroAvailable(hero.id);
                   const member = teamMembers.find((m: any) => m.hero_id === hero.id);
-                  const displayName = !isAvail && member?.instagram_handle
+                  const username = !isAvail && member?.instagram_handle
                     ? `@${member.instagram_handle.replace(/^@/, "")}`
-                    : hero.name;
+                    : undefined;
 
                   return (
                     <motion.div
@@ -511,7 +511,8 @@ export default function TeamInvitePage() {
                       )}>
                         <HoloCard
                           data={{
-                            name: displayName,
+                            name: hero.name,
+                            username,
                             subtitle: hero.perk,
                             description: hero.description,
                             backgroundImage: HERO_BG[hero.id],
