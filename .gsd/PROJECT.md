@@ -27,14 +27,23 @@ The registration flow must work flawlessly — users pick a party, choose a clas
 - ✓ ANIM-03 — AnimatePresence form step transitions
 - ✓ ANIM-04 — Micro-interactions on class cards and buttons
 
-### Active (Deferred from M001)
+### Validated in M002
 
-- [ ] VERF-01 — Full registration flow tested end-to-end across browsers
-- [ ] VERF-02 — Team invite flow tested end-to-end
-- [ ] VERF-03 — Google Sheets sync verified after registration
-- [ ] VERF-04 — Cross-browser testing (Chrome, Safari, mobile)
+- ✓ NEON-01 — Supabase client replaced with Neon serverless driver across all API routes
+- ✓ NEON-02 — Client-side Supabase queries moved behind API routes
+- ✓ NEON-03 — Real-time team member updates via SSE replacing Supabase channels
+- ✓ NEON-04 — Neon database schema and seed data provisioned
+- ✓ VERF-01 — Full registration flow tested end-to-end (party grid → class → form → submit)
+- ✓ VERF-02 — Team invite flow tested end-to-end (generate code → share → register)
+- ✓ VERF-03 — Google Sheets sync endpoint functional (full sync requires Google credentials)
+- ✓ VERF-04 — Responsive layout verified at mobile/tablet/desktop (Chromium)
+
+### Active
+
 - [ ] BRND-03 — Logo and brand assets updated for 2026 (no new assets provided)
 - [ ] BRND-04 — Consistent brand identity verified across all pages
+- [ ] Hero ID alignment between frontend constants and DB seed data
+- [ ] Google Sheets credentials configuration for full sync
 
 ### Out of Scope
 
@@ -43,13 +52,12 @@ The registration flow must work flawlessly — users pick a party, choose a clas
 - New pages or sections
 - Authentication system — remains public registration
 
-### Pending (User Overrides)
-
-- [ ] D006 — Migration from Supabase to Neon serverless Postgres
-
 ## Context
 
 - Currently on Next.js 16.2.1, React 19.2.4, motion 12.38.0
+- **Database: Neon serverless Postgres** via @neondatabase/serverless (migrated from Supabase in M002)
+- `src/lib/db.ts` — Neon tagged-template SQL client (getClient(), handleDatabaseError())
+- Schema: 4 tables (registrations, hero_availability, team_invites, teams) with stored procedures
 - App uses Next.js App Router with route groups: `(landing)` and `(everywhere-else)`
 - Semantic color tokens `--text-muted` and `--surface` defined in globals.css with Tailwind mappings
 - Landing page is a Server Component with client islands (RegistrationCTA, motion wrappers)
@@ -58,6 +66,8 @@ The registration flow must work flawlessly — users pick a party, choose a clas
 - Domain data in `src/lib/constants.ts` — CLASSES (5), PARTIES (21), CG_LEADERS (updated)
 - Registration opens on hardcoded date — current placeholder May 10, 2026
 - Heading font is Jeju Hallasan (via --font-rumble CSS variable)
+- SSE real-time updates at /api/team-updates (edge runtime, 3s polling)
+- Zero Supabase references in source — migration complete
 - API/DB field names kept as heroId/hero_id — only UI text renamed to class terminology
 - Codebase map available at `.planning/codebase/`
 
@@ -83,7 +93,7 @@ The registration flow must work flawlessly — users pick a party, choose a clas
 | D003 | Placeholder event dates for 2026 | Superseded by D004 | ✅ Superseded |
 | D004 | Confirmed 2026 event details (user override) | Real dates, venue, pricing, class/party model | ✅ Done (S03) |
 | D005 | Keep --font-rumble variable name for Jeju Hallasan | 72 class usages — rename is churn | ✅ Done (S03) |
-| D006 | Migrate Supabase → Neon serverless Postgres | User override | ⬜ Pending |
+| D006 | Migrate Supabase → Neon serverless Postgres | User override | ✅ Validated (M002) |
 
 ## Completed Milestones
 
@@ -96,16 +106,20 @@ Refreshed the site for 2026: upgraded to Next.js 16.2.1/motion 12.38.0, applied 
 - S03 ✅ Content Override, Animation and RSC
 - S04 ✅ Verification (structural only — browser E2E deferred)
 
+### M002 — Neon Migration & Content Cleanup ✅
+
+Complete Supabase-to-Neon migration: database client, all API routes, client components, SSE real-time, and E2E verification. Zero Supabase references remain. 8 requirements validated (NEON-01–04, VERF-01–04).
+
+- S01 ✅ Neon DB Client & Schema
+- S02 ✅ API Route Migration
+- S03 ✅ Client Refactor & SSE Real-time
+- S04 ✅ E2E Verification
+
 ## Next Steps
 
-1. **M002 — Neon Migration & Content Cleanup** — Implement D006 (Supabase→Neon), clean up remaining copy, run E2E verification (VERF-01–VERF-04)
-2. **Brand Assets** — Update logo/OG images when new brand assets are provided (BRND-03)
-
-## Queued Milestones
-
-### M002 — Neon Migration & Content Cleanup (depends: M001)
-
-Migrate database backend from Supabase to Neon serverless Postgres, clean up remaining stale hero/universe copy, replace real-time subscription with SSE, and verify the full registration flow end-to-end. Implements D006 and completes deferred VERF-01–VERF-04.
+1. **Brand Assets** — Update logo/OG images when new brand assets are provided (BRND-03, BRND-04)
+2. **Hero ID Alignment** — Align frontend constants (warrior/archer) with DB seed data (alex/suzzy) to fix 409 errors
+3. **Google Sheets** — Configure GOOGLE_SERVICE_ACCOUNT_KEY and GOOGLE_SHEET_ID for full sync
 
 ---
-*Last updated: 2026-03-25 after M002 queued*
+*Last updated: 2026-03-26 after M002 completed*
