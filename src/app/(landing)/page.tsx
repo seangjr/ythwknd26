@@ -24,14 +24,15 @@ export default function Home() {
       {/* Hero Section */}
       <section className="w-full relative h-[620px] sm:h-[820px] flex items-end justify-center">
         <div className="absolute inset-0">
-          <Image
-            src="/landing.png"
-            alt="YTHWKND background"
-            fill
-            className="object-cover object-top opacity-90"
-            quality={100}
-            priority
-          />
+          <video
+            autoPlay
+            loop
+            muted
+            playsInline
+            className="h-full w-full object-cover object-top opacity-90"
+          >
+            <source src="/landing.mp4" type="video/mp4" />
+          </video>
         </div>
         {/* Bottom fade overlay — independent of masthead */}
         <div className="absolute inset-x-0 bottom-0 h-1/3 bg-linear-to-t from-black to-transparent z-[2]" />

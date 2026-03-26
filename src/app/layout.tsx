@@ -1,6 +1,8 @@
 import "@/app/globals.css";
 import "@/styles/fonts.css";
+import "lenis/dist/lenis.css";
 import { BackgroundMusic } from "@/components/background-music";
+import { LenisProvider } from "@/components/lenis-provider";
 import type { Metadata } from "next";
 import { GoogleAnalytics } from "@next/third-parties/google";
 
@@ -79,8 +81,10 @@ export default function RootLayout({
       <body
         className="antialiased bg-black text-[#BABABA] min-h-screen flex flex-col"
       >
-        <BackgroundMusic />
-        {children}
+        <LenisProvider>
+          <BackgroundMusic />
+          {children}
+        </LenisProvider>
       </body>
       <GoogleAnalytics gaId="GTM-W5JTJM5Q" />
     </html>
