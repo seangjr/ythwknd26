@@ -1,16 +1,1 @@
-[
-  {
-    "id": "c48629b6",
-    "label": "next-dev",
-    "command": "cd /Users/seangjr/Developer/Personal/ythwknd25 && npm run dev",
-    "cwd": "/Users/seangjr/Developer/Personal/ythwknd25",
-    "ownerSessionFile": "/Users/seangjr/.gsd/sessions/--Users-seangjr-Developer-Personal-ythwknd25--/2026-03-26T04-10-47-239Z_03363bd9-51b5-4884-a5ae-0fd3aaf7d30b.jsonl",
-    "persistAcrossSessions": false,
-    "startedAt": 1774498258752,
-    "processType": "server",
-    "group": null,
-    "readyPattern": null,
-    "readyPort": 3000,
-    "pid": 63271
-  }
-]
+[]

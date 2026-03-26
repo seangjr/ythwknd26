@@ -23,7 +23,7 @@
 - [x] **S03: Client Refactor & SSE Real-time** `risk:medium` `depends:[S02]`
   > After this: After this: register page, character selection, and invite page all work without Supabase client — team member updates arrive via SSE within seconds of registration
 
-- [ ] **S04: E2E Verification** `risk:low` `depends:[S03]`
+- [x] **S04: E2E Verification** `risk:low` `depends:[S03]`
   > After this: After this: every registration path verified in browser — ready to go live with Neon backend
 
 ## Boundary Map
