@@ -3,7 +3,8 @@
 import { Button } from "@/components/ui/button";
 import { CONSTANTS } from "@/lib/constants";
 import { cn } from "@/lib/utils";
-import { ArrowLeft, Facebook, Globe, Instagram } from "lucide-react";
+import { HugeiconsIcon } from "@hugeicons/react";
+import { ArrowLeft02Icon, Facebook01Icon, GlobeIcon, InstagramIcon } from "@hugeicons/core-free-icons";
 import { useEffect, useState } from "react";
 import Navbar from "./navbar";
 import { motion, AnimatePresence } from "framer-motion";
@@ -98,7 +99,7 @@ export function CharacterSelectionScreen({
     if (member)
       return member.instagram_handle ? `${member.instagram_handle}` : "TAKEN";
 
-    return "HERO AVAILABLE";
+    return "CLASS AVAILABLE";
   };
 
   // Get hero status color
@@ -156,7 +157,7 @@ export function CharacterSelectionScreen({
           onClick={onClose}
           className="flex cursor-pointer items-center text-gray-400 hover:text-white transition-colors"
         >
-          <ArrowLeft className="w-4 h-4 mr-2" />
+          <HugeiconsIcon icon={ArrowLeft02Icon} size={16} className="mr-2" />
           <span>BACK</span>
         </button>
       </motion.div>
@@ -170,9 +171,9 @@ export function CharacterSelectionScreen({
           className="text-center mb-6 flex flex-col gap-4"
         >
           <h3 className="text-gray-400 uppercase text-sm">
-            CHARACTER SELECTION
+            CLASS SELECTION
           </h3>
-          <h2 className="text-6xl font-rumble">CONFIRM HERO</h2>
+          <h2 className="text-6xl font-jejuhallasan">CONFIRM CLASS</h2>
         </motion.div>
 
         <AnimatePresence mode="wait">
@@ -202,7 +203,7 @@ export function CharacterSelectionScreen({
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.4, delay: 0.3 }}
-                  className="text-4xl font-rumble mb-6"
+                  className="text-4xl font-jejuhallasan mb-6"
                 >
                   {selectedHeroDetails.name}
                 </motion.h3>
@@ -214,11 +215,11 @@ export function CharacterSelectionScreen({
                   className="grid grid-cols-2 gap-8 w-full mb-6"
                 >
                   <div>
-                    <h4 className="text-2xl font-rumble mb-2">CLASS</h4>
+                    <h4 className="text-2xl font-jejuhallasan mb-2">CLASS</h4>
                     <p className="text-sm">{selectedHeroDetails.class}</p>
                   </div>
                   <div>
-                    <h4 className="text-2xl font-rumble mb-2">PERK</h4>
+                    <h4 className="text-2xl font-jejuhallasan mb-2">PERK</h4>
                     <p className="text-sm">{selectedHeroDetails.perk} - {selectedHeroDetails.description.toUpperCase()}</p>
                   </div>
                 </motion.div>
@@ -229,7 +230,7 @@ export function CharacterSelectionScreen({
                   transition={{ duration: 0.4, delay: 0.5 }}
                   className="w-full"
                 >
-                  <h4 className="text-xl font-rumble mb-2">CURRENT TEAM</h4>
+                  <h4 className="text-xl font-jejuhallasan mb-2">CURRENT PARTY</h4>
                   <p className="text-sm mb-4 uppercase">
                     {team.code} {team.name}
                   </p>
@@ -294,9 +295,9 @@ export function CharacterSelectionScreen({
           <Button
             onClick={handleConfirm}
             disabled={!selectedHero}
-            className="w-full cursor-pointer max-w-md bg-white text-black hover:bg-gray-200 rounded-full py-6 text-2xl font-rumble"
+            className="w-full cursor-pointer max-w-md bg-white text-black hover:bg-gray-200 rounded-full py-6 text-2xl font-jejuhallasan"
           >
-            Confirm Hero
+            Confirm Class
           </Button>
         </motion.div>
       </div>
@@ -314,21 +315,21 @@ export function CharacterSelectionScreen({
             href="#" 
             className="text-gray-500 hover:text-white"
           >
-            <Globe className="w-5 h-5" />
+            <HugeiconsIcon icon={GlobeIcon} size={20} />
           </motion.a>
           <motion.a 
             whileHover={{ scale: 1.1 }}
             href="#" 
             className="text-gray-500 hover:text-white"
           >
-            <Instagram className="w-5 h-5" />
+            <HugeiconsIcon icon={InstagramIcon} size={20} />
           </motion.a>
           <motion.a 
             whileHover={{ scale: 1.1 }}
             href="#" 
             className="text-gray-500 hover:text-white"
           >
-            <Facebook className="w-5 h-5" />
+            <HugeiconsIcon icon={Facebook01Icon} size={20} />
           </motion.a>
         </div>
         <p className="text-sm">{CONSTANTS.SITE_DESCRIPTION}</p>

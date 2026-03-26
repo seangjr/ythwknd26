@@ -11,7 +11,8 @@ import {
   SheetTitle,
 } from "@/components/ui/sheet";
 import { CONSTANTS } from "@/lib/constants";
-import { Check, Copy, Share2 } from "lucide-react";
+import { HugeiconsIcon } from "@hugeicons/react";
+import { Tick02Icon, Copy01Icon, Share01Icon } from "@hugeicons/core-free-icons";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
@@ -199,14 +200,14 @@ export function TeamDrawer({
                 />
                 <Button onClick={copyInviteLink} variant="outline" size="sm">
                   {copied ? (
-                    <Check className="h-4 w-4" />
+                    <HugeiconsIcon icon={Tick02Icon} size={16} />
                   ) : (
-                    <Copy className="h-4 w-4" />
+                    <HugeiconsIcon icon={Copy01Icon} size={16} />
                   )}
                 </Button>
               </div>
               <Button onClick={shareInviteLink} className="w-full">
-                <Share2 className="mr-2 h-4 w-4" />
+                <HugeiconsIcon icon={Share01Icon} size={16} className="mr-2" />
                 Share Link
               </Button>
               <Button

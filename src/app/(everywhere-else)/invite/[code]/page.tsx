@@ -8,17 +8,17 @@ import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { CONSTANTS } from "@/lib/constants";
-import { createClient } from "@/lib/supabase";
 import { cn } from "@/lib/utils";
+import { HugeiconsIcon } from "@hugeicons/react";
 import {
-  AlertCircle,
-  AlertTriangle,
-  ArrowLeft,
-  Facebook,
-  Globe,
-  Instagram,
-  Users,
-} from "lucide-react";
+  AlertCircleIcon,
+  Alert02Icon,
+  ArrowLeft02Icon,
+  Facebook01Icon,
+  GlobeIcon,
+  InstagramIcon,
+  UserGroupIcon,
+} from "@hugeicons/core-free-icons";
 import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
@@ -100,18 +100,25 @@ export default function TeamInvitePage() {
 
     try {
       setIsHeroesLoaded(false);
-      const supabase = createClient();
 
-      // Get all registrations for this team
-      const { data: registrations } = await supabase
-        .from("registrations")
-        .select("line_number, nickname, hero_id, instagram_handle")
-        .eq("team_id", invite.teamId);
+      // Fetch team members, team hero availability, and all hero availability in parallel
+      const [membersRes, teamHeroRes, allHeroRes] = await Promise.all([
+        fetch(`/api/team-members?teamId=${invite.teamId}`),
+        fetch(`/api/hero-availability?teamId=${invite.teamId}`),
+        fetch(`/api/hero-availability`),
+      ]);
 
-      setTeamMembers(registrations || []);
+      if (!membersRes.ok) throw new Error("Failed to fetch team members");
+      if (!teamHeroRes.ok) throw new Error("Failed to fetch team hero availability");
+      if (!allHeroRes.ok) throw new Error("Failed to fetch all hero availability");
 
-      // Calculate which lines are taken
-      const takenLines = registrations?.map((r) => r.line_number) || [];
+      // Team members — API returns { members: [...] } with snake_case DB fields
+      const membersData = await membersRes.json();
+      const registrations = membersData.members || [];
+      setTeamMembers(registrations);
+
+      // Calculate which lines are taken (API returns snake_case field names)
+      const takenLines = registrations.map((r: any) => r.line_number);
 
       // Calculate available lines (5 lines per team)
       const teamIndex = invite.teamId - 1;
@@ -123,36 +130,22 @@ export default function TeamInvitePage() {
 
       setAvailableLines(availLines);
 
-      // Get hero availability
-      const { data: heroData } = await supabase
-        .from("hero_availability")
-        .select("hero_id, is_available")
-        .eq("team_id", invite.teamId);
-
-      const availableHeroes = heroData?.map((h) => ({
-        heroId: h.hero_id as string,
-        isAvailable: h.is_available as boolean,
-      })) || [];
-
-      setAvailableHeroes(availableHeroes);
+      // Team hero availability — API returns camelCase array [{ heroId, teamId, isAvailable }]
+      const teamHeroData: HeroAvailability[] = await teamHeroRes.json();
+      setAvailableHeroes(teamHeroData);
 
       // Set the first available hero as default
       const firstAvailableHero = CONSTANTS.HEROES.find(hero => 
-        !registrations?.some(r => r.hero_id === hero.id)
+        !registrations.some((r: any) => r.hero_id === hero.id)
       );
       setSelectedHero(firstAvailableHero?.id || null);
 
-      // Get total hero count and available hero count
-      const { data: allHeroData } = await supabase
-        .from("hero_availability")
-        .select("hero_id, is_available");
-
-      if (allHeroData) {
-        setTotalHeroes(allHeroData.length);
-        setAvailableHeroCount(
-          allHeroData.filter((h) => h.is_available).length,
-        );
-      }
+      // All hero availability — API returns camelCase array [{ heroId, teamId, isAvailable }]
+      const allHeroData: HeroAvailability[] = await allHeroRes.json();
+      setTotalHeroes(allHeroData.length);
+      setAvailableHeroCount(
+        allHeroData.filter((h) => h.isAvailable).length,
+      );
     } catch (error) {
       console.error("Error fetching available data:", error);
     } finally {
@@ -176,7 +169,7 @@ export default function TeamInvitePage() {
 
     if (isHeroTaken) {
       setSelectionError(
-        "This hero has already been selected by another team member.",
+        "This class has already been selected by another team member.",
       );
       return;
     }
@@ -188,7 +181,7 @@ export default function TeamInvitePage() {
   const handleRegister = () => {
     if (availableLines.length === 0) return;
     if (!selectedHero || !isHeroAvailable(selectedHero)) {
-      setSelectionError("Please select an available hero before registering.");
+      setSelectionError("Please select an available class before registering.");
       return;
     }
 
@@ -311,12 +304,12 @@ export default function TeamInvitePage() {
 
   const blocks = [
     "PLEASE READ BEFORE PROCEEDING.",
-    "SELECT A HERO FROM THE LIST BELOW. EACH SET OF FIVE HEROES BELONG TO A UNIVERSE THAT YOU WILL PLAY WITH AS A TEAM.",
-    "IF YOU ARE REGISTERING ALONE, CHOOSE A HERO AS YOU WISH.",
-    "IF YOU ARE REGISTERING WITH A GROUP OF TWO OR MORE FRIENDS, ENSURE THAT THE UNIVERSE HAS ENOUGH SLOTS AVAILABLE FOR YOUR GROUP.",
-    "NO RESERVATION OF UNIVERSES ARE ALLOWED. OTHER PARTICIPANTS MAY SECURE THE HEROES MEANT FOR YOUR FRIENDS.",
-    "VISIT OUR REGISTRATION COUNTER LOCATED BEHIND L5 AFTER SERVICE IF YOU NEED HELP WITH ANY INQUIRIES, SIGNUPS OR PAYMENTS.",
-    "TIME IS TICKING. MYSTERY IS CALLING.",
+    "SELECT A PARTY FROM THE LIST BELOW AND CHOOSE YOUR CLASS.",
+    "THE PARTY THAT YOU SELECT WILL INCLUDE THE PEOPLE YOU WILL PLAY WITH AS A TEAM.",
+    "IF YOU ARE REGISTERING ALONE, CHOOSE A PARTY AND CLASS AS YOU WISH.",
+    "IF YOU ARE REGISTERING WITH A GROUP OF TWO OR MORE FRIENDS, PLEASE ENSURE THAT THE PARTY HAS ENOUGH SLOTS AVAILABLE FOR YOUR GROUP.",
+    "NO RESERVATION OF PARTIES ARE ALLOWED. OTHER PARTICIPANTS MAY SECURE THE SLOTS MEANT FOR YOUR FRIENDS.",
+    "VIEW OUR REGISTRATION COUNTER LOCATED BEHIND L5 AFTER SERVICE IF YOU NEED HELP WITH ANY INQUIRIES, SIGNUPS OR PAYMENTS.",
   ];
 
   return (
@@ -349,7 +342,7 @@ export default function TeamInvitePage() {
               onClick={() => router.push("/register")}
               className="cursor-pointer flex items-center text-gray-400 hover:text-white transition-colors"
             >
-              <ArrowLeft className="w-4 h-4 mr-2" />
+              <HugeiconsIcon icon={ArrowLeft02Icon} size={16} className="mr-2" />
               <span>BACK</span>
             </button>
           </motion.div>
@@ -362,10 +355,10 @@ export default function TeamInvitePage() {
               className="text-center mb-6"
             >
               <div className="uppercase text-center">
-                <p className="text-xs md:text-base">Character selection</p>
+                <p className="text-xs md:text-base">Class selection</p>
               </div>
-              <h1 className="text-4xl md:text-6xl text-center font-rumble mt-4">
-                Choose your hero
+              <h1 className="text-4xl md:text-6xl text-center font-jejuhallasan mt-4">
+                Choose your class
               </h1>
             </motion.div>
 
@@ -395,11 +388,11 @@ export default function TeamInvitePage() {
               transition={{ duration: 0.5, delay: 0.6 }}
               className="text-center py-10 my-10 border-y-2 border-gray-400"
             >
-              <h2 className="text-8xl mb-2 font-rumble">
+              <h2 className="text-8xl mb-2 font-jejuhallasan">
                 <span className="text-amber-500">{availableHeroesCount}</span>/
                 <span>{CONSTANTS.HEROES.length}</span>
               </h2>
-              <p className="text-3xl uppercase font-rumble">Heroes Available</p>
+              <p className="text-3xl uppercase font-jejuhallasan">Classes Available</p>
             </motion.div>
 
             {/* Selection Error */}
@@ -412,7 +405,7 @@ export default function TeamInvitePage() {
                   transition={{ duration: 0.3 }}
                 >
                   <Alert className="bg-red-900/50 border-red-800 text-white mb-4 max-w-2xl">
-                    <AlertTriangle className="h-4 w-4" />
+                    <HugeiconsIcon icon={Alert02Icon} size={16} />
                     <AlertDescription>{selectionError}</AlertDescription>
                   </Alert>
                 </motion.div>
@@ -445,8 +438,8 @@ export default function TeamInvitePage() {
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ duration: 0.4, delay: 0.9 }}
                   >
-                    <h4 className="text-2xl font-rumble text-[#bababa] mb-3">
-                      Select Your Hero
+                    <h4 className="text-2xl font-jejuhallasan text-[#bababa] mb-3">
+                      Select Your Class
                     </h4>
                     <HeroSelectionGrid
                       teamMembers={teamMembers}
@@ -456,14 +449,14 @@ export default function TeamInvitePage() {
                     />
                   </motion.div>
 
-                  {/* Hero Details */}
+                  {/* Class Details */}
                   <motion.div
                     initial={{ opacity: 0, x: 20 }}
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ duration: 0.4, delay: 1 }}
                   >
-                    <h4 className="text-2xl font-rumble text-[#bababa] mb-3">
-                      Hero Details
+                    <h4 className="text-2xl font-jejuhallasan text-[#bababa] mb-3">
+                      Class Details
                     </h4>
                     <HeroDetails heroId={selectedHero} teamId={team.id} />
                   </motion.div>
@@ -481,14 +474,14 @@ export default function TeamInvitePage() {
                         onClick={handleRegister}
                         disabled={!isHeroesLoaded || (isHeroesLoaded && (!selectedHero || !isHeroAvailable(selectedHero)))}
                         className={cn(
-                          "cursor-pointer w-full bg-white text-black hover:bg-gray-200 rounded-full py-6 text-xl font-rumble",
+                          "cursor-pointer w-full bg-white text-black hover:bg-gray-200 rounded-full py-6 text-xl font-jejuhallasan",
                         )}
                       >
                         {!isHeroesLoaded 
-                          ? "Loading Heroes..."
+                          ? "Loading Classes..."
                           : !selectedHero || !isHeroAvailable(selectedHero)
-                            ? "Select A Hero To Continue"
-                            : "Register With Selected Hero"}
+                            ? "Select A Class To Continue"
+                            : "Register With Selected Class"}
                       </Button>
                   ) : (
                     <motion.div
@@ -497,9 +490,9 @@ export default function TeamInvitePage() {
                       transition={{ duration: 0.3 }}
                     >
                       <Alert className="bg-red-900/50 border-red-800 !text-white">
-                        <AlertCircle className="!size-5"/>
-                        <AlertDescription className="text-white font-rumble text-lg">
-                          ALL HEROES FOR THIS TEAM ARE TAKEN!
+                        <HugeiconsIcon icon={AlertCircleIcon} size={20} />
+                        <AlertDescription className="text-white font-jejuhallasan text-lg">
+                          ALL CLASSES FOR THIS PARTY ARE TAKEN!
                         </AlertDescription>
                       </Alert>
                     </motion.div>
@@ -518,7 +511,7 @@ export default function TeamInvitePage() {
                   transition={{ duration: 0.5, delay: 1.2 }}
                   className="w-full max-w-2xl bg-[#1a1a1a] rounded-lg overflow-hidden mb-8 p-6"
                 >
-                  <h4 className="text-2xl font-rumble text-[#bababa] mb-4">
+                  <h4 className="text-2xl font-jejuhallasan text-[#bababa] mb-4">
                     Current Team Members
                   </h4>
                   <div className="space-y-3">
@@ -538,7 +531,7 @@ export default function TeamInvitePage() {
                           <div className="w-10 h-10 rounded-full overflow-hidden mr-3">
                             <img
                               src={getHeroImagePath(hero!.id, invite.teamId)}
-                              alt={hero?.name || "Hero"}
+                              alt={hero?.name || "Class"}
                               className="w-full h-full object-cover"
                             />
                           </div>
@@ -547,7 +540,7 @@ export default function TeamInvitePage() {
                               {hero?.name}
                             </p>
                             <p className="text-xs text-gray-400">
-                              {member.instagram_handle || "Unknown Hero"}
+                              {member.instagram_handle || "Unknown Class"}
                             </p>
                           </div>
                         </motion.div>
@@ -571,9 +564,9 @@ export default function TeamInvitePage() {
                     animate={{ scale: 1 }}
                     transition={{ duration: 0.5, delay: 1.3 }}
                   >
-                    <Users className="w-12 h-12 text-gray-600 mx-auto mb-3" />
+                    <HugeiconsIcon icon={UserGroupIcon} size={48} className="text-gray-600 mx-auto mb-3" />
                   </motion.div>
-                  <h4 className="text-2xl font-rumble text-[#bababa] mb-2">
+                  <h4 className="text-2xl font-jejuhallasan text-[#bababa] mb-2">
                     No Team Members Yet
                   </h4>
                   <p className="text-[#bababa] text-sm">Be the first to join this team!</p>

@@ -32,7 +32,7 @@ Upstream: All 6 API routes from S02 (hero-availability, team-members, team-invit
   - Files: `src/app/api/hero-availability/route.ts`, `src/app/api/team-members/route.ts`, `src/app/(everywhere-else)/register/page.tsx`, `src/components/character-selection-screen.tsx`
   - Verify: rg 'supabase' src/app/\(everywhere-else\)/register/page.tsx src/components/character-selection-screen.tsx returns zero matches && npx tsc --noEmit exits 0
 
-- [ ] **T02: Refactor invite page to use fetch() instead of Supabase client** `est:30m`
+- [x] **T02: Refactor invite page to use fetch() instead of Supabase client** `est:30m`
   Replace all three Supabase queries in invite/[code]/page.tsx with fetch() calls to /api/team-members and /api/hero-availability. The page queries: (1) registrations for team, (2) hero_availability for team, (3) all hero_availability. All three now map to existing API routes (with the teamId-optional enhancement from T01).
   - Files: `src/app/(everywhere-else)/invite/[code]/page.tsx`
   - Verify: rg 'supabase' src/app/\(everywhere-else\)/invite/\[code\]/page.tsx returns zero matches && npx tsc --noEmit exits 0

@@ -10,14 +10,15 @@ import { CONSTANTS } from "@/lib/constants";
 import { getRelativeTimeString } from "@/lib/format-date";
 import { cn } from "@/lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { HugeiconsIcon } from "@hugeicons/react";
 import {
-  AlertCircle,
-  ArrowLeft,
-  Facebook,
-  Globe,
-  Instagram,
-  Link as LinkIcon,
-} from "lucide-react";
+  AlertCircleIcon as AlertCircle,
+  ArrowLeft02Icon as ArrowLeft,
+  Facebook01Icon as Facebook,
+  GlobeIcon as Globe,
+  InstagramIcon as Instagram,
+  Link01Icon as LinkIcon,
+} from "@hugeicons/core-free-icons";
 import { useRouter } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
@@ -555,7 +556,7 @@ export function MultiStepRegistrationForm({
             onClick={handleBack}
             className="cursor-pointer flex items-center text-gray-400 hover:text-white transition-colors"
           >
-            <ArrowLeft className="w-4 h-4 mr-2" />
+            <HugeiconsIcon icon={ArrowLeft} size={16} className="mr-2" />
             <span>BACK</span>
           </button>
         </div>
@@ -566,7 +567,7 @@ export function MultiStepRegistrationForm({
             <h3 className="text-gray-400 uppercase text-sm">
               REGISTRATION UNAVAILABLE
             </h3>
-            <h2 className="text-6xl font-rumble">We&apos;re Sorry</h2>
+            <h2 className="text-6xl font-jejuhallasan">We&apos;re Sorry</h2>
 
             <p className="text-[#BABABA] mb-2">
               THANK YOU FOR YOUR INTEREST IN JOINING OUR EVENT.
@@ -591,7 +592,7 @@ export function MultiStepRegistrationForm({
 
             <Button
               onClick={handleReturnToMain}
-              className="w-full bg-white text-black hover:bg-gray-200 rounded-full py-6 text-xl font-rumble"
+              className="w-full bg-white text-black hover:bg-gray-200 rounded-full py-6 text-xl font-jejuhallasan"
             >
               RETURN TO MAIN PAGE
             </Button>
@@ -615,7 +616,7 @@ export function MultiStepRegistrationForm({
           onClick={handleBack}
           className="cursor-pointer flex items-center text-gray-400 hover:text-white transition-colors"
         >
-          <ArrowLeft className="w-4 h-4 mr-2" />
+          <HugeiconsIcon icon={ArrowLeft} size={16} className="mr-2" />
           <span>BACK</span>
         </button>
       </div>
@@ -629,25 +630,25 @@ export function MultiStepRegistrationForm({
                 REGISTRATION FORM
               </h3>
               {step === 1 && (
-                <h2 className="text-6xl font-rumble">PERSONAL DETAILS</h2>
+                <h2 className="text-6xl font-jejuhallasan">PERSONAL DETAILS</h2>
               )}
               {step === 2 && (
-                <h2 className="text-6xl font-rumble">CG DETAILS</h2>
+                <h2 className="text-6xl font-jejuhallasan">CG DETAILS</h2>
               )}
               {step === 3 && (
-                <h2 className="text-6xl font-rumble">MORE DETAILS</h2>
+                <h2 className="text-6xl font-jejuhallasan">MORE DETAILS</h2>
               )}
               {step === 4 && (
-                <h2 className="text-6xl font-rumble">CHURCH DETAILS</h2>
+                <h2 className="text-6xl font-jejuhallasan">CHURCH DETAILS</h2>
               )}
               {step === 5 && (
-                <h2 className="text-6xl font-rumble">EMERGENCY CONTACT</h2>
+                <h2 className="text-6xl font-jejuhallasan">EMERGENCY CONTACT</h2>
               )}{" "}
             </div>
 
             {/* {error && (
               <Alert className="bg-red-900 border-red-800 mb-4 w-full">
-                <AlertCircle className="h-4 w-4" />
+                <HugeiconsIcon icon={AlertCircle} size={16} />
                 <AlertDescription>{error}</AlertDescription>
               </Alert>
             )} */}
@@ -663,7 +664,7 @@ export function MultiStepRegistrationForm({
                   <div className="space-y-2">
                     <Label
                       htmlFor="email"
-                      className="text-2xl uppercase font-rumble"
+                      className="text-2xl uppercase font-jejuhallasan"
                     >
                       Email<span className="text-red-500">*</span>
                     </Label>
@@ -684,7 +685,7 @@ export function MultiStepRegistrationForm({
                   <div className="space-y-2">
                     <Label
                       htmlFor="fullName"
-                      className="text-2xl uppercase font-rumble"
+                      className="text-2xl uppercase font-jejuhallasan"
                     >
                       Full Name (as per IC/Passport)
                       <span className="text-red-500">*</span>
@@ -706,9 +707,9 @@ export function MultiStepRegistrationForm({
                   <div className="space-y-2">
                     <Label
                       htmlFor="age"
-                      className="text-2xl uppercase font-rumble"
+                      className="text-2xl uppercase font-jejuhallasan"
                     >
-                      Age (as of 2025)<span className="text-red-500">*</span>
+                      Age (as of 2026)<span className="text-red-500">*</span>
                     </Label>
                     <p className="text-sm text-gray-400">
                       This camp is only open for ages 13 to 17. If you're above
@@ -752,7 +753,7 @@ export function MultiStepRegistrationForm({
 
                   {/* Gender */}
                   <div className="space-y-2">
-                    <Label className="text-2xl uppercase font-rumble">
+                    <Label className="text-2xl uppercase font-jejuhallasan">
                       Gender<span className="text-red-500">*</span>
                     </Label>
                     <RadioGroup
@@ -793,7 +794,7 @@ export function MultiStepRegistrationForm({
                   <div className="space-y-2">
                     <Label
                       htmlFor="nricPassport"
-                      className="text-2xl uppercase font-rumble"
+                      className="text-2xl uppercase font-jejuhallasan"
                     >
                       NRIC/Passport Number
                       <span className="text-red-500">*</span>
@@ -816,7 +817,7 @@ export function MultiStepRegistrationForm({
                   <div className="space-y-2">
                     <Label
                       htmlFor="contactNumber"
-                      className="text-2xl uppercase font-rumble"
+                      className="text-2xl uppercase font-jejuhallasan"
                     >
                       Contact Number<span className="text-red-500">*</span>
                     </Label>
@@ -838,7 +839,7 @@ export function MultiStepRegistrationForm({
                   <div className="space-y-2">
                     <Label
                       htmlFor="instagramHandle"
-                      className="text-2xl uppercase font-rumble"
+                      className="text-2xl uppercase font-jejuhallasan"
                     >
                       Instagram Handle
                       <span className="text-red-500">*</span>
@@ -860,7 +861,7 @@ export function MultiStepRegistrationForm({
                   <div className="space-y-2">
                     <Label
                       htmlFor="schoolName"
-                      className="text-2xl uppercase font-rumble"
+                      className="text-2xl uppercase font-jejuhallasan"
                     >
                       School Name<span className="text-red-500">*</span>
                     </Label>
@@ -879,7 +880,7 @@ export function MultiStepRegistrationForm({
 
                   {/* YM Member */}
                   <div className="space-y-2">
-                    <Label className="text-2xl uppercase font-rumble">
+                    <Label className="text-2xl uppercase font-jejuhallasan">
                       Are you a YM Member?
                       <span className="text-red-500">*</span>
                     </Label>
@@ -920,7 +921,7 @@ export function MultiStepRegistrationForm({
                   <Button
                     type="button"
                     onClick={handleNext}
-                    className="cursor-pointer w-full bg-white text-black hover:bg-gray-200 rounded-full py-6 text-xl font-rumble"
+                    className="cursor-pointer w-full bg-white text-black hover:bg-gray-200 rounded-full py-6 text-xl font-jejuhallasan"
                   >
                     NEXT
                   </Button>
@@ -932,7 +933,7 @@ export function MultiStepRegistrationForm({
                 <div className="space-y-6 w-full">
                   {/* CG Leader */}
                   <div className="space-y-2">
-                    <Label className="text-2xl uppercase font-rumble">
+                    <Label className="text-2xl uppercase font-jejuhallasan">
                       Select your CG Leader
                       <span className="text-red-500">*</span>
                     </Label>
@@ -1027,7 +1028,7 @@ export function MultiStepRegistrationForm({
                   <Button
                     type="button"
                     onClick={handleNext}
-                    className="cursor-pointer w-full bg-white text-black hover:bg-gray-200 rounded-full py-6 text-xl font-rumble"
+                    className="cursor-pointer w-full bg-white text-black hover:bg-gray-200 rounded-full py-6 text-xl font-jejuhallasan"
                   >
                     NEXT
                   </Button>
@@ -1039,7 +1040,7 @@ export function MultiStepRegistrationForm({
                 <div className="space-y-6 w-full">
                   {/* Religious Affiliation */}
                   <div className="space-y-2">
-                    <Label className="text-2xl uppercase font-rumble">
+                    <Label className="text-2xl uppercase font-jejuhallasan">
                       Are you a Christian?
                       <span className="text-red-500">*</span>
                     </Label>
@@ -1102,7 +1103,7 @@ export function MultiStepRegistrationForm({
 
                   {/* Event Source */}
                   <div className="space-y-2">
-                    <Label className="text-2xl uppercase font-rumble">
+                    <Label className="text-2xl uppercase font-jejuhallasan">
                       Where did you hear about this event?
                       <span className="text-red-500">*</span>
                     </Label>
@@ -1209,7 +1210,7 @@ export function MultiStepRegistrationForm({
                   <div className="space-y-2">
                     <Label
                       htmlFor="invitedByFriend"
-                      className="text-2xl uppercase font-rumble"
+                      className="text-2xl uppercase font-jejuhallasan"
                     >
                       Name of the friend who invited you
                       <span className="text-red-500">*</span>
@@ -1233,7 +1234,7 @@ export function MultiStepRegistrationForm({
                   <Button
                     type="button"
                     onClick={handleNext}
-                    className="w-full bg-white text-black hover:bg-gray-200 rounded-full py-6 text-xl font-rumble"
+                    className="w-full bg-white text-black hover:bg-gray-200 rounded-full py-6 text-xl font-jejuhallasan"
                   >
                     NEXT
                   </Button>
@@ -1260,7 +1261,7 @@ export function MultiStepRegistrationForm({
                   <div className="space-y-2">
                     <Label
                       htmlFor="emergencyContactName"
-                      className="text-2xl uppercase font-rumble"
+                      className="text-2xl uppercase font-jejuhallasan"
                     >
                       Emergency Contact's Name
                       <span className="text-red-500">*</span>
@@ -1284,7 +1285,7 @@ export function MultiStepRegistrationForm({
 
                   {/* Emergency Contact Relationship */}
                   <div className="space-y-2">
-                    <Label className="text-2xl uppercase font-rumble">
+                    <Label className="text-2xl uppercase font-jejuhallasan">
                       Relationship with Emergency Contact
                       <span className="text-red-500">*</span>
                     </Label>
@@ -1364,7 +1365,7 @@ export function MultiStepRegistrationForm({
                   <div className="space-y-2">
                     <Label
                       htmlFor="emergencyContactPhone"
-                      className="text-2xl uppercase font-rumble"
+                      className="text-2xl uppercase font-jejuhallasan"
                     >
                       Emergency Contact Number
                       <span className="text-red-500">*</span>
@@ -1386,7 +1387,7 @@ export function MultiStepRegistrationForm({
                   <div className="space-y-2">
                     <Label
                       htmlFor="emergencyContactEmail"
-                      className="text-2xl uppercase font-rumble"
+                      className="text-2xl uppercase font-jejuhallasan"
                     >
                       Emergency Contact Email
                       <span className="text-red-500">*</span>
@@ -1407,7 +1408,7 @@ export function MultiStepRegistrationForm({
                   <Button
                     type="submit"
                     disabled={isSubmitting}
-                    className="cursor-pointer w-full bg-white text-black hover:bg-gray-200 rounded-full py-6 text-xl font-rumble"
+                    className="cursor-pointer w-full bg-white text-black hover:bg-gray-200 rounded-full py-6 text-xl font-jejuhallasan"
                   >
                     {isSubmitting ? "SUBMITTING..." : "SUBMIT"}
                   </Button>
@@ -1441,7 +1442,7 @@ export function MultiStepRegistrationForm({
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.4, delay: 0.4 }}
-                className="text-6xl font-rumble text-[#BABABA] mb-6"
+                className="text-6xl font-jejuhallasan text-[#BABABA] mb-6"
               >
                 See You At Camp
               </motion.h2>
@@ -1472,7 +1473,7 @@ export function MultiStepRegistrationForm({
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
               >
-                <Button asChild className="w-full bg-white text-black hover:bg-gray-200 rounded-full py-6 text-2xl font-rumble mb-8 cursor-pointer">
+                <Button asChild className="w-full bg-white text-black hover:bg-gray-200 rounded-full py-6 text-2xl font-jejuhallasan mb-8 cursor-pointer">
                   <a 
                     href="https://forms.gle/qv5ze5FUQkGZo3bd6" 
                     target="_blank" 
@@ -1495,7 +1496,7 @@ export function MultiStepRegistrationForm({
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ duration: 0.4, delay: 0.9 }}
-                className="text-2xl font-rumble text-[#BABABA] mb-4"
+                className="text-2xl font-jejuhallasan text-[#BABABA] mb-4"
               >
                 Your Hero
               </motion.h3>
@@ -1530,7 +1531,7 @@ export function MultiStepRegistrationForm({
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ duration: 0.4, delay: 1.2 }}
-                className="text-2xl font-rumble text-[#BABABA] mb-4"
+                className="text-2xl font-jejuhallasan text-[#BABABA] mb-4"
               >
                 Current Team
               </motion.h3>
@@ -1652,7 +1653,7 @@ export function MultiStepRegistrationForm({
                   <Button
                     onClick={fetchTeamMembers}
                     variant="outline"
-                    className="w-full self-center bg-white text-black hover:bg-gray-200 rounded-full py-6 text-2xl font-rumble cursor-pointer"
+                    className="w-full self-center bg-white text-black hover:bg-gray-200 rounded-full py-6 text-2xl font-jejuhallasan cursor-pointer"
                   >
                     Refresh Team Members
                   </Button>
@@ -1671,7 +1672,7 @@ export function MultiStepRegistrationForm({
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ duration: 0.4, delay: 2.2 }}
-                className="text-2xl font-rumble text-[#bababa] mb-4"
+                className="text-2xl font-jejuhallasan text-[#bababa] mb-4"
               >
                 Team Invite Link
               </motion.h3>
@@ -1710,7 +1711,7 @@ export function MultiStepRegistrationForm({
                     transition={{ duration: 0.3 }}
                   >
                     <Alert className="bg-red-900 border-red-800 mb-4">
-                      <AlertCircle className="h-4 w-4" />
+                      <HugeiconsIcon icon={AlertCircle} size={16} />
                       <AlertDescription>{inviteLinkError}</AlertDescription>
                     </Alert>
                   </motion.div>
@@ -1730,7 +1731,7 @@ export function MultiStepRegistrationForm({
                 >
                   <Button
                     onClick={handleRegenerateInviteLink}
-                    className="w-fit bg-white text-black hover:bg-gray-200 rounded-full py-6 text-2xl font-rumble"
+                    className="w-fit bg-white text-black hover:bg-gray-200 rounded-full py-6 text-2xl font-jejuhallasan"
                   >
                     Try Again
                   </Button>
@@ -1747,7 +1748,7 @@ export function MultiStepRegistrationForm({
                   <Button
                     onClick={copyInviteLink}
                     disabled={!inviteLink || inviteLinkLoading}
-                    className="w-fit bg-white text-black hover:bg-gray-200 rounded-full py-6 text-2xl font-rumble"
+                    className="w-fit bg-white text-black hover:bg-gray-200 rounded-full py-6 text-2xl font-jejuhallasan"
                   >
                     {copied ? "Copied!" : "Copy Link"}
                   </Button>

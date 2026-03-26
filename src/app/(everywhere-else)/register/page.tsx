@@ -5,7 +5,8 @@ import { TeamInviteModal } from "@/components/team-invite-modal";
 import { Button } from "@/components/ui/button";
 import { CONSTANTS } from "@/lib/constants";
 import { cn } from "@/lib/utils";
-import { Share2, Users } from "lucide-react";
+import { HugeiconsIcon } from "@hugeicons/react";
+import { Share01Icon, UserGroupIcon } from "@hugeicons/core-free-icons";
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Image from "next/image";
@@ -217,12 +218,12 @@ export default function Registration() {
 
   const blocks = [
     "PLEASE READ BEFORE PROCEEDING.",
-    "SELECT A HERO FROM THE LIST BELOW. EACH SET OF FIVE HEROES BELONG TO A UNIVERSE THAT YOU WILL PLAY WITH AS A TEAM.",
-    "IF YOU ARE REGISTERING ALONE, CHOOSE A HERO AS YOU WISH.",
-    "IF YOU ARE REGISTERING WITH A GROUP OF TWO OR MORE FRIENDS, ENSURE THAT THE UNIVERSE HAS ENOUGH SLOTS AVAILABLE FOR YOUR GROUP.",
-    "NO RESERVATION OF UNIVERSES ARE ALLOWED. OTHER PARTICIPANTS MAY SECURE THE HEROES MEANT FOR YOUR FRIENDS.",
-    "VISIT OUR REGISTRATION COUNTER LOCATED BEHIND L5 AFTER SERVICE IF YOU NEED HELP WITH ANY INQUIRIES, SIGNUPS OR PAYMENTS.",
-    "TIME IS TICKING. MYSTERY IS CALLING.",
+    "SELECT A PARTY FROM THE LIST BELOW AND CHOOSE YOUR CLASS.",
+    "THE PARTY THAT YOU SELECT WILL INCLUDE THE PEOPLE YOU WILL PLAY WITH AS A TEAM.",
+    "IF YOU ARE REGISTERING ALONE, CHOOSE A PARTY AND CLASS AS YOU WISH.",
+    "IF YOU ARE REGISTERING WITH A GROUP OF TWO OR MORE FRIENDS, PLEASE ENSURE THAT THE PARTY HAS ENOUGH SLOTS AVAILABLE FOR YOUR GROUP.",
+    "NO RESERVATION OF PARTIES ARE ALLOWED. OTHER PARTICIPANTS MAY SECURE THE SLOTS MEANT FOR YOUR FRIENDS.",
+    "VIEW OUR REGISTRATION COUNTER LOCATED BEHIND L5 AFTER SERVICE IF YOU NEED HELP WITH ANY INQUIRIES, SIGNUPS OR PAYMENTS.",
   ];
 
   return clickedHeroData ? (
@@ -257,13 +258,13 @@ export default function Registration() {
         >
           <p className="text-xs md:text-base">Character selection</p>
         </motion.div>
-        <motion.h1 
+        <motion.h1
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.3 }}
-          className="text-4xl md:text-6xl text-center font-rumble"
+          className="text-4xl md:text-6xl text-center font-jejuhallasan"
         >
-          Choose your hero
+          Choose your class
         </motion.h1>
         {blocks.map((block, index) => (
           <motion.div 
@@ -282,7 +283,7 @@ export default function Registration() {
           transition={{ duration: 0.6, delay: 1 }}
           className="text-center py-10 my-10 border-y-2 border-gray-400"
         >
-          <h2 className="text-8xl mb-2 font-rumble">
+          <h2 className="text-8xl mb-2 font-jejuhallasan">
             <motion.span
               initial={{ scale: 0.5 }}
               animate={{ scale: 1 }}
@@ -299,7 +300,7 @@ export default function Registration() {
             </motion.span>
             /<span>{totalHeroes}</span>
           </h2>
-          <p className="text-3xl uppercase font-rumble">Heroes Available</p>
+          <p className="text-3xl uppercase font-jejuhallasan">Classes Available</p>
         </motion.div>
       </motion.section>
       {loading ? (
@@ -347,7 +348,7 @@ export default function Registration() {
                       {team.code} {team.name}
                     </h3>
                     <div className="ml-3 hidden md:flex items-center">
-                      <Users className="w-4 h-4 mr-1 text-gray-400" />
+                      <HugeiconsIcon icon={UserGroupIcon} size={16} className="mr-1 text-gray-400" />
                       <span className="text-sm text-gray-400">
                         {memberCount}/5
                       </span>
@@ -366,7 +367,7 @@ export default function Registration() {
                       )}
                     >
                       {availableCount !== 0
-                        ? `${availableCount}/5 Heroes`
+                        ? `${availableCount}/5 Classes`
                         : "Unavailable"}
                     </span>
                     <motion.div
@@ -379,7 +380,7 @@ export default function Registration() {
                         className="bg-transparent border-gray-700 text-white hover:bg-gray-800 hover:text-white cursor-pointer"
                         onClick={() => handleInviteClick(team.id)}
                       >
-                        <Share2 className="w-4 h-4 mr-1" />
+                        <HugeiconsIcon icon={Share01Icon} size={16} className="mr-1" />
                         <span className="hidden sm:inline">Invite</span>
                       </Button>
                     </motion.div>
@@ -414,7 +415,7 @@ export default function Registration() {
                               : "opacity-50 cursor-not-allowed grayscale",
                           )}
                           disabled={!isAvailable}
-                          aria-label={`Select ${hero.name} hero from ${team.name}`}
+                          aria-label={`Select ${hero.name} class from ${team.name}`}
                         >
                           <Image
                             src={getHeroImagePath(hero.id, team.id)}

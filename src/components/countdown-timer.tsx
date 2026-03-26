@@ -51,19 +51,19 @@ export function CountdownTimer({ targetDate, className = "" }: CountdownTimerPro
       className={`grid grid-cols-4 gap-4 text-center ${className}`}
     >
       <div className="bg-[#1a1a1a] p-4 rounded-lg">
-        <div className="text-3xl font-rumble">{timeLeft.days}</div>
+        <div className="text-3xl font-jejuhallasan">{timeLeft.days}</div>
         <div className="text-sm text-[#BABABA]">Days</div>
       </div>
       <div className="bg-[#1a1a1a] p-4 rounded-lg">
-        <div className="text-3xl font-rumble">{timeLeft.hours}</div>
+        <div className="text-3xl font-jejuhallasan">{timeLeft.hours}</div>
         <div className="text-sm text-[#BABABA]">Hours</div>
       </div>
       <div className="bg-[#1a1a1a] p-4 rounded-lg">
-        <div className="text-3xl font-rumble">{timeLeft.minutes}</div>
+        <div className="text-3xl font-jejuhallasan">{timeLeft.minutes}</div>
         <div className="text-sm text-[#BABABA]">Minutes</div>
       </div>
       <div className="bg-[#1a1a1a] p-4 rounded-lg">
-        <div className="text-3xl font-rumble">{timeLeft.seconds}</div>
+        <div className="text-3xl font-jejuhallasan">{timeLeft.seconds}</div>
         <div className="text-sm text-[#BABABA]">Seconds</div>
       </div>
     </motion.div>

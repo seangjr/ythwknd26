@@ -9,7 +9,8 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
-import { Check, Copy, Loader2, Share2 } from "lucide-react";
+import { HugeiconsIcon } from "@hugeicons/react";
+import { Tick02Icon, Copy01Icon, Loading03Icon, Share01Icon } from "@hugeicons/core-free-icons";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 
@@ -132,7 +133,7 @@ export function TeamInviteModal({
           {/* <div
             className={`h-2 ${teamColor} rounded-t-lg -mt-6 -mx-6 mb-4`}
           ></div> */}
-          <DialogTitle className="text-2xl font-rumble text-center uppercase">
+          <DialogTitle className="text-2xl font-jejuhallasan text-center uppercase">
             Invite Friends to {teamName}
           </DialogTitle>
         </DialogHeader>
@@ -151,7 +152,7 @@ export function TeamInviteModal({
 
           {isGenerating ? (
             <div className="flex justify-center py-4">
-              <Loader2 className="h-8 w-8 animate-spin text-amber-500" />
+              <HugeiconsIcon icon={Loading03Icon} size={32} className="animate-spin text-amber-500" />
             </div>
           ) : inviteLink ? (
             <div className="space-y-4">
@@ -168,9 +169,9 @@ export function TeamInviteModal({
                   className="cursor-pointer bg-transparent border-gray-700 text-white hover:bg-gray-800 hover:text-white"
                 >
                   {copied ? (
-                    <Check className="h-4 w-4" />
+                    <HugeiconsIcon icon={Tick02Icon} size={16} />
                   ) : (
-                    <Copy className="h-4 w-4" />
+                    <HugeiconsIcon icon={Copy01Icon} size={16} />
                   )}
                 </Button>
               </div>
@@ -178,16 +179,16 @@ export function TeamInviteModal({
               <div className="flex flex-col space-y-2">
                 <Button
                   onClick={shareInviteLink}
-                  className="bg-amber-500 text-black hover:bg-amber-600 font-rumble text-xl"
+                  className="bg-amber-500 text-black hover:bg-amber-600 font-jejuhallasan text-xl"
                   disabled={!inviteLink}
                 >
-                  <Share2 className="mr-2 h-4 w-4" />
+                  <HugeiconsIcon icon={Share01Icon} size={16} className="mr-2" />
                   Share Link
                 </Button>
                 <Button
                   onClick={generateInviteLink}
                   variant="outline"
-                  className="bg-transparent border-gray-700 text-white hover:bg-gray-800 hover:text-white cursor-pointer font-rumble text-xl"
+                  className="bg-transparent border-gray-700 text-white hover:bg-gray-800 hover:text-white cursor-pointer font-jejuhallasan text-xl"
                   disabled={isGenerating}
                 >
                   {isGenerating ? "Generating..." : "Generate New Link"}
@@ -197,7 +198,7 @@ export function TeamInviteModal({
           ) : (
             <Button
               onClick={generateInviteLink}
-              className="bg-amber-500 text-black hover:bg-amber-600 font-rumble text-xl"
+              className="bg-amber-500 text-black hover:bg-amber-600 font-jejuhallasan text-xl"
               disabled={isGenerating}
             >
               {isGenerating

@@ -6,8 +6,8 @@ export default function Navbar() {
     <nav className="flex flex-col items-center justify-center py-4 md:py-8 border-[#BABABA] border-b">
       <Link href="/">
         <Image
-          src="/assets/sm-masthead.svg"
-          alt="Logo for YTHWKND 2025"
+          src="/assets/masthead-white.svg"
+          alt="Logo for YTHWKND 2026"
           className="w-[200] md:w-[250]"
           width={250}
           height={100}

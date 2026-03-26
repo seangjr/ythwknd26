@@ -31,7 +31,7 @@ export function HeroDetails({ heroId, className, teamId }: HeroDetailsProps) {
   if (!heroDetails) {
     return (
       <div className={cn("bg-[#1a1a1a] rounded-2xl p-8 text-center", className)}>
-        <p className="text-gray-400">Select a hero to see details</p>
+        <p className="text-gray-400">Select a class to see details</p>
       </div>
     );
   }
@@ -51,22 +51,22 @@ export function HeroDetails({ heroId, className, teamId }: HeroDetailsProps) {
         <div className="pointer-events-none absolute inset-0" style={{background: 'linear-gradient(to bottom, rgba(24,24,27,0) 60%, rgba(24,24,27,1) 100%)'}} />
       </div>
       <div className="p-6 flex flex-col gap-2">
-        <h2 className="text-[#bababa] text-3xl font-rumble mb-1">{heroDetails.name}</h2>
+        <h2 className="text-[#bababa] text-3xl font-jejuhallasan mb-1">{heroDetails.name}</h2>
         {heroDetails.class && (
           <div className="mb-2">
-            <h3 className="font-rumble text-xl uppercase text-[#bababa] mb-1">Class</h3>
+            <h3 className="font-jejuhallasan text-xl uppercase text-[#bababa] mb-1">Class</h3>
             <p className="text-[#bababa] text-sm uppercase">{heroDetails.class}</p>
           </div>
         )}
         {heroDetails.perk && (
           <div className="mb-2">
-            <h3 className="font-rumble text-xl uppercase text-[#bababa] mb-1">Perk</h3>
+            <h3 className="font-jejuhallasan text-xl uppercase text-[#bababa] mb-1">Perk</h3>
             <p className="text-[#bababa] text-sm">{heroDetails.perk}</p>
           </div>
         )}
         {heroDetails.description && (
           <div>
-            <h3 className="font-rumble text-xl uppercase text-[#bababa] mb-1">Description</h3>
+            <h3 className="font-jejuhallasan text-xl uppercase text-[#bababa] mb-1">Description</h3>
             <p className="text-[#bababa] text-sm uppercase">{heroDetails.description}</p>
           </div>
         )}
