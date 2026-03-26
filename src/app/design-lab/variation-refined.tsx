@@ -1,7 +1,7 @@
 "use client";
-import { motion, useScroll, useTransform } from "framer-motion";
+import { motion } from "framer-motion";
 import Image from "next/image";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 
 /**
  * REFINED VARIATION: "The Real One"
@@ -50,17 +50,9 @@ export function VariationRefined() {
   const targetDate = new Date(2026, 2, 30, 12, 30, 0);
   const countdown = useCountdown(targetDate);
   const [isOpen, setIsOpen] = useState(false);
-  const sectionRef = useRef<HTMLDivElement>(null);
-
   useEffect(() => {
     setIsOpen(new Date() >= targetDate);
   }, [targetDate]);
-
-  const { scrollYProgress } = useScroll({
-    target: sectionRef,
-    offset: ["start end", "end start"],
-  });
-  const charsY = useTransform(scrollYProgress, [0, 1], [40, -40]);
 
   return (
     <>
@@ -117,7 +109,7 @@ export function VariationRefined() {
         </section>
 
         {/* — Characters — */}
-        <section ref={sectionRef} className="relative mt-20 sm:mt-28 overflow-hidden">
+        <section className="relative mt-20 sm:mt-28 overflow-hidden">
           <div className="max-w-5xl mx-auto px-6">
             <motion.div
               initial={{ opacity: 0 }}
@@ -130,36 +122,39 @@ export function VariationRefined() {
               </p>
             </motion.div>
 
-            <motion.div style={{ y: charsY }} className="mt-8 sm:mt-10 -mx-6 sm:mx-0">
-              <Image
-                src="/assets/chars.png"
-                alt="Hero characters — Warrior, Archer, Scout, Guardian, Scholar"
-                width={800}
-                height={460}
-                className="w-full max-w-3xl mx-auto object-contain"
-              />
-            </motion.div>
-
-            {/* Character names — not a grid, just flowing text */}
+            {/* Hero class cards — icon centered on party-colored bg */}
             <motion.div
               initial={{ opacity: 0, y: 16 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              transition={{ duration: 0.6, delay: 0.2 }}
-              className="mt-6 sm:mt-8 flex flex-wrap gap-x-6 gap-y-2 justify-center sm:justify-start"
+              transition={{ duration: 0.6, delay: 0.1 }}
+              className="mt-8 sm:mt-10 grid grid-cols-3 sm:grid-cols-5 gap-3"
             >
               {[
-                { name: "Warrior", sub: "Frontline" },
-                { name: "Archer", sub: "Precision" },
-                { name: "Scout", sub: "Recon" },
-                { name: "Guardian", sub: "Defense" },
-                { name: "Scholar", sub: "Strategy" },
-              ].map((hero, i) => (
-                <span key={hero.name} className="inline-flex items-baseline gap-1.5">
-                  <span className="font-jejuhallasan text-lg text-[#c4d4c6]">{hero.name}</span>
-                  <span className="text-xs text-[#4a6a4e]">{hero.sub}</span>
-                  {i < 4 && <span className="text-[#2a3d2e] ml-3">/</span>}
-                </span>
+                { name: "Warrior", perk: "Frontline", icon: "/warrior.png", bg: "#C23B3B" },
+                { name: "Archer", perk: "Precision", icon: "/archer.png", bg: "#3B7FC2" },
+                { name: "Scout", perk: "Recon", icon: "/scout.png", bg: "#3BAF5C" },
+                { name: "Guardian", perk: "Defense", icon: "/guardian.png", bg: "#C2903B" },
+                { name: "Scholar", perk: "Strategy", icon: "/scholar.png", bg: "#7B3BC2" },
+              ].map((hero) => (
+                <div key={hero.name} className="flex flex-col items-center gap-2">
+                  <div
+                    className="w-full aspect-square rounded-2xl flex items-center justify-center"
+                    style={{ backgroundColor: hero.bg }}
+                  >
+                    <Image
+                      src={hero.icon}
+                      alt={hero.name}
+                      width={80}
+                      height={80}
+                      className="w-3/5 h-3/5 object-contain"
+                    />
+                  </div>
+                  <div className="text-center">
+                    <div className="font-jejuhallasan text-sm text-[#c4d4c6]">{hero.name}</div>
+                    <div className="text-[10px] text-[#4a6a4e] uppercase tracking-wider">{hero.perk}</div>
+                  </div>
+                </div>
               ))}
             </motion.div>
           </div>

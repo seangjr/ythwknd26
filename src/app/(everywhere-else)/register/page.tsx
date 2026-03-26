@@ -409,24 +409,15 @@ export default function Registration() {
                             isAvailable && handleRegisterClick(hero.id, team.id)
                           }
                           className={cn(
-                            "w-16 h-16 rounded-full sm:rounded-lg sm:w-full sm:h-36 overflow-hidden mx-auto relative",
+                            "w-16 h-16 rounded-full sm:rounded-lg sm:w-full sm:h-36 mx-auto",
+                            team.color,
                             isAvailable
                               ? "cursor-pointer hover:opacity-80 transition-opacity duration-300"
                               : "opacity-50 cursor-not-allowed grayscale",
                           )}
                           disabled={!isAvailable}
                           aria-label={`Select ${hero.name} class from ${team.name}`}
-                        >
-                          <Image
-                            src={getHeroImagePath(hero.id, team.id)}
-                            alt={hero.name}
-                            fill
-                            className="object-cover"
-                            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                            priority={false}
-                            loading="lazy"
-                          />
-                        </motion.button>
+                        />
                       </motion.div>
                     );
                   })}

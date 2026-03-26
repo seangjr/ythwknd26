@@ -530,7 +530,7 @@ export default function TeamInvitePage() {
                         >
                           <div className="w-10 h-10 rounded-full overflow-hidden mr-3">
                             <img
-                              src={getHeroImagePath(hero!.id, invite.teamId)}
+                              src={hero ? getHeroImagePath(hero.id, invite.teamId) : "/placeholder.svg"}
                               alt={hero?.name || "Class"}
                               className="w-full h-full object-cover"
                             />
