@@ -99,12 +99,12 @@ export function CharacterSelectionScreen({
 
   // Get hero status color
   const getHeroStatusColor = (heroId: string) => {
-    if (heroId === selectedHero) return "text-amber-500";
+    if (heroId === selectedHero) return "text-amber-700";
 
     const member = teamMembers.find((m) => m.hero_id === heroId);
     if (member) return "text-parchment-ink/50";
 
-    return "text-green-500";
+    return "text-emerald-700";
   };
 
   // Update local state when preselectedHero changes

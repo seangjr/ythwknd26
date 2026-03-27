@@ -35,7 +35,7 @@ export default function Home() {
             className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 min-h-full min-w-full"
             style={{ objectFit: 'cover', width: '100%', height: '100%' }}
           >
-            <source src="/landing.mp4" type="video/mp4" />
+            <source src="/landing.webm" type="video/webm" />
           </video>
         </div>
         {/* Masthead layer */}

@@ -101,8 +101,11 @@ export const HoloCard = ({
     }
   }, [forceSide, isFlipped, onFlip]);
 
+  const rafId = useRef<number>(0);
+
   const handleOnMouseMove = useCallback(
     (event: React.MouseEvent<HTMLDivElement>) => {
+      if (!animated) return; // already in active state, throttle via rAF below
       setAnimated(false);
       setHover(true);
 
@@ -119,9 +122,12 @@ export const HoloCard = ({
       const lp = 50 + (px - 50) / 1.5;
       const tp = 50 + (py - 50) / 1.5;
 
-      setActiveBackgroundPosition({ lp, tp });
+      cancelAnimationFrame(rafId.current);
+      rafId.current = requestAnimationFrame(() => {
+        setActiveBackgroundPosition({ lp, tp });
+      });
     },
-    []
+    [animated]
   );
 
   const handleOnTouchMove = useCallback(
@@ -146,7 +152,10 @@ export const HoloCard = ({
       const lp = 50 + (px - 50) / 1.5;
       const tp = 50 + (py - 50) / 1.5;
 
-      setActiveBackgroundPosition({ lp, tp });
+      cancelAnimationFrame(rafId.current);
+      rafId.current = requestAnimationFrame(() => {
+        setActiveBackgroundPosition({ lp, tp });
+      });
     },
     []
   );
@@ -250,45 +259,48 @@ export const HoloCard = ({
   const isCompact = isFull || numWidth < 280;
 
   const FrontContent = (
-    <div className="pointer-events-none absolute z-[2] flex h-full w-full flex-col items-start justify-end p-2 text-parchment-ink font-jejuhallasan transition">
+    <div className="pointer-events-none absolute z-[2] flex h-full w-full flex-col items-start justify-end font-jejuhallasan transition">
       {/* Top bar: masthead left, icon right */}
       <div className="absolute top-2 left-0 flex w-full items-start justify-between px-2">
         <Image
           src="/assets/masthead.svg"
           alt="YTHWKND"
-          width={isCompact ? 48 : 80}
-          height={isCompact ? 14 : 24}
+          width={isCompact ? 64 : 160}
+          height={isCompact ? 19 : 48}
           className="object-contain"
         />
         {iconImage && (
           <Image
             src={iconImage}
             alt="Class icon"
-            width={isCompact ? 28 : 40}
-            height={isCompact ? 28 : 40}
+            width={isCompact ? 40 : 80}
+            height={isCompact ? 40 : 80}
             className="object-contain drop-shadow-md"
           />
         )}
       </div>
 
-      {/* Bottom info card — parchment style */}
+      {/* Fade-to-black gradient at bottom */}
+      <div className="absolute inset-x-0 bottom-0 h-2/3 bg-gradient-to-t from-black/90 via-black/50 to-transparent" />
+
+      {/* Bottom text content */}
       <div className={cn(
-        "relative flex w-full flex-col gap-0.5 overflow-hidden rounded-lg parchment-bg border border-parchment-dark parchment-shadow",
+        "relative flex w-full flex-col gap-0.5",
         isCompact ? "p-2" : "p-3"
       )}>
         <div className={cn(
-          "text-parchment-ink font-jetsytrial",
+          "text-white font-jetsytrial drop-shadow-md",
           isCompact ? "text-lg" : "text-4xl"
         )}>{name}</div>
         {username && (
           <div className={cn(
-            "text-parchment-ink/40 font-sans",
+            "text-white/50 font-sans",
             isCompact ? "text-[9px]" : "text-xs"
           )}>{username}</div>
         )}
         {subtitle && (
           <div className={cn(
-            "text-parchment-ink/60",
+            "text-white/70",
             isCompact ? "text-[10px] mb-2" : "text-sm mb-4"
           )}>{subtitle}</div>
         )}
@@ -299,7 +311,7 @@ export const HoloCard = ({
               onClick={onAction ? (e) => { e.stopPropagation(); onAction(); } : undefined}
               disabled={!onAction}
               className={cn(
-                "pointer-events-auto w-full rounded-full parchment-bg border-2 border-parchment-dark text-parchment-ink font-jetsytrial uppercase tracking-wider transition-all disabled:opacity-60 disabled:cursor-not-allowed hover:enabled:brightness-95 hover:enabled:shadow-md active:enabled:brightness-90 active:enabled:scale-95 cursor-pointer",
+                "pointer-events-auto w-full rounded-full bg-white/15 backdrop-blur-sm border border-white/20 text-white font-jetsytrial uppercase tracking-wider transition-all disabled:opacity-60 disabled:cursor-not-allowed hover:enabled:bg-white/25 hover:enabled:shadow-md active:enabled:scale-95 cursor-pointer",
                 isCompact ? "py-1.5 text-[10px]" : "py-2 text-sm"
               )}
             >
@@ -310,12 +322,12 @@ export const HoloCard = ({
           <div className="flex w-full items-center justify-between">
             <div className="flex flex-col items-start gap-0.5">
               {primaryId && (
-                <span className={cn("text-parchment-ink/80", isCompact ? "text-[9px]" : "text-sm")}>
+                <span className={cn("text-white/80", isCompact ? "text-[9px]" : "text-sm")}>
                   {primaryId}
                 </span>
               )}
               {secondaryInfo && (
-                <span className={cn("text-parchment-ink/50", isCompact ? "text-[8px]" : "text-xs")}>
+                <span className={cn("text-white/50", isCompact ? "text-[8px]" : "text-xs")}>
                   {secondaryInfo}
                 </span>
               )}
@@ -328,50 +340,50 @@ export const HoloCard = ({
 
   const BackContent = (
     <div className={cn(
-      "pointer-events-none absolute z-[2] flex h-full w-full flex-col items-start justify-between text-parchment-ink font-jejuhallasan",
+      "pointer-events-none absolute z-[2] flex h-full w-full flex-col items-start justify-between font-jejuhallasan",
       isCompact ? "p-2" : "p-3"
     )}>
-      <div className={cn("flex w-full flex-col", isCompact ? "gap-2" : "gap-4")}>
+      {/* Full-card dark overlay for readability */}
+      <div className="absolute inset-0 bg-black/60" />
+
+      <div className={cn("relative flex w-full flex-col", isCompact ? "gap-2" : "gap-4")}>
         {/* Top bar: masthead left, icon right */}
         <div className="flex items-start justify-between">
           <Image
             src="/assets/masthead.svg"
             alt="YTHWKND"
-            width={isCompact ? 40 : 70}
-            height={isCompact ? 12 : 20}
+            width={isCompact ? 56 : 140}
+            height={isCompact ? 17 : 40}
             className="object-contain"
           />
           {iconImage && (
             <Image
               src={iconImage}
               alt="Class icon"
-              width={isCompact ? 24 : 32}
-              height={isCompact ? 24 : 32}
+              width={isCompact ? 36 : 64}
+              height={isCompact ? 36 : 64}
               className="object-contain drop-shadow-md"
             />
           )}
         </div>
 
-        {/* Description card — parchment style */}
-        <div className={cn(
-          "relative overflow-hidden rounded-lg parchment-bg border border-parchment-dark parchment-shadow",
-          isCompact ? "p-2" : "p-4"
-        )}>
+        {/* Description text */}
+        <div className={cn(isCompact ? "px-0" : "px-1")}>
           <div className={cn(
-            "text-parchment-ink font-jetsytrial",
+            "text-white font-jetsytrial drop-shadow-md",
             isCompact ? "text-sm mb-1" : "text-2xl mb-2"
           )}>
             {name}
           </div>
           {username && (
             <div className={cn(
-              "text-parchment-ink/40 font-sans",
+              "text-white/50 font-sans",
               isCompact ? "text-[8px] -mt-0.5 mb-1" : "text-xs -mt-1 mb-2"
             )}>{username}</div>
           )}
           {subtitle && (
             <div className={cn(
-              "text-parchment-ink/60",
+              "text-white/70",
               isCompact ? "text-[9px] mb-1.5" : "text-sm mb-4"
             )}>
               {subtitle}
@@ -379,8 +391,8 @@ export const HoloCard = ({
           )}
           {description && (
             <p className={cn(
-              "text-parchment-ink/80 leading-relaxed",
-              isCompact ? "text-[9px]" : "text-sm"
+              "text-white/80 leading-relaxed",
+              isCompact ? "text-xs" : "text-base"
             )}>{description}</p>
           )}
         </div>
@@ -389,9 +401,9 @@ export const HoloCard = ({
       {actionLabel ? (
         <button
           onClick={onAction ? (e) => { e.stopPropagation(); onAction(); } : undefined}
-            disabled={!onAction}
+          disabled={!onAction}
           className={cn(
-            "pointer-events-auto w-full rounded-full parchment-bg border-2 border-parchment-dark text-parchment-ink font-jetsytrial uppercase tracking-wider transition-all disabled:opacity-60 disabled:cursor-not-allowed hover:enabled:brightness-95 hover:enabled:shadow-md active:enabled:brightness-90 active:enabled:scale-95 cursor-pointer",
+            "pointer-events-auto relative w-full rounded-full bg-white/15 backdrop-blur-sm border border-white/20 text-white font-jetsytrial uppercase tracking-wider transition-all disabled:opacity-60 disabled:cursor-not-allowed hover:enabled:bg-white/25 hover:enabled:shadow-md active:enabled:scale-95 cursor-pointer",
             isCompact ? "py-1.5 text-[10px]" : "py-2 text-sm"
           )}
         >

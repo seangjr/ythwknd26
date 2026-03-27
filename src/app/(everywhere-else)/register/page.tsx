@@ -8,7 +8,7 @@ import { CONSTANTS } from "@/lib/constants";
 import { cn } from "@/lib/utils";
 import { HugeiconsIcon } from "@hugeicons/react";
 import { Share01Icon, UserGroupIcon } from "@hugeicons/core-free-icons";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Image from "next/image";
 
@@ -23,20 +23,20 @@ const CLASS_COLORS: Record<string, string> = {
 
 // SVG background images per hero
 const HERO_BG: Record<string, string> = {
-  warrior: "/card-bg/Warrior.webp",
-  archer: "/card-bg/Archer.webp",
-  scout: "/card-bg/Scout.webp",
-  guardian: "/card-bg/Guardian.webp",
-  scholar: "/card-bg/Scholar.webp",
+  warrior: "/card-bg/Warrior.svg",
+  archer: "/card-bg/Archer.svg",
+  scout: "/card-bg/Scout.svg",
+  guardian: "/card-bg/Guardian.svg",
+  scholar: "/card-bg/Scholar.svg",
 };
 
 // Alt icons for mobile view
 const HERO_ALT_ICON: Record<string, string> = {
-  warrior: "/icons-alt/Warrior.webp",
-  archer: "/icons-alt/Archer.webp",
-  scout: "/icons-alt/Scout.webp",
-  guardian: "/icons-alt/Guardian.webp",
-  scholar: "/icons-alt/Scholar.webp",
+  warrior: "/icons-alt/Warrior.svg",
+  archer: "/icons-alt/Archer.svg",
+  scout: "/icons-alt/Scout.svg",
+  guardian: "/icons-alt/Guardian.svg",
+  scholar: "/icons-alt/Scholar.svg",
 };
 
 interface Registration {
@@ -79,6 +79,35 @@ export default function Registration() {
     teamId: number;
     lineNumber: number | null;
   } | null>(null);
+  const [savedScrollY, setSavedScrollY] = useState(0);
+  const closingViaButton = useRef(false);
+  const hasAnimated = useRef(false);
+
+  // Listen for browser back gesture / button to close modal view
+  useEffect(() => {
+    const handlePopState = () => {
+      // If we triggered this via handleModalClose, skip (already cleaned up)
+      if (closingViaButton.current) {
+        closingViaButton.current = false;
+        // Still restore scroll position
+        requestAnimationFrame(() => {
+          window.scrollTo(0, savedScrollY);
+        });
+        return;
+      }
+      if (clickedHeroData) {
+        setClickedHeroData(null);
+        setIsModalOpen(false);
+        // Restore scroll position after React re-renders the list
+        requestAnimationFrame(() => {
+          window.scrollTo(0, savedScrollY);
+        });
+      }
+    };
+
+    window.addEventListener("popstate", handlePopState);
+    return () => window.removeEventListener("popstate", handlePopState);
+  }, [clickedHeroData, savedScrollY]);
 
   // Fetch all registrations and hero availability
   useEffect(() => {
@@ -148,6 +177,12 @@ export default function Registration() {
     const nextLine = getNextAvailableLineForTeam(teamId);
 
     if (nextLine) {
+      // Save scroll position before switching views
+      setSavedScrollY(window.scrollY);
+
+      // Push history state so mobile back gesture returns here
+      window.history.pushState({ view: "character-selection" }, "");
+
       // Store all clicked data together instead of in separate states
       setClickedHeroData({
         heroId,
@@ -172,11 +207,13 @@ export default function Registration() {
     }
   };
 
-  // Handle modal close
+  // Handle modal close (via BACK button in the UI)
   const handleModalClose = () => {
+    closingViaButton.current = true;
     setIsModalOpen(false);
-    // Clear clicked data when modal is closed
     setClickedHeroData(null);
+    // Pop the history entry we pushed so we don't leave stale state
+    window.history.back();
   };
   // Handle invite modal close
   const handleInviteModalClose = () => {
@@ -245,6 +282,16 @@ export default function Registration() {
     "VIEW OUR REGISTRATION COUNTER LOCATED BEHIND L5 AFTER SERVICE IF YOU NEED HELP WITH ANY INQUIRIES, SIGNUPS OR PAYMENTS.",
   ];
 
+  // Skip entrance animations after the first mount (e.g. when returning from character selection)
+  const skip = hasAnimated.current;
+
+  // Mark as animated after first paint of the list view
+  useEffect(() => {
+    if (!clickedHeroData && !hasAnimated.current) {
+      hasAnimated.current = true;
+    }
+  }, [clickedHeroData]);
+
   return clickedHeroData ? (
     <RegistrationModal
       isOpen={isModalOpen}
@@ -255,58 +302,58 @@ export default function Registration() {
       onSuccess={handleRegistrationSuccess}
     />
   ) : (
-    <motion.main 
-      initial={{ opacity: 0 }}
+    <motion.main
+      initial={skip ? false : { opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.5 }}
       className="flex flex-col justify-center px-4 md:px-8 mt-16"
     >
       {/* Desc section */}
-      <motion.section 
-        initial={{ opacity: 0, y: 20 }}
+      <motion.section
+        initial={skip ? false : { opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6 }}
         className="flex flex-col gap-4 md:gap-6 items-center"
       >
         {/* Small text block */}
-        <motion.div 
-          initial={{ opacity: 0, y: 10 }}
+        <motion.div
+          initial={skip ? false : { opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.4, delay: 0.2 }}
+          transition={{ duration: 0.4, delay: skip ? 0 : 0.2 }}
           className="uppercase text-center"
         >
           <p className="text-xs md:text-base">Character selection</p>
         </motion.div>
         <motion.h1
-          initial={{ opacity: 0, y: 20 }}
+          initial={skip ? false : { opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.3 }}
+          transition={{ duration: 0.6, delay: skip ? 0 : 0.3 }}
           className="text-4xl md:text-6xl text-center font-jetsytrial"
         >
           Choose your class
         </motion.h1>
         {blocks.map((block, index) => (
-          <motion.div 
+          <motion.div
             key={index}
-            initial={{ opacity: 0, y: 10 }}
+            initial={skip ? false : { opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.4, delay: 0.4 + index * 0.1 }}
+            transition={{ duration: 0.4, delay: skip ? 0 : 0.4 + index * 0.1 }}
             className="uppercase text-center"
           >
             <p className="text-xs md:text-base">{block}</p>
           </motion.div>
         ))}
-        <motion.div 
-          initial={{ opacity: 0, y: 20 }}
+        <motion.div
+          initial={skip ? false : { opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 1 }}
+          transition={{ duration: 0.6, delay: skip ? 0 : 1 }}
           className="text-center py-10 my-10"
         >
           <h2 className="text-8xl mb-2 font-jejuhallasan">
             <motion.span
-              initial={{ scale: 0.5 }}
+              initial={skip ? false : { scale: 0.5 }}
               animate={{ scale: 1 }}
-              transition={{ duration: 0.5, delay: 1.2 }}
+              transition={{ duration: 0.5, delay: skip ? 0 : 1.2 }}
               className={cn(
                 availableHeroes < totalHeroes
                   ? "text-amber-500"
@@ -327,18 +374,18 @@ export default function Registration() {
           {Array.from({ length: 4 }).map((_, i) => (
             <motion.div
               key={i}
-              initial={{ opacity: 0, y: 20 }}
+              initial={skip ? false : { opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: i * 0.1 }}
+              transition={{ duration: 0.5, delay: skip ? 0 : i * 0.1 }}
               className="h-48 bg-[#1a1a1a] rounded-lg animate-pulse"
             ></motion.div>
           ))}
         </div>
       ) : (
-        <motion.div 
-          initial={{ opacity: 0 }}
+        <motion.div
+          initial={skip ? false : { opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ duration: 0.6, delay: 1.2 }}
+          transition={{ duration: 0.6, delay: skip ? 0 : 1.2 }}
           className="space-y-12"
         >
           {/* Team Universes */}
@@ -348,18 +395,18 @@ export default function Registration() {
             const memberCount = getTeamMemberCount(team.id);
 
             return (
-              <motion.div 
-                key={team.id} 
-                initial={{ opacity: 0, y: 20 }}
+              <motion.div
+                key={team.id}
+                initial={skip ? false : { opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, delay: 1.4 + teamIndex * 0.2 }}
+                transition={{ duration: 0.5, delay: skip ? 0 : 1.4 + teamIndex * 0.2 }}
                 className="mb-8"
               >
                 {/* Team Header */}
-                <motion.div 
-                  initial={{ opacity: 0, x: -20 }}
+                <motion.div
+                  initial={skip ? false : { opacity: 0, x: -20 }}
                   animate={{ opacity: 1, x: 0 }}
-                  transition={{ duration: 0.4, delay: 1.6 + teamIndex * 0.2 }}
+                  transition={{ duration: 0.4, delay: skip ? 0 : 1.6 + teamIndex * 0.2 }}
                   className="flex justify-between items-center mb-4 p-3"
                 >
                   <div className="flex items-center">
@@ -422,11 +469,11 @@ export default function Registration() {
                     return (
                       <motion.div
                         key={`team-${team.id}-${hero.id}`}
-                        initial={{ opacity: 0, scale: 0.8 }}
+                        initial={skip ? false : { opacity: 0, scale: 0.8 }}
                         animate={{ opacity: 1, scale: 1 }}
                         transition={{
                           duration: 0.4,
-                          delay: 1.8 + teamIndex * 0.2 + heroIndex * 0.1
+                          delay: skip ? 0 : 1.8 + teamIndex * 0.2 + heroIndex * 0.1
                         }}
                         className="w-full"
                       >

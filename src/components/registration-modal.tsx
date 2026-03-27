@@ -2,7 +2,7 @@
 
 import { CharacterSelectionScreen } from "@/components/character-selection-screen";
 import { MultiStepRegistrationForm } from "@/components/multi-step-registration-form";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { z } from "zod";
 import { LoadingOverlay } from "./loading-overlay";
 import { useDatabaseConnection } from "@/hooks/use-database-connection";
@@ -108,6 +108,7 @@ export function RegistrationModal({
   const [preselectedHeroHandled, setPreselectedHeroHandled] =
     useState<boolean>(false);
   const { isConnecting, connectionError, handleFetchError, retryConnection } = useDatabaseConnection();
+  const closingViaButton = useRef(false);
 
   // Set preselected hero when it changes
   useEffect(() => {
@@ -117,17 +118,38 @@ export function RegistrationModal({
     }
   }, [preselectedHero, preselectedHeroHandled]);
 
+  // Listen for browser back to return to character selection from form
+  useEffect(() => {
+    const handlePopState = () => {
+      if (closingViaButton.current) {
+        closingViaButton.current = false;
+        return;
+      }
+      // If we're on the form, go back to character selection
+      if (!showCharacterSelection && isOpen) {
+        setShowCharacterSelection(true);
+      }
+    };
+
+    window.addEventListener("popstate", handlePopState);
+    return () => window.removeEventListener("popstate", handlePopState);
+  }, [showCharacterSelection, isOpen]);
+
   // Handle character selection
   const handleCharacterConfirm = (heroId: string) => {
     setSelectedHero(heroId);
+    // Push history so back gesture returns to character selection
+    window.history.pushState({ view: "registration-form" }, "");
     setTimeout(() => {
       setShowCharacterSelection(false);
     }, 0);
   };
 
-  // Handle going back to character selection
+  // Handle going back to character selection (via UI button)
   const handleBackToCharacterSelection = () => {
+    closingViaButton.current = true;
     setShowCharacterSelection(true);
+    window.history.back();
   };
 
   // Handle modal close
