@@ -613,15 +613,24 @@ export function MultiStepRegistrationForm({
       {/* Header */}
       <Navbar variant="parchment" />
 
-      {/* Back button */}
+      {/* Back / Home button */}
       <div className="p-4">
-        <button
-          onClick={handleBack}
-          className="cursor-pointer flex items-center text-parchment-ink/60 hover:text-parchment-ink transition-colors"
-        >
-          <HugeiconsIcon icon={ArrowLeft} size={16} className="mr-2" />
-          <span>BACK</span>
-        </button>
+        {registrationComplete ? (
+          <a
+            href="https://ymfgakl.com/ythwknd"
+            className="cursor-pointer flex items-center text-parchment-ink/60 hover:text-parchment-ink transition-colors"
+          >
+            <span>HOME</span>
+          </a>
+        ) : (
+          <button
+            onClick={handleBack}
+            className="cursor-pointer flex items-center text-parchment-ink/60 hover:text-parchment-ink transition-colors"
+          >
+            <HugeiconsIcon icon={ArrowLeft} size={16} className="mr-2" />
+            <span>BACK</span>
+          </button>
+        )}
       </div>
 
       {/* Main content */}
@@ -1449,13 +1458,14 @@ export function MultiStepRegistrationForm({
                 THE LATEST UPDATES!
               </p>
 
+              {watchYmMember === "Yes" && (
               <motion.div
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
               >
-                <Button asChild variant="parchment" size="2xl" className="w-full mb-8 cursor-pointer">
+                <Button asChild variant="parchment" size="2xl" className="w-full mb-8 cursor-pointer text-center whitespace-normal">
                   <a 
-                    href="https://forms.gle/qv5ze5FUQkGZo3bd6" 
+                    href="https://forms.gle/CqWSGJLUURyjaxbNA" 
                     target="_blank" 
                     rel="noopener noreferrer"
                   >
@@ -1463,6 +1473,7 @@ export function MultiStepRegistrationForm({
                   </a>
                 </Button>
               </motion.div>
+              )}
             </div>
 
             {/* Hero and Team Info */}
