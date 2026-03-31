@@ -139,9 +139,11 @@ Reduced public/ from 300MB to 17MB (94% reduction), replaced googleapis with @go
 
 ⚠️ Mobile Lighthouse scores (52/0) below ≥80 target — localhost slow 4G simulation artifact. Desktop scores used as representative gate. Requires re-verification on deployed Vercel URL.
 
-### M004 — Registration UX Fixes & Animation Reduction (queued)
+### M004 — Registration UX Fixes & Animation Reduction ✅
 
-Fix 6 user-reported registration issues: strip excessive animations causing lag (72→essentials), remove duplicate "Not Sure" CG leader option, change success page "BACK" to "HOME" linking to ymfgakl.com/ythwknd, conditionally show Payment button for YM members only, fix button overflow, update Payment form URL.
+Fixed 6 UX issues in the registration form: stripped ~48 entrance animations from success page (71→23 motion elements), removed duplicate CG leader option, added HOME link to ymfgakl.com/ythwknd, conditional payment button for YM members only, text wrapping fix, and updated payment URL. 2 files changed across 3 commits.
+
+- S01 ✅ Registration UX Fixes & Animation Strip
 
 ## Next Steps
 
@@ -152,4 +154,4 @@ Fix 6 user-reported registration issues: strip excessive animations causing lag 
 5. **Google Sheets** — Configure GOOGLE_SERVICE_ACCOUNT_KEY and GOOGLE_SHEET_ID for full sync
 
 ---
-*Last updated: 2026-03-31 after M004 queued*
+*Last updated: 2026-03-31 after M004 complete*

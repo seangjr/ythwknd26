@@ -153,3 +153,11 @@ Lighthouse mobile preset applies simulated slow 4G throttling (1.6 Mbps, 150ms R
 ## @googleapis/sheets as lightweight googleapis replacement
 
 The full `googleapis` package is ~148MB in node_modules. For apps that only need Google Sheets, `@googleapis/sheets` + `google-auth-library` is ~26MB — an 82% reduction. Import changes: `import { google } from 'googleapis'` → `import { sheets_v4, auth } from '@googleapis/sheets'`.
+
+## Entrance animations on post-action pages cause perceived lag
+
+Staggered entrance animations on confirmation/success pages create a delay between action completion and user feedback. Users have already committed (submitted form, completed purchase) — they want instant confirmation, not choreographed reveals. Strip entrance-only animations from post-action pages; keep functional animations (step transitions, gesture feedback) intact.
+
+## Motion element grep counts include open+close tags
+
+When estimating remaining motion element count after a strip pass, remember that `grep -c 'motion\.'` counts both opening tags (`<motion.div`) and JSX closing references. A single `<motion.div>...</motion.div>` wrapper produces 2 grep matches, not 1. Plan estimates should account for this 2x factor.
