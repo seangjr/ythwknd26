@@ -97,7 +97,6 @@ export const CONSTANTS = { SITE_TITLE: "YTHWKND",
     "Rachel Anne",
     "Samantha Edwin",
     "Yae-ber Neo",
-    "Not Sure",
   ],
 
   // Mock ages for demo

@@ -139,6 +139,10 @@ Reduced public/ from 300MB to 17MB (94% reduction), replaced googleapis with @go
 
 ⚠️ Mobile Lighthouse scores (52/0) below ≥80 target — localhost slow 4G simulation artifact. Desktop scores used as representative gate. Requires re-verification on deployed Vercel URL.
 
+### M004 — Registration UX Fixes & Animation Reduction (queued)
+
+Fix 6 user-reported registration issues: strip excessive animations causing lag (72→essentials), remove duplicate "Not Sure" CG leader option, change success page "BACK" to "HOME" linking to ymfgakl.com/ythwknd, conditionally show Payment button for YM members only, fix button overflow, update Payment form URL.
+
 ## Next Steps
 
 1. **Lighthouse Mobile Verification** — Run Lighthouse on deployed Vercel production URL to confirm mobile ≥80
@@ -148,4 +152,4 @@ Reduced public/ from 300MB to 17MB (94% reduction), replaced googleapis with @go
 5. **Google Sheets** — Configure GOOGLE_SERVICE_ACCOUNT_KEY and GOOGLE_SHEET_ID for full sync
 
 ---
-*Last updated: 2026-03-26 after M003 completed*
+*Last updated: 2026-03-31 after M004 queued*
