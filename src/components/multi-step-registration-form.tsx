@@ -1425,58 +1425,31 @@ export function MultiStepRegistrationForm({
           </>
         ) : (
           // Registration Complete Screen
-          <motion.div 
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.5 }}
-            className="w-full space-y-8"
-          >
-            <motion.div 
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: 0.2 }}
-              className="text-center"
-            >
-              <motion.h3 
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ duration: 0.4, delay: 0.3 }}
-                className="text-parchment-ink/60 uppercase text-sm pb-4"
-              >
+          <div className="w-full space-y-8">
+            <div className="text-center">
+              <h3 className="text-parchment-ink/60 uppercase text-sm pb-4">
                 REGISTRATION COMPLETE
-              </motion.h3>
-              <motion.h2 
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.4, delay: 0.4 }}
+              </h3>
+              <h2 
                 className="text-6xl font-jetsytrial text-parchment-ink mb-6"
               >
                 See You At Camp
-              </motion.h2>
-              <motion.p 
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ duration: 0.4, delay: 0.5 }}
+              </h2>
+              <p 
                 className="text-parchment-ink mb-6"
               >
                 PLEASE KEEP AN EYE ON YOUR INBOX — WE&apos;LL BE SENDING YOU THE
                 PAYMENT DETAILS AND THE PARENTAL CONSENT FORM TO SECURE YOUR
                 SPOT IN CAMP.
-              </motion.p>
-              <motion.p 
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ duration: 0.4, delay: 0.6 }}
+              </p>
+              <p 
                 className="text-parchment-ink mb-8"
               >
                 IN THE MEANTIME, STAY CONNECTED WITH US THROUGH OUR SOCIALS FOR
                 THE LATEST UPDATES!
-              </motion.p>
+              </p>
 
               <motion.div
-                initial={{ opacity: 0, scale: 0.9 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ duration: 0.4, delay: 0.7 }}
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
               >
@@ -1490,33 +1463,21 @@ export function MultiStepRegistrationForm({
                   </a>
                 </Button>
               </motion.div>
-            </motion.div>
+            </div>
 
             {/* Hero and Team Info */}
-            <motion.div 
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: 0.8 }}
+            <div 
               className="bg-parchment-darker/15 border border-parchment-dark rounded-lg p-6 mb-6"
             >
-              <motion.h3 
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ duration: 0.4, delay: 0.9 }}
+              <h3 
                 className="text-2xl font-jejuhallasan text-parchment-ink mb-4"
               >
                 Your Hero
-              </motion.h3>
-              <motion.div 
-                initial={{ opacity: 0, x: -20 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.4, delay: 1 }}
+              </h3>
+              <div 
                 className="flex items-center mb-6"
               >
-                <motion.div 
-                  initial={{ scale: 0.8 }}
-                  animate={{ scale: 1 }}
-                  transition={{ duration: 0.4, delay: 1.1 }}
+                <div 
                   className="relative w-12 h-12 rounded-full overflow-hidden mr-3"
                 >
                   <Image
@@ -1528,46 +1489,34 @@ export function MultiStepRegistrationForm({
                     priority={false}
                     loading="lazy"
                   />
-                </motion.div>
+                </div>
                 <span className="text-parchment-ink font-medium">
                   {heroDetails?.name}
                 </span>
-              </motion.div>
+              </div>
 
-              <motion.h3 
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ duration: 0.4, delay: 1.2 }}
+              <h3 
                 className="text-2xl font-jejuhallasan text-parchment-ink mb-4"
               >
                 Current Team
-              </motion.h3>
-              <motion.p 
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ duration: 0.4, delay: 1.3 }}
+              </h3>
+              <p 
                 className="text-parchment-ink/70 mb-4"
               >
                 {team?.code} {team?.name}
-              </motion.p>
+              </p>
 
               {teamMembersLoading ? (
-                <motion.div 
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  transition={{ duration: 0.4 }}
+                <div 
                   className="flex justify-center py-4"
                 >
                   <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-white" />
                   <span className="ml-2 text-parchment-ink/70">
                     Loading team members...
                   </span>
-                </motion.div>
+                </div>
               ) : teamMembers.length > 0 ? (
-                <motion.div 
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  transition={{ duration: 0.4, delay: 1.4 }}
+                <div 
                   className="space-y-3"
                 >
                   {CONSTANTS.HEROES.map((hero, index) => {
@@ -1576,19 +1525,13 @@ export function MultiStepRegistrationForm({
                     const isCurrentUser = member?.line_number === lineNumber;
 
                     return (
-                      <motion.div
+                      <div
                         key={hero.id}
-                        initial={{ opacity: 0, x: -20 }}
-                        animate={{ opacity: 1, x: 0 }}
-                        transition={{ duration: 0.3, delay: 1.5 + index * 0.1 }}
                         className={`flex items-center p-2 ${
                           isTaken ? "opacity-50 cursor-not-allowed" : ""
                         }`}
                       >
-                        <motion.div 
-                          initial={{ scale: 0.8 }}
-                          animate={{ scale: 1 }}
-                          transition={{ duration: 0.3, delay: 1.6 + index * 0.1 }}
+                        <div 
                           className="relative w-10 h-10 rounded-full overflow-hidden mr-3"
                         >
                           <Image
@@ -1600,7 +1543,7 @@ export function MultiStepRegistrationForm({
                             priority={false}
                             loading="lazy"
                           />
-                        </motion.div>
+                        </div>
 
                         <div className="flex-1">
                           <p className="font-medium text-parchment-ink">
@@ -1631,25 +1574,19 @@ export function MultiStepRegistrationForm({
                             </p>
                           )}
                         </div>
-                      </motion.div>
+                      </div>
                     );
                   })}
-                </motion.div>
+                </div>
               ) : (
-                <motion.div 
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  transition={{ duration: 0.4, delay: 1.4 }}
+                <div 
                   className="text-center py-4 text-parchment-ink/50"
                 >
                   <p>No team members found. Be the first to join!</p>
-                </motion.div>
+                </div>
               )}
 
-              <motion.div 
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.4, delay: 2 }}
+              <div 
                 className="mt-4 flex w-full"
               >
                 <motion.div
@@ -1665,73 +1602,52 @@ export function MultiStepRegistrationForm({
                     Refresh Team Members
                   </Button>
                 </motion.div>
-              </motion.div>
-            </motion.div>
+              </div>
+            </div>
 
             {/* Team Invite Link */}
-            <motion.div 
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: 2.1 }}
+            <div 
               className="bg-parchment-darker/15 border border-parchment-dark rounded-lg p-6 flex flex-col"
             >
-              <motion.h3 
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ duration: 0.4, delay: 2.2 }}
+              <h3 
                 className="text-2xl font-jejuhallasan text-parchment-ink mb-4"
               >
                 Team Invite Link
-              </motion.h3>
-              <motion.p 
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ duration: 0.4, delay: 2.3 }}
+              </h3>
+              <p 
                 className="text-parchment-ink mb-4"
               >
                 Share your team invite link to your friends so they can join
                 your group. Five participants per team.
-              </motion.p>
+              </p>
 
-              <motion.div 
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ duration: 0.4, delay: 2.4 }}
+              <div 
                 className="relative mb-4"
               >
                 {inviteLinkLoading ? (
-                  <motion.div 
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    transition={{ duration: 0.4 }}
+                  <div 
                     className="flex items-center justify-center py-4"
                   >
                     <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-white" />
                     <span className="ml-2 text-parchment-ink/70">
                       Generating invite link...
                     </span>
-                  </motion.div>
+                  </div>
                 ) : inviteLinkError ? (
-                  <motion.div
-                    initial={{ opacity: 0, y: -10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.3 }}
+                  <div
                   >
                     <Alert className="bg-red-900 border-red-800 mb-4">
                       <HugeiconsIcon icon={AlertCircle} size={16} />
                       <AlertDescription>{inviteLinkError}</AlertDescription>
                     </Alert>
-                  </motion.div>
+                  </div>
                 ) : (
                   <Input value={inviteLink || ""} readOnly />
                 )}
-              </motion.div>
+              </div>
 
               {inviteLinkError ? (
                 <motion.div
-                  initial={{ opacity: 0, scale: 0.9 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  transition={{ duration: 0.4, delay: 2.5 }}
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
                   className="flex justify-center w-full"
@@ -1745,9 +1661,6 @@ export function MultiStepRegistrationForm({
                 </motion.div>
               ) : (
                 <motion.div
-                  initial={{ opacity: 0, scale: 0.9 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  transition={{ duration: 0.4, delay: 2.5 }}
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
                   className="flex justify-center w-full"
@@ -1761,14 +1674,14 @@ export function MultiStepRegistrationForm({
                   </Button>
                 </motion.div>
               )}
-            </motion.div>
+            </div>
             {registrationComplete && (
               <TeamMembersSubscription
                 teamId={teamId}
                 onNewMember={fetchTeamMembers}
               />
             )}
-          </motion.div>
+          </div>
         )}
       </div>
 
