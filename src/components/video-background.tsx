@@ -8,6 +8,7 @@ export function VideoBackground() {
         loop
         muted
         playsInline
+        preload="none"
         className="h-full w-full object-cover scale-175 opacity-45 mix-blend-lighten blur-xs"
       >
         <source src="/bg.mp4" type="video/mp4" />

@@ -35,7 +35,7 @@ function getAudio() {
     audio = new Audio("/assets/bg.mp3");
     audio.loop = true;
     audio.volume = 0;
-    audio.preload = "auto";
+    audio.preload = "none"; // Don't preload 6.6MB audio until user interaction
   }
   return audio;
 }

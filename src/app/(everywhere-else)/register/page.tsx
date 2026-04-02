@@ -10,7 +10,6 @@ import { HugeiconsIcon } from "@hugeicons/react";
 import { Share01Icon, UserGroupIcon } from "@hugeicons/core-free-icons";
 import { useEffect, useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import Image from "next/image";
 
 // Class-specific overlay colors for HoloCard
 const CLASS_COLORS: Record<string, string> = {
@@ -21,22 +20,22 @@ const CLASS_COLORS: Record<string, string> = {
   scholar: "#8b5cf6",
 };
 
-// SVG background images per hero
+// Optimized PNG background images per hero (extracted from SVGs, resized)
 const HERO_BG: Record<string, string> = {
-  warrior: "/card-bg/Warrior.svg",
-  archer: "/card-bg/Archer.svg",
-  scout: "/card-bg/Scout.svg",
-  guardian: "/card-bg/Guardian.svg",
-  scholar: "/card-bg/Scholar.svg",
+  warrior: "/card-bg/Warrior.png",
+  archer: "/card-bg/Archer.png",
+  scout: "/card-bg/Scout.png",
+  guardian: "/card-bg/Guardian.png",
+  scholar: "/card-bg/Scholar.png",
 };
 
-// Alt icons for mobile view
+// Alt icons for mobile view (optimized PNGs)
 const HERO_ALT_ICON: Record<string, string> = {
-  warrior: "/icons-alt/Warrior.svg",
-  archer: "/icons-alt/Archer.svg",
-  scout: "/icons-alt/Scout.svg",
-  guardian: "/icons-alt/Guardian.svg",
-  scholar: "/icons-alt/Scholar.svg",
+  warrior: "/icons-alt/Warrior.png",
+  archer: "/icons-alt/Archer.png",
+  scout: "/icons-alt/Scout.png",
+  guardian: "/icons-alt/Guardian.png",
+  scholar: "/icons-alt/Scholar.png",
 };
 
 interface Registration {
@@ -109,26 +108,31 @@ export default function Registration() {
     return () => window.removeEventListener("popstate", handlePopState);
   }, [clickedHeroData, savedScrollY]);
 
-  // Fetch all registrations and hero availability
+  // Fetch all registrations and hero availability in parallel
   useEffect(() => {
     async function fetchData() {
       try {
-        // Fetch all registrations via API
-        const regRes = await fetch("/api/team-members");
-        if (!regRes.ok) throw new Error("Failed to fetch registrations");
-        const regJson = await regRes.json();
-        const regData: Registration[] = regJson.members || [];
+        // Fetch both in parallel for faster initial load
+        const [regRes, heroRes] = await Promise.all([
+          fetch("/api/team-members"),
+          fetch("/api/hero-availability"),
+        ]);
 
-        // Fetch all hero availability via API
-        const heroRes = await fetch("/api/hero-availability");
+        if (!regRes.ok) throw new Error("Failed to fetch registrations");
         if (!heroRes.ok) throw new Error("Failed to fetch hero availability");
-        const heroData: HeroAvailability[] = await heroRes.json();
+
+        const [regJson, heroData] = await Promise.all([
+          regRes.json(),
+          heroRes.json(),
+        ]) as [{ members: Registration[] }, HeroAvailability[]];
+
+        const regData: Registration[] = regJson.members || [];
 
         setRegistrations(regData);
         setHeroAvailability(heroData);
 
         // Calculate available heroes
-        const available = heroData.filter((h) => h.isAvailable).length;
+        const available = heroData.filter((h: HeroAvailability) => h.isAvailable).length;
         setAvailableHeroes(available);
         setTotalHeroes(heroData.length);
       } catch (error) {
@@ -337,7 +341,7 @@ export default function Registration() {
             key={index}
             initial={skip ? false : { opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.4, delay: skip ? 0 : 0.4 + index * 0.1 }}
+            transition={{ duration: 0.3, delay: skip ? 0 : 0.35 + index * 0.04 }}
             className="uppercase text-center"
           >
             <p className="text-xs md:text-base">{block}</p>
@@ -346,14 +350,14 @@ export default function Registration() {
         <motion.div
           initial={skip ? false : { opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: skip ? 0 : 1 }}
+          transition={{ duration: 0.6, delay: skip ? 0 : 0.6 }}
           className="text-center py-10 my-10"
         >
           <h2 className="text-8xl mb-2 font-jejuhallasan">
             <motion.span
               initial={skip ? false : { scale: 0.5 }}
               animate={{ scale: 1 }}
-              transition={{ duration: 0.5, delay: skip ? 0 : 1.2 }}
+              transition={{ duration: 0.5, delay: skip ? 0 : 0.7 }}
               className={cn(
                 availableHeroes < totalHeroes
                   ? "text-amber-500"
@@ -385,7 +389,7 @@ export default function Registration() {
         <motion.div
           initial={skip ? false : { opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ duration: 0.6, delay: skip ? 0 : 1.2 }}
+          transition={{ duration: 0.6, delay: skip ? 0 : 0.8 }}
           className="space-y-12"
         >
           {/* Team Universes */}
@@ -399,14 +403,14 @@ export default function Registration() {
                 key={team.id}
                 initial={skip ? false : { opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, delay: skip ? 0 : 1.4 + teamIndex * 0.2 }}
+                transition={{ duration: 0.4, delay: skip ? 0 : 0.9 + teamIndex * 0.05 }}
                 className="mb-8"
               >
                 {/* Team Header */}
                 <motion.div
                   initial={skip ? false : { opacity: 0, x: -20 }}
                   animate={{ opacity: 1, x: 0 }}
-                  transition={{ duration: 0.4, delay: skip ? 0 : 1.6 + teamIndex * 0.2 }}
+                  transition={{ duration: 0.3, delay: skip ? 0 : 1.0 + teamIndex * 0.05 }}
                   className="flex justify-between items-center mb-4 p-3"
                 >
                   <div className="flex items-center">
@@ -469,11 +473,11 @@ export default function Registration() {
                     return (
                       <motion.div
                         key={`team-${team.id}-${hero.id}`}
-                        initial={skip ? false : { opacity: 0, scale: 0.8 }}
+                        initial={skip ? false : { opacity: 0, scale: 0.9 }}
                         animate={{ opacity: 1, scale: 1 }}
                         transition={{
-                          duration: 0.4,
-                          delay: skip ? 0 : 1.8 + teamIndex * 0.2 + heroIndex * 0.1
+                          duration: 0.3,
+                          delay: skip ? 0 : 1.0 + teamIndex * 0.05 + heroIndex * 0.03
                         }}
                         className="w-full"
                       >
