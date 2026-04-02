@@ -3,7 +3,6 @@
 import Image from "next/image";
 import type React from "react";
 import { useRef, useState, useCallback } from "react";
-import Tilt from "react-parallax-tilt";
 import { cn } from "@/lib/utils";
 import "./holo-card.css";
 
@@ -430,7 +429,7 @@ export const HoloCard = ({
     }
 
     return (
-      <Tilt className="relative h-full w-full overflow-hidden rounded-2xl !p-0 shadow-xl">
+      <div className="relative h-full w-full overflow-hidden rounded-2xl !p-0 shadow-xl">
         {OverlayLayer}
         {content}
         <div
@@ -444,7 +443,7 @@ export const HoloCard = ({
         >
           {children}
         </div>
-      </Tilt>
+      </div>
     );
   };
 
