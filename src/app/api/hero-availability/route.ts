@@ -29,7 +29,11 @@ export async function GET(request: Request) {
       isAvailable: item.is_available,
     }));
 
-    return NextResponse.json(heroAvailability);
+    return NextResponse.json(heroAvailability, {
+      headers: {
+        'Cache-Control': 'public, s-maxage=10, stale-while-revalidate=30',
+      },
+    });
   } catch (error) {
     const errorResponse = handleDatabaseError(error);
     console.error("Error in hero availability API:", error);

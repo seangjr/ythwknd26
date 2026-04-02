@@ -22,7 +22,11 @@ export async function GET(request: Request) {
           ORDER BY line_number
         `;
 
-    return NextResponse.json({ members: rows });
+    return NextResponse.json({ members: rows }, {
+      headers: {
+        'Cache-Control': 'public, s-maxage=10, stale-while-revalidate=30',
+      },
+    });
   } catch (error) {
     const errorResponse = handleDatabaseError(error);
     console.error("Error in team members API:", error);

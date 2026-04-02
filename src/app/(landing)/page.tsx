@@ -32,6 +32,7 @@ export default function Home() {
             loop
             muted
             playsInline
+            preload="metadata"
             className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 min-h-full min-w-full"
             style={{ objectFit: 'cover', width: '100%', height: '100%' }}
           >
@@ -40,7 +41,7 @@ export default function Home() {
         </div>
         {/* Masthead layer */}
         <div className="absolute w-full flex flex-col items-center pb-8 px-8 z-10">
-          <Image src="/assets/masthead.svg" className='md:mb-0 mb-32' alt="YTHWKND and the Multiverse of Mystery Logo" width={700} height={700} />
+          <Image src="/assets/masthead.svg" className='md:mb-0 mb-32' alt="YTHWKND and the Multiverse of Mystery Logo" width={700} height={700} priority />
         </div>
       </section>
 

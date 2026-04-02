@@ -8,6 +8,7 @@ import { ArrowLeft02Icon, Facebook01Icon, GlobeIcon, InstagramIcon } from "@huge
 import { useEffect, useState } from "react";
 import Navbar from "./navbar";
 import { motion, AnimatePresence } from "framer-motion";
+import Image from "next/image";
 
 interface CharacterSelectionScreenProps {
   isOpen: boolean;
@@ -188,9 +189,11 @@ export function CharacterSelectionScreen({
                   transition={{ duration: 0.5, delay: 0.2 }}
                   className="w-24 h-24 rounded-full overflow-hidden mb-4 border-2 border-parchment-dark"
                 >
-                  <img
+                  <Image
                     src={getHeroIcon(selectedHero)}
                     alt={selectedHeroDetails.name}
+                    width={96}
+                    height={96}
                     className="w-full h-full object-cover"
                   />
                 </motion.div>
@@ -268,9 +271,11 @@ export function CharacterSelectionScreen({
                                 {index + 1}
                               </div>
                               <div className="w-10 h-10 rounded-full overflow-hidden mr-3">
-                                <img
+                                <Image
                                   src={getHeroIcon(hero.id)}
                                   alt={hero.name}
+                                  width={40}
+                                  height={40}
                                   className={cn(
                                     "w-full h-full object-cover",
                                     isTaken && !isSelected && "grayscale",
