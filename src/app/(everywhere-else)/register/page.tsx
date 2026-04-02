@@ -20,22 +20,22 @@ const CLASS_COLORS: Record<string, string> = {
   scholar: "#8b5cf6",
 };
 
-// Optimized PNG background images per hero (extracted from SVGs, resized)
+// SVG background images per hero
 const HERO_BG: Record<string, string> = {
-  warrior: "/card-bg/Warrior.png",
-  archer: "/card-bg/Archer.png",
-  scout: "/card-bg/Scout.png",
-  guardian: "/card-bg/Guardian.png",
-  scholar: "/card-bg/Scholar.png",
+  warrior: "/card-bg/Warrior.svg",
+  archer: "/card-bg/Archer.svg",
+  scout: "/card-bg/Scout.svg",
+  guardian: "/card-bg/Guardian.svg",
+  scholar: "/card-bg/Scholar.svg",
 };
 
-// Alt icons for mobile view (optimized PNGs)
+// Alt icons for mobile view
 const HERO_ALT_ICON: Record<string, string> = {
-  warrior: "/icons-alt/Warrior.png",
-  archer: "/icons-alt/Archer.png",
-  scout: "/icons-alt/Scout.png",
-  guardian: "/icons-alt/Guardian.png",
-  scholar: "/icons-alt/Scholar.png",
+  warrior: "/icons-alt/Warrior.svg",
+  archer: "/icons-alt/Archer.svg",
+  scout: "/icons-alt/Scout.svg",
+  guardian: "/icons-alt/Guardian.svg",
+  scholar: "/icons-alt/Scholar.svg",
 };
 
 interface Registration {
