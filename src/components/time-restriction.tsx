@@ -36,7 +36,7 @@ export function TimeRestriction({ children }: TimeRestrictionProps) {
           transition={{ duration: 0.5 }}
           className="text-center space-y-8"
         >
-          <h1 className="text-4xl md:text-6xl font-jetsytrial">Coming Soon</h1>
+          <h1 className="text-4xl md:text-6xl font-jejuhallasan">Coming Soon</h1>
           <p className="text-[#F7EAD9] text-lg">
             Registration opens on April 4, 2026 at 6:30 PM
           </p>

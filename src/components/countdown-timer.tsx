@@ -51,7 +51,7 @@ function FlipDigit({ value, label }: { value: number; label: string }) {
               className="absolute inset-0 flex items-center justify-center"
               style={{ perspective: "200px" }}
             >
-              <span className="text-4xl md:text-5xl font-jetsytrial text-[#F7EAD9] tracking-wider tabular-nums">
+              <span className="text-4xl md:text-5xl font-jejuhallasan text-[#F7EAD9] tracking-wider tabular-nums">
                 {display}
               </span>
             </motion.div>
