@@ -10,7 +10,7 @@ interface TimeRestrictionProps {
 
 export function TimeRestriction({ children }: TimeRestrictionProps) {
   const [isAllowed, setIsAllowed] = useState(false);
-  const targetDate = new Date(2024, 2, 30, 12, 30, 0); // March 30, 2026, 12:30 PM (bypassed for dev)
+  const targetDate = new Date(2026, 3, 4, 18, 30, 0); // April 4, 2026, 6:30 PM MYT (GMT+8)
 
   useEffect(() => {
     const checkTime = () => {
@@ -38,7 +38,7 @@ export function TimeRestriction({ children }: TimeRestrictionProps) {
         >
           <h1 className="text-4xl md:text-6xl font-jetsytrial">Coming Soon</h1>
           <p className="text-[#F7EAD9] text-lg">
-            The registration will be available on March 30, 2026 at 12:30 PM
+            Registration opens on April 4, 2026 at 6:30 PM
           </p>
           <CountdownTimer targetDate={targetDate} />
         </motion.div>

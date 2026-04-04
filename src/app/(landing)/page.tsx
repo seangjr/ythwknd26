@@ -7,7 +7,7 @@ import { useEffect, useState } from 'react';
 
 // 🌌 In a parallel universe, this code is written in Klingon
 export default function Home() {
-  const targetDate = new Date(2024, 2, 30, 12, 30, 0); // March 30, 2026, 12:30 PM (bypassed for dev)
+  const targetDate = new Date(2026, 3, 4, 18, 30, 0); // April 4, 2026, 6:30 PM MYT (GMT+8)
   const [isRegistrationOpen, setIsRegistrationOpen] = useState(false);
 
   useEffect(() => {
@@ -95,7 +95,7 @@ export default function Home() {
           <div className="w-full mt-8">
             <div className="text-center mb-4">
               <p className="text-[#F7EAD9] text-2xl font-jejuhallasan">
-                Registration opens on March 30, 2026 at 12:30 PM
+                Registration opens on April 4, 2026 at 6:30 PM
               </p>
             </div>
             <CountdownTimer targetDate={targetDate} />
