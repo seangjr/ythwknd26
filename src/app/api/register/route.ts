@@ -1,6 +1,6 @@
 import { getClient, handleDatabaseError } from "@/lib/db";
 import { createSheetsClient } from "@/lib/google-sheets";
-import { NextResponse } from "next/server";
+import { NextResponse, after } from "next/server";
 
 export async function POST(request: Request) {
   try {
@@ -112,32 +112,36 @@ export async function POST(request: Request) {
 
     const registration = result[0].register_user_extended;
 
-    // Fire-and-forget Google Sheets sync — don't block the response
-    syncToGoogleSheets({
-      lineNumber,
-      groupNumber,
-      email,
-      fullName,
-      age,
-      gender,
-      nricPassport,
-      contactNumber,
-      instagramHandle,
-      schoolName,
-      ymMember: ymMember === true || ymMember === "Yes",
-      cgLeader,
-      heroId,
-      emergencyContactName,
-      emergencyContactRelationship,
-      emergencyContactPhone,
-      emergencyContactEmail,
-      isChristian,
-      eventSource,
-      otherEventSource,
-      invitedByFriend,
-    }).catch((err) => {
-      console.error("Google Sheets sync failed (non-blocking):", err);
-    });
+    // Sheets sync runs after the response is sent. `after()` keeps the
+    // serverless function alive until the promise resolves — a bare
+    // dangling promise can be killed when the instance shuts down.
+    after(
+      syncToGoogleSheets({
+        lineNumber,
+        groupNumber,
+        email,
+        fullName,
+        age,
+        gender,
+        nricPassport,
+        contactNumber,
+        instagramHandle,
+        schoolName,
+        ymMember: ymMember === true || ymMember === "Yes",
+        cgLeader,
+        heroId,
+        emergencyContactName,
+        emergencyContactRelationship,
+        emergencyContactPhone,
+        emergencyContactEmail,
+        isChristian,
+        eventSource,
+        otherEventSource,
+        invitedByFriend,
+      }).catch((err) => {
+        console.error("Google Sheets sync failed (non-blocking):", err);
+      }),
+    );
 
     return NextResponse.json({ success: true, data: registration });
   } catch (error) {

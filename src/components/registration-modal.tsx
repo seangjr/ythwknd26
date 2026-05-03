@@ -220,16 +220,13 @@ export function RegistrationModal({
       });
 
       if (!response.ok) {
-        const errorData = await response.json();
-        
-        // Handle any fetch error
-        const recovered = await handleFetchError(errorData);
-        if (!recovered) {
-          throw new Error(errorData.error || "Registration failed");
-        }
-        
-        // If we recovered, retry the registration
-        return handleFormSubmit(data);
+        // Surface the server's error verbatim. Do NOT auto-retry: a 409
+        // ("line already taken", "hero unavailable") or 400 (validation)
+        // is a real outcome the user must see. Auto-retrying after a
+        // request that may have already succeeded server-side is what
+        // produces phantom duplicates.
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(errorData.error || "Registration failed");
       }
 
       const responseData = await response.json();
@@ -238,7 +235,19 @@ export function RegistrationModal({
         onSuccess(responseData);
       }
     } catch (error) {
-      setError(error instanceof Error ? error.message : "Registration failed");
+      // Network errors land here too (fetch threw before getting a
+      // response). We can't know whether the server processed the
+      // request, so we tell the user to refresh and check rather than
+      // silently re-submitting.
+      const message =
+        error instanceof TypeError
+          ? "Network issue — your registration may or may not have gone through. Please refresh and check before submitting again."
+          : error instanceof Error
+            ? error.message
+            : "Registration failed";
+      setError(message);
+      // Surface connection state in the UI without auto-retrying.
+      void handleFetchError(error);
     } finally {
       setIsSubmitting(false);
     }

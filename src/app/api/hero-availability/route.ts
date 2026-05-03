@@ -31,7 +31,9 @@ export async function GET(request: Request) {
 
     return NextResponse.json(heroAvailability, {
       headers: {
-        'Cache-Control': 'public, s-maxage=10, stale-while-revalidate=30',
+        // Hero availability must be real-time — any cache window allows
+        // two clients to see the same hero as available and double-book.
+        'Cache-Control': 'no-store, must-revalidate',
       },
     });
   } catch (error) {
