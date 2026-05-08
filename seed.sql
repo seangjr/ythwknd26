@@ -1,7 +1,7 @@
 -- ythwknd25 seed data — matches constants.ts
 -- Run after schema.sql to populate initial data.
 
--- Teams (21 parties from CONSTANTS.TEAMS)
+-- Teams (24 parties from CONSTANTS.TEAMS)
 INSERT INTO teams (id, name, color, code) VALUES
   ( 1, 'Crimson',   'bg-team-01', 'P001'),
   ( 2, 'Sapphire',  'bg-team-02', 'P002'),
@@ -22,13 +22,17 @@ INSERT INTO teams (id, name, color, code) VALUES
   (17, 'Scarlet',   'bg-team-17', 'P017'),
   (18, 'Azure',     'bg-team-18', 'P018'),
   (19, 'Maroon',    'bg-team-19', 'P019'),
-  (20, 'Indigo',    'bg-team-20', 'P020')
+  (20, 'Indigo',    'bg-team-20', 'P020'),
+  (21, 'Magenta',   'bg-team-21', 'P021'),
+  (22, 'Lime',      'bg-team-22', 'P022'),
+  (23, 'Turquoise', 'bg-team-23', 'P023'),
+  (24, 'Plum',      'bg-team-24', 'P024')
 ON CONFLICT (id) DO UPDATE SET name = EXCLUDED.name, color = EXCLUDED.color, code = EXCLUDED.code;
 
 -- Reset the teams id sequence so future inserts don't collide
 SELECT setval('teams_id_seq', (SELECT MAX(id) FROM teams));
 
--- Hero availability: 5 classes × 21 teams = 105 rows, all initially available
+-- Hero availability: 5 classes × 24 teams = 120 rows, all initially available
 -- Class IDs match CONSTANTS.HEROES[].id in constants.ts
 INSERT INTO hero_availability (team_id, hero_id, is_available)
 SELECT t.id, h.hero_id, TRUE

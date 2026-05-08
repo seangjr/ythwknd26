@@ -52,7 +52,7 @@ export const CONSTANTS = { SITE_TITLE: "YTHWKND",
     },
   ],
 
-  // Party options (20 color-based parties, 5 slots each)
+  // Party options (24 color-based parties, 5 slots each)
   TEAMS: [
     { id: 1, name: "Crimson", color: "bg-team-01", hex: "#DC143C", code: "PARTY 001" },
     { id: 2, name: "Sapphire", color: "bg-team-02", hex: "#0F52BA", code: "PARTY 002" },
@@ -74,6 +74,10 @@ export const CONSTANTS = { SITE_TITLE: "YTHWKND",
     { id: 18, name: "Azure", color: "bg-team-18", hex: "#007FFF", code: "PARTY 018" },
     { id: 19, name: "Maroon", color: "bg-team-19", hex: "#800000", code: "PARTY 019" },
     { id: 20, name: "Indigo", color: "bg-team-20", hex: "#4B0082", code: "PARTY 020" },
+    { id: 21, name: "Magenta", color: "bg-team-21", hex: "#FF00FF", code: "PARTY 021" },
+    { id: 22, name: "Lime", color: "bg-team-22", hex: "#BFFF00", code: "PARTY 022" },
+    { id: 23, name: "Turquoise", color: "bg-team-23", hex: "#40E0D0", code: "PARTY 023" },
+    { id: 24, name: "Plum", color: "bg-team-24", hex: "#8E4585", code: "PARTY 024" },
   ],
 
   // Class image paths — placeholder for now, classes share a single icon per class
