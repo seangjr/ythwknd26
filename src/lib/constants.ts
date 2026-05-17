@@ -1,3 +1,6 @@
+export const REGISTRATION_CLOSED = true;
+export const WAITING_LIST_URL = "https://forms.gle/yh3UHvzSHBnqZWL38";
+
 export const CONSTANTS = { SITE_TITLE: "YTHWKND",
   SITE_SUBTITLE: "AND THE",
   SITE_MAIN_TITLE: "MULTIVERSE OF MYSTERY",

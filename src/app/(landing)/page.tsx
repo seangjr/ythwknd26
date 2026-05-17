@@ -4,6 +4,7 @@ import { CountdownTimer } from '@/components/countdown-timer';
 import Image from 'next/image';
 import { TransitionLink } from '@/components/transition-link';
 import { useEffect, useState } from 'react';
+import { REGISTRATION_CLOSED, WAITING_LIST_URL } from '@/lib/constants';
 
 // 🌌 In a parallel universe, this code is written in Klingon
 export default function Home() {
@@ -79,8 +80,29 @@ export default function Home() {
         <div className="text-center text-sm text-[#F7EAD9] mt-10 uppercase">
           *For non-Muslims only
         </div>
+        {/* Waiting list — registration is closed */}
+        {REGISTRATION_CLOSED && (
+          <div className="w-full mt-8">
+            <div className="text-center mb-4">
+              <p className="text-[#F7EAD9] text-2xl font-jejuhallasan">
+                Registration is closed
+              </p>
+              <p className="text-[#F7EAD9] text-sm mt-1 opacity-80">
+                Join the waiting list and we&apos;ll reach out if a slot opens.
+              </p>
+            </div>
+            <Button
+              asChild
+              variant="parchment" size="2xl" className="w-full"
+            >
+              <a href={WAITING_LIST_URL} target="_blank" rel="noopener noreferrer">
+                Join the waiting list
+              </a>
+            </Button>
+          </div>
+        )}
         {/* Register Button - only show after registration opens */}
-        {isRegistrationOpen && (
+        {!REGISTRATION_CLOSED && isRegistrationOpen && (
           <div className="w-full mt-8">
             <Button
               asChild
@@ -91,7 +113,7 @@ export default function Home() {
           </div>
         )}
         {/* Countdown Timer - only show before registration opens */}
-        {!isRegistrationOpen && (
+        {!REGISTRATION_CLOSED && !isRegistrationOpen && (
           <div className="w-full mt-8">
             <div className="text-center mb-4">
               <p className="text-[#F7EAD9] text-2xl font-jejuhallasan">

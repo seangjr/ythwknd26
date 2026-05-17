@@ -1,8 +1,16 @@
 import { getClient, handleDatabaseError } from "@/lib/db";
 import { createSheetsClient } from "@/lib/google-sheets";
+import { REGISTRATION_CLOSED } from "@/lib/constants";
 import { NextResponse, after } from "next/server";
 
 export async function POST(request: Request) {
+  if (REGISTRATION_CLOSED) {
+    return NextResponse.json(
+      { error: "Registration is closed. Please join the waiting list." },
+      { status: 403 },
+    );
+  }
+
   try {
     const body = await request.json();
 

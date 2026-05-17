@@ -2,6 +2,7 @@ import Navbar from "@/components/navbar";
 import { Footer } from "@/components/footer";
 import { SonnerProvider } from "@/components/sonner-provider";
 import { TimeRestriction } from "@/components/time-restriction";
+import { RegistrationClosed } from "@/components/registration-closed";
 
 export default function EverywhereElseLayout({
   children,
@@ -11,9 +12,11 @@ export default function EverywhereElseLayout({
   return (
     <TimeRestriction>
       <Navbar />
-      <main className="flex-1">
-        {children}
-      </main>
+      <RegistrationClosed>
+        <main className="flex-1">
+          {children}
+        </main>
+      </RegistrationClosed>
       <Footer />
       <SonnerProvider />
     </TimeRestriction>
